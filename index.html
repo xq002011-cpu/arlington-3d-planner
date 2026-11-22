@@ -42,6 +42,7 @@ button{cursor:pointer}
 .chk{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--bg);user-select:none;cursor:pointer}
 .chk input{accent-color:var(--accent);margin:0}
 .mobile-only{display:none}
+.panel-close{display:none;align-self:flex-end;margin:8px 12px 0;flex:none}
 .stage{display:grid;grid-template-columns:260px 1fr 280px;min-height:0;position:relative}
 .panel{background:var(--panel);border-right:1px solid var(--line);overflow:auto;min-height:0;display:flex;flex-direction:column}
 #right{border-right:0;border-left:1px solid var(--line)}
@@ -115,6 +116,7 @@ dialog textarea{width:100%;min-height:220px;box-sizing:border-box;font-family:va
   #right{border-left:0}
   .panel:not(.open){display:none}
   .mobile-only{display:inline-flex}
+  .panel-close{display:block}
   .brand{flex-basis:100%}
 }
 @media (prefers-reduced-motion:reduce){#toast{transition:none}}
@@ -150,6 +152,7 @@ dialog textarea{width:100%;min-height:220px;box-sizing:border-box;font-family:va
 
   <main class="stage">
     <aside class="panel" id="left">
+      <button class="btn panel-close" id="closeLeft">Close ✕</button>
       <div class="tabs" role="tablist">
         <button role="tab" id="tab-lib" aria-selected="true" data-tab="lib">Furniture</button>
         <button role="tab" id="tab-rooms" aria-selected="false" data-tab="rooms">Rooms</button>
@@ -173,7 +176,7 @@ dialog textarea{width:100%;min-height:220px;box-sizing:border-box;font-family:va
       <div id="toast"></div>
     </div>
 
-    <aside class="panel" id="right"><div class="pane" id="insp"></div></aside>
+    <aside class="panel" id="right"><button class="btn panel-close" id="closeRight">Close ✕</button><div class="pane" id="insp"></div></aside>
   </main>
 
   <footer class="foot">
@@ -741,7 +744,7 @@ function setMode(m) {
   camera = m === 'plan' ? ortho : persp;
   document.querySelectorAll('#modeSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === m));
   $('walkpad').hidden = m !== 'walk';
-  $('viewhint').textContent = { orbit: 'Drag to orbit · right-drag to pan · scroll to zoom · click a floor to select a room', plan: 'Top-down plan · drag to pan · scroll to zoom · drag furniture to arrange', walk: 'Drag to look · W A S D or arrows to walk · click furniture to select' }[m];
+  $('viewhint').textContent = { orbit: 'Drag to orbit · right-drag to pan · scroll to zoom · click a floor to select a room', plan: 'Top-down plan · drag to pan · scroll to zoom · drag furniture to arrange', walk: 'Drag to look · W A S D to walk · Q / E or ← → to turn · Shift to run' }[m];
   enableCtl(); applyVis();
 }
 function setLevel(l, quiet) {
@@ -772,7 +775,7 @@ function pickItem() { const objs = []; for (let l = 0; l < 2; l++) if (G.levels[
 function pickFloor() { const hits = raycaster.intersectObjects(floorMeshes, false).filter(h => visibleChain(h.object)); if (!hits.length) return null; if (level === 'all' && mode !== 'walk') { /* prefer upper floor if hit */ } return hits[0]; }
 function planeHit(y) { const p = new THREE.Vector3(); return raycaster.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), -y), p) ? p : null; }
 function onDown(e) {
-  if (e.button !== 0) return; setPtr(e); down = { x: e.clientX, y: e.clientY };
+  if (e.button !== 0) return; setPtr(e); down = { x: e.clientX, y: e.clientY }; document.activeElement?.blur?.(); closeSheets();
   if (placing) return;
   const it = pickItem();
   if (it) { select(it); const p = planeHit(M(LEVELS[it.level].base)); if (p) { drag = { it, dx: it.x - p.x, dz: it.z - p.z, moved: false }; orbitCtl.enabled = planCtl.enabled = false; dom.setPointerCapture(e.pointerId); } return; }
@@ -803,7 +806,7 @@ function startPlacing(type) {
 function stopPlacing() { if (ghost) scene.remove(ghost); ghost = null; placing = null; document.querySelectorAll('#lib button').forEach(b => b.setAttribute('aria-pressed', 'false')); }
 function roomOfItem(it) { return roomAt(it.level, it.x / FT, it.z / FT); }
 function select(it) { sel = it; if (it) selRoom = null; updateSelBox(); updateRoomOutline(); renderInspector(); }
-function selectRoom(r) { sel = null; selRoom = r; updateSelBox(); updateRoomOutline(); renderInspector(); if (matchMedia('(max-width:900px)').matches) $('right').classList.add('open'); }
+function selectRoom(r) { sel = null; selRoom = r; updateSelBox(); updateRoomOutline(); renderInspector(); if (mode !== 'walk' && matchMedia('(max-width:900px)').matches) $('right').classList.add('open'); }
 function updateSelBox() { if (sel && meshes.get(sel.id) && G.levels[sel.level].visible) { selBox.setFromObject(meshes.get(sel.id)); selBox.visible = true; } else selBox.visible = false; }
 let outline;
 function updateRoomOutline() { if (outline) { G.outlines.remove(outline); outline.geometry.dispose(); outline = null; } if (!selRoom || !G.levels[selRoom.level].visible) return; const y = M(LEVELS[selRoom.level].base) + 0.03; const pts = selRoom.poly.concat([selRoom.poly[0]]).map(([x, z]) => new THREE.Vector3(M(x), y, M(z))); outline = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x2F6B57, depthTest: false })); outline.renderOrder = 9; G.outlines.add(outline); }
@@ -818,17 +821,20 @@ function rotateSel(deg) { if (!sel) return; sel.rot = ((sel.rot + deg) % 360 + 3
 function deleteSel() { if (!sel) return; const it = sel; state.items = state.items.filter(i => i !== it); removeItemMesh(it.id); select(null); save(); renderRooms(); toast(`${it.name} removed`); }
 function duplicateSel() { if (!sel) return; const it = Object.assign({}, sel, { id: 'i' + (nextId++), x: sel.x + 0.4, z: sel.z + 0.4, name: sel.name + ' copy' }); state.items.push(it); syncItem(it); select(it); save(); renderRooms(); }
 
+const keyName = e => { const c = e.code || ''; return (c.startsWith('Key') ? c.slice(3) : c.startsWith('Arrow') ? c : c.startsWith('Shift') ? 'shift' : e.key || '').toLowerCase(); };
+const closeSheets = () => { $('left').classList.remove('open'); $('right').classList.remove('open'); };
 addEventListener('keydown', e => {
-  const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName);
-  if (typing) return;
-  walk.keys[e.key.toLowerCase()] = true;
-  if (e.key === 'Escape') { if (placing) stopPlacing(); else select(null); }
+  const ae = document.activeElement, typing = ae && (ae.tagName === 'TEXTAREA' || ae.tagName === 'SELECT' || (ae.tagName === 'INPUT' && /^(text|number)$/.test(ae.type)));
+  if (typing || dlg.open) return;
+  const k = keyName(e); walk.keys[k] = true;
+  if (mode === 'walk' && 'wasdqe'.includes(k) && k.length === 1) e.preventDefault();
+  if (e.key === 'Escape') { closeSheets(); if (placing) stopPlacing(); else select(null); }
   if ((e.key === 'Delete' || e.key === 'Backspace') && sel) { e.preventDefault(); deleteSel(); }
-  if ((e.key === 'r' || e.key === 'R') && sel) rotateSel(e.shiftKey ? -15 : 15);
+  if (k === 'r' && sel) rotateSel(e.shiftKey ? -15 : 15);
   if (sel && mode !== 'walk' && e.key.startsWith('Arrow')) { e.preventDefault(); const s = e.shiftKey ? 0.25 : 0.05; if (e.key === 'ArrowLeft') sel.x -= s; if (e.key === 'ArrowRight') sel.x += s; if (e.key === 'ArrowUp') sel.z -= s; if (e.key === 'ArrowDown') sel.z += s; syncItem(sel); save(); }
   if (mode === 'walk' && e.key.startsWith('Arrow')) e.preventDefault();
 });
-addEventListener('keyup', e => { walk.keys[e.key.toLowerCase()] = false; });
+addEventListener('keyup', e => { walk.keys[keyName(e)] = false; });
 addEventListener('blur', () => { walk.keys = {}; });
 document.querySelectorAll('#walkpad button').forEach(b => {
   const map = { f: 'w', b: 's', l: 'q', r: 'e' }; const k = map[b.dataset.k];
@@ -961,6 +967,7 @@ document.querySelectorAll('#lvlSeg button').forEach(b => b.onclick = () => setLe
 [['tRoof', 'roof'], ['tCeil', 'ceil'], ['tCut', 'cut'], ['tYard', 'yard'], ['tLabels', 'labels']].forEach(([id, k]) => $(id).onchange = () => { ui[k] = $(id).checked; if (k === 'roof' && ui.roof && level !== 'all') setLevel('all'); applyVis(); });
 $('openLeft').onclick = () => { $('right').classList.remove('open'); $('left').classList.toggle('open'); };
 $('openRight').onclick = () => { $('left').classList.remove('open'); $('right').classList.toggle('open'); };
+$('closeLeft').onclick = $('closeRight').onclick = closeSheets;
 $('bSave').onclick = () => save(true);
 let resetArm = 0;
 $('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {} }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
