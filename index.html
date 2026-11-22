@@ -733,8 +733,8 @@ function setMode(m) {
   if (prev === 'walk' && walk.saved) { persp.position.copy(walk.saved.pos); orbitCtl.target.copy(walk.saved.target); persp.fov = 50; persp.updateProjectionMatrix(); }
   if (m === 'walk') {
     walk.saved = { pos: persp.position.clone(), target: orbitCtl.target.clone() };
-    walk.lvl = level === '1' ? 1 : 0; const start = walk.lvl ? [16, 79.5] : [14.5, 79.2];
-    persp.position.set(M(start[0]), M(LEVELS[walk.lvl].base) + 1.6, M(start[1])); walk.yaw = -Math.PI / 2; walk.pitch = -0.05; persp.fov = 70; persp.updateProjectionMatrix();
+    walk.lvl = level === '1' ? 1 : 0; const start = walk.lvl ? [16, 79.5] : [22.6, 90.5]; // main level: spawn on the front porch, facing the front door
+    persp.position.set(M(start[0]), M(LEVELS[walk.lvl].base) + 1.6, M(start[1])); walk.yaw = walk.lvl ? -Math.PI / 2 : 0; walk.pitch = 0; persp.fov = 70; persp.updateProjectionMatrix();
     if (!$('tCeil').checked) { $('tCeil').checked = true; ui.ceil = true; }
   }
   if (m === 'plan' && level === 'all') setLevel('0', true);
@@ -753,7 +753,7 @@ function setLevel(l, quiet) {
 }
 function applyVis() {
   const showL = lv => level === 'all' || level === String(lv);
-  const roofOn = ui.roof && level === 'all' && mode === 'orbit';
+  const roofOn = ui.roof && level === 'all' && mode !== 'plan';
   G.roof.visible = roofOn;
   for (let l = 0; l < 2; l++) {
     G.levels[l].visible = showL(l);
@@ -1003,6 +1003,7 @@ if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true
 setStatus(saved ? 'Loaded your saved layout' : null);
 $('viewhint').textContent = 'Drag to orbit · right-drag to pan · scroll to zoom · pick Main or Upper to look inside';
 applyVis(); renderInspector(); renderRooms();
+setMode('walk'); // open at the front door
 window.__planner = { state: () => state, setMode, setLevel, select, startPlacing, scene, meshes, view: (px, py, pz, tx, ty, tz) => { persp.position.set(M(px), M(py), M(pz)); orbitCtl.target.set(M(tx), M(ty), M(tz)); orbitCtl.update(); } };
 tick();
 </script>
