@@ -227,7 +227,7 @@ const ROOMS = [
   { id: 'laundry', name: 'Laundry', level: 0, poly: R(7.7, 70.6, 10.2, 76.2), src: 'est', floor: 'tile' },
   { id: 'pantry', name: 'Pantry', level: 0, poly: R(13.9, 70.6, 17.9, 76.2), src: 'est', floor: 'stone' },
   { id: 'stairs', name: 'Stairs', level: 0, poly: R(18.4, 70.6, 26.8, 76.5), src: 'est', floor: 'oak', noCeil: true },
-  { id: 'dining', name: 'Dining Room', level: 0, poly: R(27, 57.7, 39, 70.4), dims: [11, 13], src: 'plan', floor: 'oak', note: 'Your renovations: west wall removed (open to the kitchen) and east wall removed (open to the living room and sitting room)' },
+  { id: 'dining', name: 'Dining Room', level: 0, poly: R(27, 57.7, 39, 70.4), dims: [11, 13], src: 'plan', floor: 'oak', note: 'Your renovation: wall to the kitchen removed, one open space' },
   { id: 'closet1', name: 'Closet', level: 0, poly: R(27, 70.4, 31, 75.5), src: 'est', floor: 'oak' },
   { id: 'wic1', name: 'Walk-in Closet', level: 0, poly: R(35, 70.4, 39, 75.5), src: 'est', floor: 'oak' },
   { id: 'foyer', name: 'Foyer', level: 0, poly: [[10.2, 70.6], [13.9, 70.6], [13.9, 76.2], [17.9, 76.2], [17.9, 76.5], [27, 76.5], [27, 75.5], [31, 75.5], [31, 70.4], [35, 70.4], [35, 75.5], [39, 75.5], [39, 81.9], [12.8, 81.9], [12.8, 76.2], [10.2, 76.2]], src: 'est', floor: 'marble' },
@@ -293,7 +293,7 @@ const WALLS = [[
   [35, 70.4, 35, 75.5, 'i'],
   [27, 75.5, 31, 75.5, 'i', [[2, 2.4, 'd']]],
   [35, 75.5, 39, 75.5, 'i', [[2, 2.4, 'd']]],
-  [39, 70.4, 39, 75.5, 'i'], // dining ↔ living/sitting-room wall removed (owner's renovation)
+  [39, 57.7, 39, 75.5, 'i'], // dining east wall: as on the plan (still standing)
   [11, 23, 11, 39.3, 'i', [[13, 2.8, 'd']]], // former bar area enclosed as a bedroom (owner's renovation)
   [39, 66, 61.5, 66, 'i', [[4, 5, 'o'], [14.5, 14, 'f']]],
 ], [
@@ -948,7 +948,7 @@ $('pane-info').innerHTML = `
 <p><span class="tag">real</span> 4 bd / 3 ba, built 1946, 2 stories, composition roof, crawl space, 0 garage spaces (motor court, tandem parking), heated in-ground pool, 3 fireplaces, vaulted ceiling, wet bar, hardwood/marble/tile floors, APN 052-052-300, sold $3.55M Dec 2021: <a href="https://www.compass.com/listing/736-arlington-road-redwood-city-ca-94062/859590691799040889/" target="_blank" rel="noopener">Compass / MLS ML81865290</a>.</p>
 <p><span class="tag">real</span> Lot shape, house position, pool outline, terrace, motor court, shed (7′×5′), driveway: measured off the listing's site plan at the house's scale. That drawing is approximate: the traced lot comes to about 12,700 sq ft, against 11,623 in public records and 10,500 in the MLS.</p>
 <p><span class="tag">real</span> Look of the house from the 47 listing photos: red brick on the street side, white lap siding elsewhere, black window frames, the long upper window band, flat gravel roof over the family room, fieldstone fireplace, wood-beamed ceilings, brick walk, and the planting (cordylines, yuccas, boxwood, palms, the street oak).</p>
-<p><span class="tag">yours</span> Two changes you told me about: the dining room's walls to the kitchen and to the living room are removed (one open space), and the bar/sitting area is now Bedroom 5. I assumed where the new bedroom's wall and door are.</p>
+<p><span class="tag">yours</span> Two changes you told me about: the wall between the kitchen and the dining room is removed (one open space), and the bar/sitting area is now Bedroom 5. I assumed where the new bedroom's wall and door are.</p>
 <p><span class="tag est">estimate</span> Halls, closets, baths, pantry and mech rooms (scaled off the plan drawing), wall thickness, door and window sizes and positions, ceiling heights (9′ main, 8.5′ upper), roof pitches, exact plant positions and sizes, stair shape, how the upper floor sits over the main floor (matched by chimney and south wall), tree sizes, colors.</p>
 <p>Public records list 3,480 sq ft; the plan-measured 4,205 sq ft is used here. Treat all dimensions as ±1 ft and measure on site before buying furniture.</p>
 </div>
