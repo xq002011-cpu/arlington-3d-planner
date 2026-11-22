@@ -906,12 +906,13 @@ const walk = { yaw: 0, pitch: 0, keys: {}, saved: null };
 function activeLevel() { return level === '1' ? 1 : level === '0' ? 0 : (mode === 'walk' ? walk.lvl || 0 : 0); }
 function setMode(m) {
   if (m === mode) return; const prev = mode; mode = m;
+  if (prev === 'walk' && walk.prevCeil === false) { ui.ceil = false; $('tCeil').checked = false; }
   if (prev === 'walk' && walk.saved) { persp.position.copy(walk.saved.pos); orbitCtl.target.copy(walk.saved.target); persp.fov = 50; persp.updateProjectionMatrix(); }
   if (m === 'walk') {
     walk.saved = { pos: persp.position.clone(), target: orbitCtl.target.clone() };
     walk.lvl = level === '1' ? 1 : 0; const start = walk.lvl ? [16, 79.5] : [22.6, 90.5]; // main level: spawn on the front porch, facing the front door
     persp.position.set(M(start[0]), M(LEVELS[walk.lvl].base) + 1.6, M(start[1])); walk.yaw = walk.lvl ? -Math.PI / 2 : 0; walk.pitch = 0; persp.fov = 70; persp.updateProjectionMatrix();
-    if (!$('tCeil').checked) { $('tCeil').checked = true; ui.ceil = true; }
+    walk.prevCeil = ui.ceil; if (!ui.ceil) { $('tCeil').checked = true; ui.ceil = true; }
   }
   if (m === 'plan' && level === 'all') setLevel('0', true);
   camera = m === 'plan' ? ortho : persp;
