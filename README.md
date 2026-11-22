@@ -9,6 +9,8 @@ One static page (`index.html`), no build step. It loads three.js 0.160.0 from js
 - **Views:** 3D orbit, top-down floor plan, first-person walk (drag to look, WASD or arrow keys). Show both levels, Main or Upper. Toggles for roof, ceilings, cutaway, yard and labels.
 - **Furniture:** pick a piece, click a floor to place it, drag to move, `R` to rotate 15°, `Del` to remove. Size, rotation and colour are in the right-hand panel.
 - **Rooms:** click a floor to select a room, then change its wall paint and floor material.
+- **Marks:** press *Mark a spot*, click any part of the house and write what should change there. *Copy all marks* gives a list with each spot's room and position to send to whoever edits the model.
+- **Doors** open as you walk up to them; a click holds one open.
 - **Saving:** layouts save to this browser's localStorage (key `arlington736.layout.v1`). Export downloads a JSON file; Import loads one.
 
 ## Where the data comes from
@@ -19,7 +21,7 @@ One static page (`index.html`), no build step. It loads three.js 0.160.0 from js
 | Built 1946, 2 stories, 3 baths, composition roof, no garage, heated pool, 3 fireplaces | Compass / MLS ML81865290 (sold Dec 2021) | Real |
 | Lot shape, house position, pool outline, terrace, motor court, shed, driveway | Listing site plan, measured at the house's scale (5.72 px/ft) | Real, but the drawing is approximate: the traced lot is about 12,700 sq ft against 11,623 in public records |
 | Brick and siding, black window frames, roof forms, fireplaces, wood ceilings, brick walk, planting | The 47 listing photos | Matched by eye |
-| Kitchen open to the dining room (wall between them removed); bar and sitting area turned into Bedroom 5 | Owner's renovations | Wall and door position of Bedroom 5 assumed |
+| Kitchen open to the dining room (wall between them removed); bar and sitting area turned into Bedroom 5; the sunroom by the pool is an office with a standing desk; the bedroom left of the entry is a second office; grand piano by the sunroom | Owner's renovations | Wall and door position of Bedroom 5 assumed |
 | Halls, closets, baths, pantry, mechanical rooms, wall thickness, door and window sizes, ceiling heights (9 ft main, 8.5 ft upper), roof pitches, stair shape, plant sizes | Scaled off the plan drawing or estimated | Estimate |
 
 Treat every dimension as ±1 ft and measure on site before buying furniture.
@@ -39,12 +41,14 @@ Geometry is defined in feet (x = east, y = south, origin = the house's north-wes
     { "id": "i1", "type": "sofa", "name": "Sofa", "x": 15.39, "z": 24.32, "level": 0,
       "rot": 180, "w": 2.2, "d": 0.95, "h": 0.85, "color": "#8C9388", "elev": 0 }
   ],
-  "rooms": { "living": { "wall": "#B9C4B0", "floor": "walnut" } }
+  "rooms": { "living": { "wall": "#B9C4B0", "floor": "walnut" } },
+  "notes": [ { "id": "n1", "x": 8.44, "y": 2.5, "z": 25.0, "level": 0, "text": "This window is wider" } ]
 }
 ```
 
 - `x`, `z`: position in meters from the house's north-west corner (x east, z south). `level`: 0 main, 1 upper. `rot`: degrees. `w`, `d`, `h`: size in meters. `elev`: height off the floor in meters (used by art frames).
 - `type` is one of the furniture catalog keys in `index.html` (`CAT`).
+- `notes` are the marks: a point in meters (y is height) and the requested change.
 - `rooms` is keyed by room id; `wall` is a hex colour, `floor` one of `oak`, `walnut`, `stone`, `marble`, `tile`, `terracotta`, `carpet`, `concrete`, `deck`.
 
 ## Deploying
