@@ -19,7 +19,7 @@ One static page (`index.html`), no build step. It loads three.js 0.160.0 from js
 | Built 1946, 2 stories, 3 baths, composition roof, no garage, heated pool, 3 fireplaces | Compass / MLS ML81865290 (sold Dec 2021) | Real |
 | Lot shape, house position, pool outline, terrace, motor court, shed, driveway | Listing site plan, measured at the house's scale (5.72 px/ft) | Real, but the drawing is approximate: the traced lot is about 12,700 sq ft against 11,623 in public records |
 | Brick and siding, black window frames, roof forms, fireplaces, wood ceilings, brick walk, planting | The 47 listing photos | Matched by eye |
-| Dining room open to the living room; bar and sitting area turned into Bedroom 5 | Owner's renovations | Wall and door position of Bedroom 5 assumed |
+| Dining room open to both the kitchen and the living room (two walls removed); bar and sitting area turned into Bedroom 5 | Owner's renovations | Wall and door position of Bedroom 5 assumed |
 | Halls, closets, baths, pantry, mechanical rooms, wall thickness, door and window sizes, ceiling heights (9 ft main, 8.5 ft upper), roof pitches, stair shape, plant sizes | Scaled off the plan drawing or estimated | Estimate |
 
 Treat every dimension as ±1 ft and measure on site before buying furniture.
