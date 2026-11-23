@@ -943,6 +943,8 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
 /* site — layout measured off the listing's site plan (5.72 px/ft); surfaces, fences and planting from the photos */
 {
   const S = G.site;
+  let plantAt = null; { const sAdd = S.add.bind(S); S.add = (...os) => { if (plantAt) for (const o of os) o.userData.at = plantAt; return sAdd(...os); }; }
+  const rooted = (kind, f) => (...a) => { if (plantAt) return f(...a); plantAt = [a[0], a[1], kind]; try { return f(...a); } finally { plantAt = null; } };
   const tex = (draw, rep) => { const t = canvasTex(draw); t.repeat.set(1 / rep, 1 / rep); return t; };
   const std = o => new THREE.MeshStandardMaterial(Object.assign({ roughness: 1 }, o));
   const grass = std({ map: tex((g, s) => { noise('#6E9150', 0.16, 30000)(g, s); for (let i = 0; i < 60; i++) { g.fillStyle = `rgba(${rnd() > .5 ? '150,175,90' : '60,95,45'},.10)`; g.beginPath(); g.ellipse(rnd() * s, rnd() * s, 20 + rnd() * 50, 14 + rnd() * 30, rnd() * 3, 0, 7); g.fill(); } }, 5) }), grassOut = std({ color: 0x7c8f66 });
@@ -1024,13 +1026,13 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
   const fmats = {}, fmat = (c, rep2) => { const k = c + ':' + rep2; if (!fmats[k]) { const t = leafT.clone(); t.repeat.set(rep2, rep2); t.needsUpdate = true; fmats[k] = std({ color: new THREE.Color(c).multiplyScalar(1.3), map: t }); } return fmats[k]; };
   const stem = (x, y, h, r, tx = x, ty = y, mat = bark, h0 = 0) => { const A = new THREE.Vector3(M(x), M(h0), M(y)), B = new THREE.Vector3(M(tx), M(h), M(ty)), d = B.clone().sub(A), t = new THREE.Mesh(new THREE.CylinderGeometry(M(r * 0.7), M(r), d.length(), 7), mat); t.position.copy(A).addScaledVector(d, 0.5); t.quaternion.setFromUnitVectors(up, d.clone().normalize()); t.castShadow = true; S.add(t); };
   const blob = (x, h, y, r, c, sy = 0.85, geo = ico) => { const leafy = geo === ico && r >= 0.5, m = new THREE.Mesh(leafy ? (r >= 4 ? lumpsBig : lumps)[lumpN++ % 3] : geo, geo === sph ? (mats['s' + c] || (mats['s' + c] = std({ color: c }))) : leafy ? fmat(c, r >= 4 ? 5 : r >= 1.8 ? 3 : 2) : pmat(c)); if (leafy) m.userData.round = 1; m.scale.set(M(r), M(r * sy), M(r)); m.position.set(M(x), M(h), M(y)); if (geo === ico) m.rotation.set(rnd() * 3, rnd() * 3, rnd() * 3); m.castShadow = true; S.add(m); };
-  const tree = (x, y, R, H, cols, o = {}) => { const fl = o.flat || 0.8, th = H - R * fl * 1.25; stem(x, y, th + R * 0.3, o.tr || R * 0.07 + 0.35);
+  const tree_raw = (x, y, R, H, cols, o = {}) => { const fl = o.flat || 0.8, th = H - R * fl * 1.25; stem(x, y, th + R * 0.3, o.tr || R * 0.07 + 0.35);
     for (let i = 0; i < 4; i++) { const a = i * 1.6 + rnd(), d = R * 0.5; stem(x, y, th + R * 0.3, 0.22 + R * 0.025, x + Math.cos(a) * d, y + Math.sin(a) * d, bark, th * 0.6); }
     const n = o.n || 10; for (let i = 0; i < n; i++) { const a = i / (n - 1) * 6.283 + rnd() * 0.6, d = i ? R * (0.4 + rnd() * 0.25) : 0, r = R * (i ? 0.42 + rnd() * 0.18 : 0.62); blob(x + Math.cos(a) * d, th + R * fl * (i ? 0.3 + rnd() * 0.45 : 0.72), y + Math.sin(a) * d, r, cols[i % cols.length], 0.8); } };
-  const conifer = (x, y, r, h, c = 0x2F5237) => { stem(x, y, h * 0.5, 0.9); for (let i = 0; i < 4; i++) { const m = new THREE.Mesh(new THREE.ConeGeometry(M(r * (1 - i * 0.2)), M(h * 0.42), 14), fmat(i % 2 ? c : 0x37603F, 3)); m.position.set(M(x), M(h * (0.3 + i * 0.165)), M(y)); m.rotation.y = rnd() * 3; m.castShadow = true; S.add(m); } };
-  const cypress = (x, y, h) => { const m = new THREE.Mesh(lumpsBig[lumpN++ % 3], fmat(0x2B4A33, 4)); m.scale.set(M(h * 0.075), M(h / 2), M(h * 0.075)); m.position.set(M(x), M(h / 2), M(y)); m.castShadow = true; m.userData.round = 1; S.add(m); };
-  const bush = (x, y, r, c = 0x4E7A45, sy = 0.8) => blob(x, r * sy * 0.8, y, r, c, sy);
-  const ball = (x, y, r, c = 0x3F6A3A, h = r * 0.85) => blob(x, h, y, r, c, 0.92, sph);
+  const conifer_raw = (x, y, r, h, c = 0x2F5237) => { stem(x, y, h * 0.5, 0.9); for (let i = 0; i < 4; i++) { const m = new THREE.Mesh(new THREE.ConeGeometry(M(r * (1 - i * 0.2)), M(h * 0.42), 14), fmat(i % 2 ? c : 0x37603F, 3)); m.position.set(M(x), M(h * (0.3 + i * 0.165)), M(y)); m.rotation.y = rnd() * 3; m.castShadow = true; S.add(m); } };
+  const cypress_raw = (x, y, h) => { const m = new THREE.Mesh(lumpsBig[lumpN++ % 3], fmat(0x2B4A33, 4)); m.scale.set(M(h * 0.075), M(h / 2), M(h * 0.075)); m.position.set(M(x), M(h / 2), M(y)); m.castShadow = true; m.userData.round = 1; S.add(m); };
+  const bush_raw = (x, y, r, c = 0x4E7A45, sy = 0.8) => blob(x, r * sy * 0.8, y, r, c, sy);
+  const ball_raw = (x, y, r, c = 0x3F6A3A, h = r * 0.85) => blob(x, h, y, r, c, 0.92, sph);
   const spiky = (x, y, r, base = 0, c = 0x7E9A86, n = 34, p0 = 0.15, p1 = 1.45, tw = r * 0.07) => { const m = new THREE.Mesh(spikyGeo(r, n, p0, p1, tw), pmat(c)); m.position.set(M(x), M(base), M(y)); m.castShadow = true; S.add(m); };
   // arching fronds / paddle leaves radiating from a crown
   const leafGeo = (n, L, wd, rise, droop, segs = 5) => { const pos = []; for (let i = 0; i < n; i++) { const a = (i / n) * 6.283 + rnd() * 0.5, l = M(L) * (0.8 + rnd() * 0.35), rs = rise * (0.5 + rnd()), ca = Math.cos(a), sa = Math.sin(a); let pv = null;
@@ -1038,8 +1040,9 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
         if (pv) pos.push(...pv.c, ...pv.lf, ...lf, ...pv.c, ...lf, ...c, ...pv.c, ...c, ...rt, ...pv.c, ...rt, ...pv.rt); pv = { c, lf, rt }; } }
     const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.computeVertexNormals(); return g; };
   const crown = (x, h, y, a, c) => { const m = new THREE.Mesh(leafGeo(...a), pmat(c)); m.position.set(M(x), M(h), M(y)); m.castShadow = true; S.add(m); };
-  const palm = (x, y, h, L, n = 18, tr = 0.8) => { const tx = x + 0.8, ty = y - 0.5; stem(x, y, h, tr, tx, ty, barkGrey); crown(tx, h - 0.4, ty, [n, L, L * 0.24, 0.55, 1.0], 0x4F7A3A); crown(tx, h - 0.2, ty, [Math.round(n * 0.6), L * 0.75, L * 0.2, 1.25, 0.7], 0x5E8C45); };
-  const banana = (x, y, h) => { for (const [ox, oy, k] of [[0, 0, 1], [1.6, 0.8, 0.8], [-1.2, 1.4, 0.7]]) { stem(x + ox, y + oy, h * k, 0.4, x + ox * 1.3, y + oy * 1.3, pmat(0x7E8C4E)); crown(x + ox * 1.3, h * k - 0.3, y + oy * 1.3, [8, 6.5 * k, 2.6, 1.5, 1.15, 4], k === 1 ? 0x6FA03C : 0x7DAA45); } };
+  const palm_raw = (x, y, h, L, n = 18, tr = 0.8) => { const tx = x + 0.8, ty = y - 0.5; stem(x, y, h, tr, tx, ty, barkGrey); crown(tx, h - 0.4, ty, [n, L, L * 0.24, 0.55, 1.0], 0x4F7A3A); crown(tx, h - 0.2, ty, [Math.round(n * 0.6), L * 0.75, L * 0.2, 1.25, 0.7], 0x5E8C45); };
+  const banana_raw = (x, y, h) => { for (const [ox, oy, k] of [[0, 0, 1], [1.6, 0.8, 0.8], [-1.2, 1.4, 0.7]]) { stem(x + ox, y + oy, h * k, 0.4, x + ox * 1.3, y + oy * 1.3, pmat(0x7E8C4E)); crown(x + ox * 1.3, h * k - 0.3, y + oy * 1.3, [8, 6.5 * k, 2.6, 1.5, 1.15, 4], k === 1 ? 0x6FA03C : 0x7DAA45); } };
+  const tree = rooted('tree', tree_raw), conifer = rooted('conifer', conifer_raw), cypress = rooted('cypress', cypress_raw), bush = rooted('bush', bush_raw), ball = rooted('ball', ball_raw), palm = rooted('palm', palm_raw), banana = rooted('banana', banana_raw);
   const cordyline = (x, y, h, tx, ty) => { stem(x, y, h, 0.32, tx, ty, barkGrey); spiky(tx, ty, 2.5, h - 0.3, 0x55804C, 80, 0.05, 2.25, 0.13); };
   const yucca = (x, y, th, r = 2.6, flower = false) => { if (th > 0.4) stem(x, y, th, 0.45, x + 0.3, y + 0.2, barkGrey); spiky(x + (th > 0.4 ? 0.3 : 0), y + (th > 0.4 ? 0.2 : 0), r, th, 0x6F9A72, 64, 0.08, 1.95, 0.13);
     if (flower && false) { /* cream flower spikes from the 2021 listing photos: not there today, and they read as white cones */ stem(x + 0.3, y + 0.2, th + r * 0.9, 0.13, x + 0.3, y + 0.2, pmat(0x8C9A6A), th); const m = new THREE.Mesh(new THREE.ConeGeometry(M(0.6), M(3.2), 7), pmat(0xEFE8C8)); m.position.set(M(x + 0.3), M(th + r * 0.9 + 1.5), M(y + 0.2)); m.castShadow = true; S.add(m); } };
@@ -1122,7 +1125,8 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
     const funnel = (() => mergeGeos([trumpet(0.2, 0.16), new THREE.SphereGeometry(0.06, 6, 5).translate(0, 0.05, 0)]))();
     for (let y = -40; y < -13; y += 2.4) { const fx = lotX(y) - 0.9; for (let k = 0; k < 3; k++) blob(fx + 0.15, 3 + k * 1.5 + rnd(), y + (rnd() - .5) * 2, 0.9 + rnd() * 0.5, [0x3F7F3C, 0x4E8F45][k % 2], 0.9); for (let k = 0; k < 3; k++) put(funnel, [0x4E5FD8, 0x5B6FE6][k % 2], fx - 0.75, 3.2 + rnd() * 3.4, y + (rnd() - .5) * 2.2, { ry: 0, rz: Math.PI / 2 - 0.15, s: 1.3 }); }
     // citrus: glossy dark foliage with fruit
-    const citrus = (x, y, r, h, fruit) => { stem(x, y, h, 0.16); for (const [ox, oy, k] of [[0, 0, 1], [0.5, 0.3, 0.7], [-0.45, 0.35, 0.72], [0.1, -0.5, 0.68]]) blob(x + ox * r, h + r * 0.5 * k, y + oy * r, r * k * 0.7, [0x2F6F35, 0x3A7D3C][(k * 10 | 0) % 2], 0.85); fib(16, v => blob(x + v.x * r * 0.95, h + r * 0.45 + v.y * r * 0.55, y + v.z * r * 0.95, 0.16, fruit, 1, sph), 0.6); };
+    const citrus_raw = (x, y, r, h, fruit) => { stem(x, y, h, 0.16); for (const [ox, oy, k] of [[0, 0, 1], [0.5, 0.3, 0.7], [-0.45, 0.35, 0.72], [0.1, -0.5, 0.68]]) blob(x + ox * r, h + r * 0.5 * k, y + oy * r, r * k * 0.7, [0x2F6F35, 0x3A7D3C][(k * 10 | 0) % 2], 0.85); fib(16, v => blob(x + v.x * r * 0.95, h + r * 0.45 + v.y * r * 0.55, y + v.z * r * 0.95, 0.16, fruit, 1, sph), 0.6); };
+    const citrus = rooted('citrus', citrus_raw);
     // pittosporum: small white flower clusters over the clipped mounds by the street
     const whiteDots = (x, y, r) => fib(22, v => blob(x + v.x * r * 0.95, r * 0.64 + v.y * r * 0.62, y + v.z * r * 0.95, 0.09, 0xF6F4EA, 1, sph), 0.05);
     // ---- where each one grows ----
@@ -1183,6 +1187,107 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
       const lm = new THREE.Mesh(new THREE.PlaneGeometry(M(40), M(1.3)), std({ map: lt, transparent: true, alphaTest: 0.35, side: THREE.DoubleSide })); lm.rotation.y = Math.PI / 2; lm.position.set(M(-13.2), M(6.65), M(-24)); S.add(lm);
       for (let z = -30; z < -4; z += 1.7) blob(-9.9, 0.4, z, 0.95, [0x8A3B2E, 0x9A4632, 0x7A3328][(z * 3 | 0) % 3 < 0 ? 0 : Math.abs(z * 3 | 0) % 3], 0.5); } }
 }
+/* ADU option (a structural what-if, not furniture): a custom-built one-bedroom cottage at the back of the lot, behind the patio, with an outside-door pool bath.
+   Everything here is built hidden and shown only when "ADU option" is picked in the Plan menu; the house as it is today (Original) never changes.
+   Footprint: the lot's back triangle less 4 ft from the side and rear lot lines (state ADU setback), ≈545 sq ft gross. The lot drawing is approximate: survey first. */
+const ADU_POLY = [[-8.8, -31.5], [25.9, -31.5], [14, -52], [0, -52], [-8.8, -41.9]];
+const ADU = new THREE.Group(), ADU_ROOF = new THREE.Group(); ADU.visible = false; ADU.add(ADU_ROOF); G.site.add(ADU);
+let aduOn = false; const aduHide = [];
+const ADU_LABELS = [['ADU option · 1 bed + 2 baths · ≈545 sq ft', 3.5, -29.2], ['Great room', 2, -38.2], ['Bedroom', 9, -47.6], ['Bath', -3.2, -46.4], ['Pool bath · outside door', 19.6, -33.6], ['Laundry', 17.4, -39.3]];
+{
+  const keep = seed, FL = 0.35, HW = 9.8, WT = HW + 0.3, APX = [4.5, 15.4, -41.8], P = ADU_POLY;
+  const mt = (c, o = {}) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.8 }, o));
+  const inner = mt(0xF4F2EC, { roughness: 0.9 }), navy = mt(0x22324F, { roughness: 0.55 }), white = mt(0xF6F5F1, { roughness: 0.55 }), steel = mt(0xB9BDC0, { metalness: 0.5, roughness: 0.35 }), dark = mt(0x1B1C1E, { roughness: 0.5 });
+  const fabric = mt(0x8C9388), linen = mt(0xE9E4DA), oakM = mt(0xA98258, { roughness: 0.6 }), rugM = mt(0xCFC3AE, { roughness: 1 }), lampM = mt(0xE9C58A, { emissive: 0xFF9A3C, emissiveIntensity: 0.6 });
+  const floorT = canvasTex(planks('#CFAE84', 0.08)); floorT.repeat.set(0.45, 0.45); const oak = mt(0xffffff, { map: floorT, roughness: 0.65 });
+  const tileT = canvasTex((g, s) => { g.fillStyle = '#D9D6CF'; g.fillRect(0, 0, s, s); g.fillStyle = '#EDEBE6'; for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) g.fillRect(i * s / 4 + 3, j * s / 4 + 3, s / 4 - 6, s / 4 - 6); }, 256); tileT.repeat.set(1.6, 1.6); const tile = mt(0xffffff, { map: tileT, roughness: 0.4 });
+  const tag = m => { m.userData.adu = 1; m.traverse(o => { o.userData.adu = 1; }); return m; };
+  const add = (m, par = ADU) => { tag(m); par.add(m); return m; };
+  // a box w (along x) × d (along y) × h, centred on x, y, bottom at z0 (all feet)
+  const bx = (w, d, h, m, x, y, z0 = FL, ry = 0) => { const b = box(M(w), M(h), M(d), m); b.position.set(M(x), M(z0 + h / 2), M(y)); b.rotation.y = ry; return add(b); };
+  const cyl = (r, h, m, x, y, z0 = FL, r2 = r) => { const c = new THREE.Mesh(new THREE.CylinderGeometry(M(r), M(r2), M(h), 18), m); c.position.set(M(x), M(z0 + h / 2), M(y)); c.castShadow = true; return add(c); };
+  // a straight piece of wall from p to q (feet), thickness t, from h0 to h1; mats [left face, right face] seen walking p → q; holes = [[s, w, sill, top]]
+  const wall = (p, q, t, h0, h1, mats, holes = [], glass = []) => {
+    const dx = q[0] - p[0], dy = q[1] - p[1], L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, nx = -uy, ny = ux, rot = -Math.atan2(uy, ux);
+    const piece = (s0, s1, a, b) => { if (s1 - s0 < 0.02 || b - a < 0.02) return; const mid = (s0 + s1) / 2;
+      [[mats[0], 1], [mats[1], -1]].forEach(([m, sg]) => { const k = box(M(s1 - s0), M(b - a), M(t / 2), m); if (m === sidingMat) worldUV(k.geometry, M(s1 - s0), M(b - a), M(s0), M(a));
+        k.position.set(M(p[0] + ux * mid + nx * sg * t / 4), M((a + b) / 2), M(p[1] + uy * mid + ny * sg * t / 4)); k.rotation.y = rot; add(k); }); };
+    let s = 0; for (const [s0, w, sill, top] of [...holes].sort((a, b) => a[0] - b[0])) { piece(s, s0, h0, h1); piece(s0, s0 + w, h0, sill); piece(s0, s0 + w, top, h1); s = s0 + w; } piece(s, L, h0, h1);
+    // black frames and glass in the window holes (glass flag) and a casing round door holes
+    for (const [s0, w, sill, top, kind, side = 1, hingeEnd = 0] of holes) { const at = (sv, off = 0) => [p[0] + ux * sv + nx * off, p[1] + uy * sv + ny * off], fr = kind === 'door' ? white : frameMat, ft = 0.16;
+      const bar = (bw, bh, sv, oz, d = t + 0.06, off = 0, m = fr) => { const c = at(sv, off), k = box(M(bw), M(bh), M(d), m); k.position.set(M(c[0]), M(oz), M(c[1])); k.rotation.y = rot; return add(k); };
+      const pane = (sv, pw, off = 0) => { const g = bar(pw, top - sill - 0.2, sv, (sill + top) / 2, 0.02, off, glassMat); g.castShadow = false; };
+      bar(w, ft, s0 + w / 2, top - ft / 2); if (kind === 'win' || kind === 'high') bar(w, ft, s0 + w / 2, sill + ft / 2); bar(ft, top - sill, s0 + ft / 2, (sill + top) / 2); bar(ft, top - sill, s0 + w - ft / 2, (sill + top) / 2);
+      if (kind === 'win' || kind === 'high') { pane(s0 + w / 2, w - 0.2); const n = Math.max(1, Math.round(w / 2.6)); for (let i = 1; i < n; i++) bar(0.12, top - sill, s0 + w * i / n, (sill + top) / 2, 0.2); }
+      if (kind === 'slider') { const pw = w / 4; // four glass panels; the second stands open, slid behind the third
+        for (const [c, off] of [[0.5, 0], [2.5, 0], [2.5, 0.14], [3.5, 0]]) { pane(s0 + pw * c, pw - 0.1, off); for (const e of [-1, 1]) bar(0.12, top - sill, s0 + pw * c + e * (pw / 2 - 0.06), (sill + top) / 2, 0.14, off, frameMat); } }
+      if (kind === 'door' || kind === 'extdoor') { // the leaf stands open at 90°, against the side the door swings into (side ±1 along the wall's left normal)
+        const hs = s0 + (hingeEnd ? w - 0.12 : 0.12), lf = box(M(0.14), M(top - sill - 0.1), M(w - 0.2), kind === 'extdoor' ? navy : white), c = at(hs, side * (t / 2 + (w - 0.2) / 2));
+        lf.position.set(M(c[0]), M((sill + top) / 2), M(c[1])); lf.rotation.y = rot; add(lf); } } };
+  // the centre line of the exterior walls lies 0.25 ft inside the footprint
+  const cen = [P.reduce((a, p) => a + p[0], 0) / P.length, P.reduce((a, p) => a + p[1], 0) / P.length];
+  const offsetPoly = (poly, d) => { const n = poly.length, ln = poly.map((p, i) => { const q = poly[(i + 1) % n], L = Math.hypot(q[0] - p[0], q[1] - p[1]), u = [(q[0] - p[0]) / L, (q[1] - p[1]) / L]; let nn = [u[1], -u[0]]; if ((p[0] + q[0]) / 2 * nn[0] - cen[0] * nn[0] + ((p[1] + q[1]) / 2 - cen[1]) * nn[1] < 0) nn = [-nn[0], -nn[1]]; return { p: [p[0] + nn[0] * d, p[1] + nn[1] * d], u }; });
+    return ln.map((l, i) => { const k = ln[(i - 1 + n) % n], den = k.u[0] * l.u[1] - k.u[1] * l.u[0], tt = ((l.p[0] - k.p[0]) * l.u[1] - (l.p[1] - k.p[1]) * l.u[0]) / den; return [k.p[0] + k.u[0] * tt, k.p[1] + k.u[1] * tt]; }); };
+  const CL = offsetPoly(P, -0.25), IN = offsetPoly(P, -0.5);
+  // exterior walls, white lap siding like the back of the house, black window frames; holes measured along each wall from its first corner
+  const EXT = [
+    [[1.6, 3, 3.6, 7, 'win'], [8.55, 12, FL, 8, 'slider'], [25.35, 2.8, FL, 7, 'extdoor', -1, 1]],  // south, onto the patio: kitchen window, 12 ft slider, pool-bath door
+    [[2.4, 2, 5.6, 7.2, 'high'], [13.6, 4, 2.4, 7, 'win']],                                              // east (angled with the lot line): pool-bath clerestory, bedroom egress window
+    [[2, 4.4, 6, 8.4, 'high']],                                                                         // north: clerestory over the bed
+    [[6.6, 3, 5.4, 7.4, 'high']],                                                                       // north-west (angled): bath window
+    [[3.7, 3, 3.6, 6.8, 'win']]];                                                                       // west: window over the sink
+  CL.forEach((p, i) => { const q = CL[(i + 1) % CL.length]; wall(p, q, 0.5, 0, WT, (() => { const dx = q[0] - p[0], dy = q[1] - p[1], nx = -dy, ny = dx, mx = (p[0] + q[0]) / 2, my = (p[1] + q[1]) / 2; return (mx + nx * 0.01 - cen[0]) * nx + (my + ny * 0.01 - cen[1]) * ny > 0 ? [sidingMat, inner] : [inner, sidingMat]; })(), EXT[i]); });
+  // interior walls (feet): great room / bedroom wing at y −42, bath | bedroom at x 3.5, great room | pool bath + laundry at x 14, pool bath | laundry at y −37
+  const xOn = (y, i) => { const a = IN[i], b = IN[(i + 1) % IN.length]; return a[0] + (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]); };
+  wall([xOn(-42, 3), -42], [xOn(-42, 1), -42], 0.4, FL, WT, [inner, inner], [[-2.6 - xOn(-42, 3), 2.5, FL, 6.9, 'door', -1, 1], [10 - xOn(-42, 3), 2.7, FL, 6.9, 'door', -1, 1]]);
+  wall([3.5, -42.2], [3.5, -51.5], 0.4, FL, WT, [inner, inner]);
+  wall([14, -31.75], [14, -41.8], 0.4, FL, WT, [inner, inner], [[6.4, 2.5, FL, 6.9, 'door', -1, 1]]);
+  wall([14.2, -37], [xOn(-37, 1), -37], 0.4, FL, WT, [inner, inner]);
+  // floors: oak in the great room and bedroom, tile in the two baths and laundry
+  const fl = (poly, m, y = FL) => { const f = flat(poly, M(y), m); f.receiveShadow = true; return add(f); };
+  fl(IN, oak); fl([[xOn(-42.2, 3), -42.2], [3.3, -42.2], [3.3, -51.6], [xOn(-51.6, 3), -51.6]], tile, FL + 0.01); fl([[14.2, -31.75], [xOn(-31.75, 1), -31.75], [xOn(-41.8, 1), -41.8], [14.2, -41.8]], tile, FL + 0.01);
+  add(flat([[-8.8, -31.5], [25.9, -31.5], [26.4, -30.4], [-8.8, -30.4]], -0.011, mt(0xE9E6DF, { roughness: 1 }))); // concrete apron joining the patio
+  // pavilion roof in the house's charcoal composition shingle, eaves ≈1.5 ft past the walls, ridge point 15.75 ft above grade (under the 16 ft detached-ADU limit)
+  const A3 = [APX[0], APX[1], APX[2]], k = 1.13, E = P.map(([x, y]) => [A3[0] + (x - A3[0]) * k, A3[1] + (HW - A3[1]) * k, A3[2] + (y - A3[2]) * k]);
+  const tri = [], triU = [], fas = [];
+  E.forEach((e, i) => { const f = E[(i + 1) % E.length]; tri.push(V3(e[0], e[1] + 0.35, e[2]), V3(f[0], f[1] + 0.35, f[2]), V3(A3[0], A3[1] + 0.35, A3[2])); triU.push(V3(e[0], e[1], e[2]), V3(A3[0], A3[1], A3[2]), V3(f[0], f[1], f[2]));
+    fas.push(V3(e[0], e[1], e[2]), V3(f[0], f[1], f[2]), V3(f[0], f[1] + 0.35, f[2]), V3(e[0], e[1], e[2]), V3(f[0], f[1] + 0.35, f[2]), V3(e[0], e[1] + 0.35, e[2])); });
+  tag(triMesh(tri, roofMat, ADU_ROOF)); const un = triMesh(triU, plankCeilMat, ADU_ROOF); un.castShadow = false; tag(un); tag(triMesh(fas, soffitMat, ADU_ROOF));
+  // ---- furniture (fixed with the option; your own pieces still go in a design plan) ----
+  // kitchen along the west wall: navy lowers like the house kitchen, white uppers, quartz top, fridge
+  bx(2, 6.3, 2.9, navy, -7.3, -35.65); bx(2.15, 6.4, 0.12, counterMat, -7.25, -35.65, FL + 2.9); bx(1.3, 2, 0.03, dark, -7.3, -36.7, FL + 3.02); cyl(0.05, 1, steel, -8.05, -36.7, FL + 3.02);
+  bx(1.5, 2, 0.03, dark, -7.3, -33.6, FL + 3.02); bx(1.2, 2.3, 2.2, white, -7.7, -33.6, FL + 5.2); bx(2.3, 2.6, 6.6, steel, -7.15, -40.3);
+  // dining: round table with four chairs by the slider
+  cyl(1.75, 0.12, oakM, -3.2, -36.8, FL + 2.4); cyl(0.22, 2.4, dark, -3.2, -36.8);
+  for (const [dx, dy, r] of [[0, 2.3, 0], [0, -2.3, Math.PI], [2.3, 0, -Math.PI / 2], [-2.3, 0, Math.PI / 2]]) { bx(1.5, 1.5, 0.15, oakM, -3.2 + dx, -36.8 + dy, FL + 1.5, r); const b = bx(1.5, 0.15, 1.5, oakM, -3.2 + dx * 1.3, -36.8 + dy * 1.3, FL + 1.6, r); for (const [lx, ly] of [[-0.6, -0.6], [0.6, -0.6], [-0.6, 0.6], [0.6, 0.6]]) cyl(0.06, 1.5, dark, -3.2 + dx + lx, -36.8 + dy + ly); }
+  // living: sage sofa with its back to the bedroom wing, rug, coffee table, armchair, floor lamp
+  bx(8.5, 6, 0.03, rugM, 6.2, -37.4); bx(7, 2.9, 1.4, fabric, 5.8, -40.1); bx(7, 0.8, 2.9, fabric, 5.8, -41.15); bx(0.7, 2.9, 2.1, fabric, 2.65, -40.1); bx(0.7, 2.9, 2.1, fabric, 8.95, -40.1);
+  bx(3.6, 2, 1.3, oakM, 5.8, -36.6); bx(2.6, 2.6, 1.4, fabric, 11.4, -36.8); bx(0.7, 2.6, 2.8, fabric, 12.4, -36.8); cyl(0.08, 5, dark, 12.6, -39.3); cyl(0.6, 0.8, lampM, 12.6, -39.3, FL + 5, 0.45);
+  // bedroom: queen bed, nightstands with lamps, wardrobe, rug
+  bx(6.5, 5, 0.03, rugM, 10, -47.4); bx(5, 6.7, 1.8, oakM, 10, -48.4); bx(4.9, 6.2, 0.6, linen, 10, -48.1, FL + 1.8); bx(5, 3.4, 0.25, mt(0x6F7F8E), 10, -46.6, FL + 2.38);
+  bx(5.4, 0.35, 3.9, oakM, 10, -51.55); for (const x of [8.8, 11.2]) bx(1.8, 1, 0.45, white, x, -50.8, FL + 2.4);
+  for (const x of [6.7, 13.15]) { bx(1.2, 1.3, 2, white, x, -51, FL); cyl(0.4, 0.9, lampM, x, -51, FL + 2, 0.3); }
+  bx(2, 5.5, 7, white, 4.75, -45.2);
+  // full bath: navy vanity with mirror, toilet, walk-in glass shower
+  bx(3.4, 1.8, 2.8, navy, -4.6, -43.1); bx(3.5, 1.9, 0.1, counterMat, -4.6, -43.1, FL + 2.8); bx(1.6, 1.1, 0.3, white, -4.6, -43.2, FL + 2.9); bx(2.8, 0.08, 2.6, mt(0xC9D3D8, { metalness: 0.6, roughness: 0.1 }), -4.6, -42.3, FL + 3.6);
+  bx(1.5, 2.2, 1.35, white, 2.55, -44.6); bx(0.6, 1.6, 1.4, white, 3.0, -44.6, FL + 1.35);
+  bx(3.2, 4, 0.12, mt(0xEDEBE6), 1.7, -48.3, FL); { const g = box(M(0.02), M(6.6), M(4), glassMat); g.position.set(M(0.1), M(FL + 3.4), M(-48.3)); g.castShadow = false; add(g); const g2 = box(M(2.2), M(6.6), M(0.02), glassMat); g2.position.set(M(1.2), M(FL + 3.4), M(-46.3)); g2.castShadow = false; add(g2); }
+  // pool bath (door from the patio only): toilet, vanity, shower to rinse off after the pool
+  bx(2.2, 1.5, 1.35, white, 15.35, -35.4); bx(0.6, 1.6, 1.4, white, 14.5, -35.4, FL + 1.35); bx(2.4, 1.6, 2.8, navy, 18.3, -36.0); bx(2.5, 1.7, 0.1, counterMat, 18.3, -36.0, FL + 2.8); bx(1.4, 1, 0.3, white, 18.3, -36.0, FL + 2.9); bx(2, 0.08, 2.4, mt(0xC9D3D8, { metalness: 0.6, roughness: 0.1 }), 18.3, -36.75, FL + 3.6);
+  bx(2.8, 2.8, 0.12, mt(0xEDEBE6), 22.0, -33.3, FL); { const g = box(M(0.02), M(6.6), M(2.8), glassMat); g.position.set(M(20.6), M(FL + 3.4), M(-33.3)); g.castShadow = false; add(g); }
+  // laundry: stacked washer-dryer, heat-pump water heater
+  bx(2.3, 2.3, 5.6, white, 18.2, -40.6); cyl(0.9, 5, white, 19.6, -38.4);
+  // outside: sconces either side of the slider and the pool-bath door, an outdoor rinse shower at the corner of the patio
+  for (const x of [-0.6, 12.6, 16.2]) { bx(0.4, 0.35, 0.7, dark, x, -31.2, 6.6); bx(0.25, 0.25, 0.4, lampM, x, -31.05, 6.7); }
+  cyl(0.08, 7.4, steel, 22, -30.9, 0); cyl(0.5, 0.08, steel, 22, -30.6, 7.2); bx(2.6, 2.6, 0.12, oakM, 22, -29.6, 0);
+  // what makes way: every plant whose trunk stands in the footprint or within reach of the walls and roof, the 7 × 5 ft shed, the log pile
+  const inside = (x, y, d) => { if (inPoly(x, y, P)) return true; for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length], vx = b[0] - a[0], vy = b[1] - a[1], t = Math.max(0, Math.min(1, ((x - a[0]) * vx + (y - a[1]) * vy) / (vx * vx + vy * vy))); if (Math.hypot(a[0] + vx * t - x, a[1] + vy * t - y) < d) return true; } return false; };
+  const REACH = { tree: 4, conifer: 8.5, cypress: 3, palm: 3, banana: 2, citrus: 3, bush: 1, ball: 1 };
+  G.site.traverse(o => { if (!o.isMesh || o.userData.adu) return; const at = o.userData.at;
+    if (at ? inside(at[0], at[1], REACH[at[2]] ?? 2) : (o.position.y < M(12) && inside(o.position.x / FT, o.position.z / FT, 0.5))) aduHide.push(o); });
+  seed = keep;
+}
+function applyStruct(s) { aduOn = s === 'adu'; ADU.visible = aduOn; for (const o of aduHide) { o.visible = !aduOn; o.userData.aduHid = aduOn; } markColliders(); applyVis(); }
 const SITE_LABELS = [
   ['Pool · heated, in-ground', 41.5, 31], ['Terrace', 14, -22], ['Shed 7′ × 5′', -4.4, -47], ['Lawn', 48, 108],
   ['Driveway', -7, 106], ['Arlington Rd', 36, 146], ['Pool deck', 45, 54],
@@ -1391,10 +1496,11 @@ const PLANS_KEY = 'arlington736.plans.v1'; let plans = { cur: 'gt', list: [] }, 
 try { const p0 = JSON.parse(localStorage.getItem(PLANS_KEY) || 'null'); if (p0 && Array.isArray(p0.list)) plans = p0; } catch (e) {}
 const designSig = () => JSON.stringify([state.items, state.rooms]), curPlan = () => plans.list.find(p => p.id === plans.cur);
 function storePlans() { localStorage.setItem(PLANS_KEY, JSON.stringify(plans)); }
-function renderPlans() { const sel = $('planSel'); sel.innerHTML = ''; const o = new Option('Original (as it is today)', 'gt'); sel.add(o); for (const p of plans.list) sel.add(new Option(p.name, p.id)); sel.value = curPlan() ? plans.cur : 'gt'; $('planDel').hidden = $('planRen').hidden = !curPlan(); }
+const OPTIONS = [{ id: 'adu', name: 'ADU option · custom 1-bed cottage behind the patio' }], optOf = id => OPTIONS.find(o => o.id === id);
+function renderPlans() { const sel = $('planSel'); sel.innerHTML = ''; const o = new Option('Original (as it is today)', 'gt'); sel.add(o); for (const op of OPTIONS) sel.add(new Option(op.name, op.id)); for (const p of plans.list) sel.add(new Option(p.name + (p.opt ? ' · on ' + optOf(p.opt).name.split(' ·')[0] : ''), p.id)); sel.value = curPlan() ? plans.cur : optOf(plans.cur) ? plans.cur : 'gt'; $('planDel').hidden = $('planRen').hidden = !curPlan(); }
 function originalData() { let o = null; try { o = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {} return o && Array.isArray(o.items) ? o : { items: starterItems(), rooms: {}, m: 16 }; }
-function openPlan(id, msg) { clearTimeout(saveT); const p = plans.list.find(q => q.id === id); plans.cur = p ? id : 'gt'; select(null); loadState(JSON.parse(JSON.stringify(p ? p.data : originalData())), msg); if (!p) gtBase = designSig(); try { storePlans(); } catch (e) {} renderPlans(); setStatus(p ? 'Design plan · ' + p.name : 'Original · changes go into a new design'); }
-function newPlan(name, quiet) { const n = plans.list.length + 1, p = { id: 'p' + Date.now().toString(36), name: name || 'Design ' + n, data: JSON.parse(JSON.stringify(state)) }; plans.list.push(p); plans.cur = p.id; try { storePlans(); } catch (e) {} renderPlans(); if (!quiet) toast('New design plan · ' + p.name); return p; }
+function openPlan(id, msg) { clearTimeout(saveT); const op = optOf(id); if (op) { plans.cur = id; select(null); loadState(JSON.parse(JSON.stringify(originalData())), msg); gtBase = designSig(); try { storePlans(); } catch (e) {} renderPlans(); applyStruct(id); setStatus('Option · ' + op.name.split(' · ')[1] + ' · the original is unchanged'); return; } const p = plans.list.find(q => q.id === id); plans.cur = p ? id : 'gt'; select(null); loadState(JSON.parse(JSON.stringify(p ? p.data : originalData())), msg); applyStruct(p && p.opt || ''); if (!p) gtBase = designSig(); try { storePlans(); } catch (e) {} renderPlans(); setStatus(p ? 'Design plan · ' + p.name : 'Original · changes go into a new design'); }
+function newPlan(name, quiet) { const n = plans.list.length + 1, p = { id: 'p' + Date.now().toString(36), name: name || 'Design ' + n, data: JSON.parse(JSON.stringify(state)), opt: aduOn ? 'adu' : undefined }; plans.list.push(p); plans.cur = p.id; try { storePlans(); } catch (e) {} renderPlans(); if (!quiet) toast('New design plan · ' + p.name); return p; }
 function save(now) { clearTimeout(saveT); const run = () => { try { const p = curPlan();
       if (p) { p.data = JSON.parse(JSON.stringify(state)); storePlans(); setStatus('Design plan · ' + p.name + ' · saved'); return; }
       if (gtBase && designSig() !== gtBase) { const np = newPlan(null, true); toast('The original is kept as it is · your change is in "' + np.name + '"'); setStatus('Design plan · ' + np.name + ' · saved'); return; }
@@ -1449,7 +1555,7 @@ function setLevel(l, quiet) {
 function applyVis() {
   const showL = lv => mode === 'walk' || level === 'all' || level === String(lv); // walking, you are inside the whole house: both floors and the roof stay
   const roofOn = ui.roof && (level === 'all' || mode === 'walk') && mode !== 'plan';
-  G.roof.visible = roofOn;
+  G.roof.visible = roofOn; ADU_ROOF.visible = roofOn;
   for (let l = 0; l < 2; l++) {
     G.levels[l].visible = showL(l) || (l === 0 && mode !== 'plan');
     G.ceilings[l].visible = (ui.ceil || (l === 0 && level === '1')) && mode !== 'plan';
@@ -1539,13 +1645,15 @@ document.querySelectorAll('#walkpad button').forEach(b => {
 const labelsEl = $('labels'), labelEls = [];
 for (const r of ROOMS) { const d = document.createElement('div'); d.className = 'lbl' + (r.dims ? '' : ' est'); d.innerHTML = `<b></b><span></span>`; d.querySelector('b').textContent = r.name; d.querySelector('span').textContent = dimsText(r); labelsEl.append(d); const [cx, cy] = centroid(r); labelEls.push({ el: d, room: r, minor: area(r.poly) < 90, pos: new THREE.Vector3(M(cx), M(LEVELS[r.level].base) + 0.15, M(cy)) }); }
 for (const [t, x, y] of SITE_LABELS) { const d = document.createElement('div'); d.className = 'lbl site'; d.innerHTML = '<b></b>'; d.firstChild.textContent = t; labelsEl.append(d); labelEls.push({ el: d, site: true, pos: new THREE.Vector3(M(x), 0.3, M(y)) }); }
+labelEls.forEach(L => { if (L.site && L.el.textContent.startsWith('Shed')) L.noAdu = 1; });
+ADU_LABELS.forEach(([t, x, y], k) => { const d = document.createElement('div'); d.className = 'lbl site'; d.innerHTML = '<b></b>'; d.firstChild.textContent = t; labelsEl.append(d); labelEls.push({ el: d, site: true, adu: k ? 1 : 2, pos: new THREE.Vector3(M(x), M(k ? 1.2 : 11), M(y)) }); });
 const inUpper = (x, y) => x > 0 && x < 37.6 && y > 53.7 && y < 81.9;
 const tmpV = new THREE.Vector3();
 function updateLabels() {
   const w = view.clientWidth, h = view.clientHeight, on = ui.labels && mode !== 'walk';
   for (const L of labelEls) {
     let show = on;
-    if (show && L.site) show = ui.yard && (level === 'all' || mode === 'plan');
+    if (show && L.site) show = ui.yard && (level === 'all' || mode === 'plan') && (L.adu ? aduOn && (L.adu === 2 || mode === 'plan' || !ADU_ROOF.visible) : !(L.noAdu && aduOn));
     else if (show) { const r = L.room; show = G.levels[r.level].visible && (level === 'all' || level === String(r.level)) && !G.roof.visible && !(level === 'all' && r.level === 0 && inUpper(...centroid(r))) && (!L.minor || (mode === 'plan' && ortho.zoom >= 1.7) || selRoom === r); }
     if (show) { tmpV.copy(L.pos).project(camera); show = tmpV.z < 1 && Math.abs(tmpV.x) < 1.05 && Math.abs(tmpV.y) < 1.05; }
     if (!show) { if (!L.el.hidden) L.el.hidden = true; continue; }
@@ -1739,10 +1847,10 @@ function markColliders() { colliders = null; }
 function buildColliders() { scene.updateMatrixWorld(true); colliders = [];
   const roots = [G.walls[0], G.walls[1], G.furn[0], G.furn[1], G.site];
   for (let l = 0; l < 2; l++) for (const c of G.levels[l].children) if (![G.walls[l], G.floors[l], G.ceilings[l], G.furn[l]].includes(c)) roots.push(c);
-  for (const r of roots) r.traverse(o => { if (!o.isMesh || !o.geometry) return; const e = o.matrixWorld.elements; if (e[5] / Math.hypot(e[4], e[5], e[6]) < 0.985) return; // flat or tilted parts (lawns, fronds) never block
+  for (const r of roots) r.traverse(o => { if (!o.isMesh || !o.geometry) return; if (o.userData.aduHid || o.userData.adu && !aduOn) return; const e = o.matrixWorld.elements; if (e[5] / Math.hypot(e[4], e[5], e[6]) < 0.985) return; // flat or tilted parts (lawns, fronds) never block
     if (!o.geometry.boundingBox) o.geometry.computeBoundingBox(); const b = new THREE.Box3().setFromObject(o); if (!isFinite(b.min.x) || b.max.x - b.min.x > 60 || b.max.z - b.min.z > 60) return;
     colliders.push({ o, b, door: o.userData.door || null, inv: o.matrixWorld.clone().invert() }); });
-  G.site.traverse(o => { if (!o.isMesh || !o.userData.round) return; const b = new THREE.Box3().setFromObject(o); if (b.min.y > 1.9 || b.max.y < 0.5) return; colliders.push({ o, b, round: Math.min(b.max.x - b.min.x, b.max.z - b.min.z) * 0.36, cx: (b.min.x + b.max.x) / 2, cz: (b.min.z + b.max.z) / 2 }); }); }
+  G.site.traverse(o => { if (!o.isMesh || !o.userData.round) return; if (o.userData.aduHid || o.userData.adu && !aduOn) return; const b = new THREE.Box3().setFromObject(o); if (b.min.y > 1.9 || b.max.y < 0.5) return; colliders.push({ o, b, round: Math.min(b.max.x - b.min.x, b.max.z - b.min.z) * 0.36, cx: (b.min.x + b.max.x) / 2, cz: (b.min.z + b.max.z) / 2 }); }); }
 function collide() { if (!colliders) buildColliders(); const pos = persp.position, head = pos.y + 0.15, feet = pos.y - 1.6 + STEP, R = BODY_R;
   for (let it = 0; it < 3; it++) { let moved = false;
     for (const c of colliders) { if (c.door && c.door.open > 0 && c.door.open < 1 || c.door && c.door.open !== c.lastOpen) { c.o.updateMatrixWorld(true); c.b.setFromObject(c.o); c.inv.copy(c.o.matrixWorld).invert(); c.lastOpen = c.door.open; }
@@ -1790,7 +1898,7 @@ function tick() {
 /* ================= BOOT ================= */
 let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { saved = null; }
 if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 16 }); }
-gtBase = designSig(); if (curPlan()) loadState(JSON.parse(JSON.stringify(curPlan().data))); else plans.cur = 'gt';
+gtBase = designSig(); if (location.hash === '#adu') plans.cur = 'adu'; if (curPlan()) { loadState(JSON.parse(JSON.stringify(curPlan().data))); applyStruct(curPlan().opt || ''); } else if (optOf(plans.cur)) applyStruct(plans.cur); else plans.cur = 'gt';
 renderPlans(); $('planSel').onchange = e => openPlan(e.target.value, 'Plan opened');
 $('planNew').onclick = () => { const nm = prompt('Name for the new design plan', 'Design ' + (plans.list.length + 1)); if (nm === null) return; newPlan(nm.trim() || null); setStatus('Design plan · ' + curPlan().name); };
 $('planRen').onclick = () => { const p = curPlan(); if (!p) return; const nm = prompt('Rename this design plan', p.name); if (nm && nm.trim()) { p.name = nm.trim(); storePlans(); renderPlans(); } };
@@ -1800,7 +1908,7 @@ $('viewhint').textContent = 'Drag to orbit · right-drag to pan · scroll to zoo
 applyVis(); renderInspector(); renderRooms();
 setMode('walk'); // open at the front door
 function supportAudit() { scene.updateMatrixWorld(true); const boxes = [], skip = new Set([G.outlines, selBox]);
-  for (const root of [G.levels[0], G.levels[1], G.roof, G.site]) root.traverse(o => { if (!o.isMesh || !o.geometry) return; const b = new THREE.Box3().setFromObject(o); if (isFinite(b.min.y)) boxes.push({ b, o, where: root === G.site ? 'site' : root === G.roof ? 'roof' : root === G.levels[0] ? 'main' : 'upper' }); });
+  for (const root of [G.levels[0], G.levels[1], G.roof, G.site]) root.traverse(o => { if (!o.isMesh || !o.geometry) return; if (o.userData.aduHid || o.userData.adu && !aduOn) return; const b = new THREE.Box3().setFromObject(o); if (isFinite(b.min.y)) boxes.push({ b, o, where: root === G.site ? 'site' : root === G.roof ? 'roof' : root === G.levels[0] ? 'main' : 'upper' }); });
   const tol = 0.05, bad = [];
   for (const A of boxes) { const a = A.b; if (a.min.y <= tol) continue; let ok = false;
     for (const B of boxes) { if (B === A) continue; const b = B.b; if (b.max.x < a.min.x - tol || b.min.x > a.max.x + tol || b.max.z < a.min.z - tol || b.min.z > a.max.z + tol) continue; if ((b.min.y <= a.min.y + tol && b.max.y >= a.min.y - tol) || (b.min.y <= a.max.y + tol && b.max.y >= a.max.y - tol)) { ok = true; break; } } // resting on, leaning against, or hanging from something
@@ -1824,12 +1932,13 @@ function physicsAudit() { scene.updateMatrixWorld(true); const out = { doors: []
       for (const f of items[d.lv]) if (f.b.max.y - f.b.min.y > 0.05 && pen(lb, f.b, 0.02)) hits.add('item ' + nm(f)); }
     d.p.rotation.y = keep; d.p.updateMatrixWorld(true); if (hits.size) out.doors.push({ level: d.lv, at_ft: [ft(d.c.x), ft(d.c.z)], hits: [...hits] }); }
   const inHouse = (x, y) => ROOMS.some(r => r.level === 0 && !r.outdoor && inPoly(x, y, r.poly));
-  G.site.traverse(o => { if (!o.isMesh) return; const b = B(o); if (!isFinite(b.min.x) || b.min.y > 2.8) return; const c = [(b.min.x + b.max.x) / 2 / FT, (b.min.z + b.max.z) / 2 / FT];
+  G.site.traverse(o => { if (!o.isMesh) return; if (o.userData.aduHid || o.userData.adu && !aduOn) return; const b = B(o); if (!isFinite(b.min.x) || b.min.y > 2.8) return; const c = [(b.min.x + b.max.x) / 2 / FT, (b.min.z + b.max.z) / 2 / FT];
     if (inHouse(...c)) out.plants.push({ at_ft: c.map(v => +v.toFixed(1)), size_m: [b.max.x - b.min.x, b.max.y - b.min.y, b.max.z - b.min.z].map(v => +v.toFixed(2)), bottom: +b.min.y.toFixed(2) });
     else for (const w of walls[0]) if (pen(b, w.b, 0.05)) { out.plants.push({ through_wall_at_ft: c.map(v => +v.toFixed(1)), size_m: [b.max.x - b.min.x, b.max.y - b.min.y, b.max.z - b.min.z].map(v => +v.toFixed(2)) }); break; } });
   return out; }
 window.__planner = { save, openPlan, plans: () => plans, audit: supportAudit, physics: physicsAudit, walkTo: (x, z, yawDeg, sec = 3, h = 5.3) => new Promise(res => { setMode('walk'); document.getElementById('tSolid').checked = true; walk.yaw = yawDeg * Math.PI / 180; walk.pitch = 0; walk.keys.w = true; setTimeout(() => { walk.keys.w = false; res([+(persp.position.x / FT).toFixed(2), +(persp.position.z / FT).toFixed(2), +(persp.position.y / FT).toFixed(2)]); }, sec * 1000); }), eye: (px, pz, yawDeg, pitch = 0, h = 5.3) => { setMode('walk'); persp.position.set(M(px), M(h), M(pz)); walk.yaw = yawDeg * Math.PI / 180; walk.pitch = pitch; }, state: () => state, setMode, setLevel, select, startPlacing, scene, meshes, planView: (x, y, zoom = 1) => { planCtl.target.set(M(x), 0, M(y)); ortho.position.set(M(x), 80, M(y)); ortho.zoom = zoom; ortho.updateProjectionMatrix(); planCtl.update(); }, view: (px, py, pz, tx, ty, tz) => { persp.position.set(M(px), M(py), M(pz)); orbitCtl.target.set(M(tx), M(ty), M(tz)); orbitCtl.update(); } };
 if (location.hash === '#audit') setTimeout(supportAudit, 800);
+if (location.hash === '#adu') { setMode('orbit'); window.__planner.view(48, 62, 12, 6, 4, -40); }
 tick();
 </script>
 </body>
