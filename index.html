@@ -360,6 +360,7 @@ const CAT = {
   shelf: { label: 'Bookshelf', w: 1.0, d: 0.35, h: 1.9, color: '#6B4F3A' },
   tv: { label: 'TV + console', w: 1.8, d: 0.45, h: 1.3, color: '#2A2A2A' },
   rug: { label: 'Rug', w: 2.4, d: 1.7, h: 0.012, color: '#C9B79C' },
+  speaker: { label: 'Speaker on stand', w: 0.22, d: 0.26, h: 1.05, color: '#8A6544' },
   floor_lamp: { label: 'Floor lamp', w: 0.4, d: 0.4, h: 1.6, color: '#E8DCC2' },
   plant: { label: 'Plant', w: 0.55, d: 0.55, h: 1.3, color: '#4F7A4A' },
   art: { label: 'Art frame', w: 1.0, d: 0.04, h: 0.7, color: '#C46A4A', elev: 1.15 },
@@ -373,25 +374,34 @@ const CAT = {
   grand_piano: { label: 'Grand piano', w: 1.5, d: 1.9, h: 1.0, color: '#17171A' },
   bench: { label: 'Bench', w: 1.4, d: 0.4, h: 0.45, color: '#A48463' },
 };
-const NAVY = '#1F2A44', OUT = '#8E9499', BLK = '#1E1F21';
-// Starter layout follows the owner's photos where they show a room (living room, office, kitchen stools, terrace); the rest is a plausible default.
+const NAVY = '#1B2440', OUT = '#8E9499', BLK = '#1A1B1D', WAL = '#6B4630';
+// Every piece below is one the owner's own photos show, in the place, direction and colour seen there. Rooms she has not photographed are left empty.
 const KITCHEN_SET = [['bar_stool', 'kitchen', 15.4, 60, 0, { color: '#6B4A33' }], ['bar_stool', 'kitchen', 18, 60, 0, { color: '#6B4A33' }], ['bar_stool', 'kitchen', 20.6, 60, 0, { color: '#6B4A33' }]];
-const OFFICE_SET = [['office_chair', 'sitroom', 50, 64, 180], ['office_chair', 'sitroom', 57, 62.5, 270], ['desk', 'sitroom', 40.2, 62.2, 90, { w: 1.1, d: 0.4, h: 0.8, color: '#8A6544', name: 'Console table' }],
-  ['art', 'sitroom', 39.35, 62.2, 90, { w: 1.5, d: 0.04, h: 0.6, color: '#C9A27E', name: 'Landscape canvases' }], ['shelf', 'sitroom', 40, 58.9, 90, { w: 0.6, d: 0.35, h: 1.7, color: BLK, name: 'Ladder shelf' }], ['shelf', 'sitroom', 60.2, 61.5, 270, { color: '#2B2B2B' }], ['rug', 'sitroom', 54, 62, 0, { w: 2, d: 1.4, color: '#B9B2A6' }]];
+const OFFICE_SET = [
+  ['standing_desk', 'sitroom', 48.2, 61.6, 90, { color: WAL, w: 1.6, d: 0.75 }], ['office_chair', 'sitroom', 45.4, 61.4, 270], ['office_chair', 'sitroom', 48, 58.9, 0, { name: 'Office chair (headrest)', h: 1.25 }], ['office_chair', 'sitroom', 57.2, 64.6, 200],
+  ['desk', 'sitroom', 40.15, 61.9, 90, { w: 1.1, d: 0.36, h: 0.8, color: '#8A5E3C', name: 'Console table' }], ['plant', 'sitroom', 40.2, 61.9, 0, { w: 0.6, d: 0.6, h: 0.75, elev: 0.8, color: '#2F6B3A', name: 'ZZ plant' }],
+  ['art', 'sitroom', 39.26, 60.6, 270, { w: 0.82, d: 0.03, h: 0.66, elev: 1.6, color: '#D9C7A6', pic: 'landscape', name: 'Landscape canvas' }], ['art', 'sitroom', 39.26, 63.4, 270, { w: 0.82, d: 0.03, h: 0.66, elev: 1.6, color: '#D9C7A6', pic: 'landscape', name: 'Landscape canvas 2' }],
+  ['speaker', 'sitroom', 40.1, 65.1, 270], ['speaker', 'sitroom', 40.6, 59.6, 270], ['shelf', 'sitroom', 40, 58.5, 315, { w: 0.5, d: 0.42, h: 1.7, color: BLK, name: 'Corner ladder shelf' }],
+  ['nightstand', 'sitroom', 52.4, 58.4, 0, { w: 0.32, d: 0.26, h: 0.42, color: BLK, name: 'Shredder' }], ['rug', 'sitroom', 55.6, 61.8, 0, { w: 2.4, d: 1.6, pic: 'persian', color: '#8D9AA6', name: 'Blue-grey rug' }],
+  ['shelf', 'sitroom', 60, 60.4, 270, { w: 1.2, d: 0.45, h: 1.6, color: '#E9E7E2', name: 'Storage shelves' }], ['desk', 'sitroom', 59.6, 64.4, 270, { w: 1.2, d: 0.6, color: BLK, name: 'Side desk' }]];
 const TERRACE_OLD = [[15, -35], [9.5, -31], [20.5, -31], [15, -31], [24, -19], [21.6, -21.2], [24, -21.2], [26.4, -21.2], [21.6, -16.8], [24, -16.8], [26.4, -16.8], [24, -19]];
-const TERRACE_SET = [['sofa', 'rec', 6, -36.4, 0, { color: OUT, name: 'Outdoor sofa' }], ['armchair', 'rec', 1.9, -32.4, 90, { color: OUT, name: 'Outdoor chair' }], ['armchair', 'rec', 10.4, -32.4, 270, { color: OUT, name: 'Outdoor chair 2' }], ['coffee_table', 'rec', 6, -32.6, 0, { color: '#5E6165', name: 'Outdoor table' }],
-  ['dining_table', 'rec', 18.6, -29, 0, { color: BLK, name: 'Outdoor dining table' }], ['chair', 'rec', 16.2, -31.2, 0, { color: BLK }], ['chair', 'rec', 18.6, -31.2, 0, { color: BLK }], ['chair', 'rec', 21, -31.2, 0, { color: BLK }], ['chair', 'rec', 16.2, -26.8, 180, { color: BLK }], ['chair', 'rec', 18.6, -26.8, 180, { color: BLK }], ['chair', 'rec', 21, -26.8, 180, { color: BLK }], ['umbrella', 'rec', 18.6, -29, 180]];
+const TERRACE_SET = [['sofa', 'rec', -2.6, -35.6, 0, { color: OUT, name: 'Outdoor sofa' }], ['armchair', 'rec', -7.4, -31.8, 90, { color: OUT, name: 'Outdoor chair' }], ['armchair', 'rec', 2.4, -31.6, 270, { color: OUT, name: 'Outdoor chair 2' }], ['coffee_table', 'rec', -2.6, -31.8, 0, { color: '#8A8F94', name: 'Outdoor table' }],
+  ['dining_table', 'rec', 10, -30, 0, { color: BLK, name: 'Outdoor dining table' }], ['chair', 'rec', 7.6, -32.2, 0, { color: BLK }], ['chair', 'rec', 10, -32.2, 0, { color: BLK }], ['chair', 'rec', 12.4, -32.2, 0, { color: BLK }], ['chair', 'rec', 7.6, -27.8, 180, { color: BLK }], ['chair', 'rec', 10, -27.8, 180, { color: BLK }], ['chair', 'rec', 12.4, -27.8, 180, { color: BLK }], ['umbrella', 'rec', 10, -30, 180]];
 const STARTER = [
-  ['sofa', 'living', 49, 81.9, 180, { color: NAVY, w: 2.3 }], ['sofa', 'living', 48, 72.2, 0, { color: NAVY, w: 2.9, d: 1.05, name: 'Sectional' }], ['bench', 'living', 44.2, 75.6, 0, { color: NAVY, w: 1.05, d: 1.5, h: 0.44, name: 'Sectional chaise' }],
-  ['coffee_table', 'living', 50.5, 77, 0, { color: NAVY, w: 1.1, d: 0.8, name: 'Ottoman' }], ['armchair', 'living', 59.3, 80.2, 270, { color: BLK, w: 0.75, d: 0.75 }], ['plant', 'living', 61, 82.3, 0],
-  ['grand_piano', 'living', 57.3, 69.3, 90], ['bench', 'living', 57.3, 73.2, 0, { color: BLK, w: 1.0, d: 0.38, h: 0.5, name: 'Piano bench' }], ['art', 'living', 62.9, 74.8, 270, { color: '#D98A6A', h: 0.5 }],
-  ['dining_table', 'dining', 33, 64, 90], ['chair', 'dining', 30.6, 61.5, 270], ['chair', 'dining', 30.6, 64, 270], ['chair', 'dining', 30.6, 66.5, 270],
-  ['chair', 'dining', 35.4, 61.5, 90], ['chair', 'dining', 35.4, 64, 90], ['chair', 'dining', 35.4, 66.5, 90],
-  ['ping_pong', 'rec', 13.5, 9, 0], ['pilates', 'rec', 20.5, 18.6, 0], ['rug', 'rec', 20.5, 18.6, 0, { w: 3, d: 1.4, color: '#5B6770', name: 'Exercise mat' }], ['sofa', 'family', 19.5, 45, 180], ['tv', 'family', 19.5, 35, 0], ['rug', 'family', 19.5, 40, 0],
-  ['bed_king', 'primary', 9.7, 70, 90], ['nightstand', 'primary', 12.6, 65.6, 90], ['nightstand', 'primary', 12.6, 74.4, 90],
-  ['bed_queen', 'bed2', 29.8, 65, 270], ['desk', 'bed2', 36.3, 66, 90], ['desk', 'bed3', 6.4, 78.2, 0], ['chair', 'bed3', 6.4, 80.6, 180], ['shelf', 'bed3', 1, 86, 90],
-  ['standing_desk', 'sitroom', 50, 61.5, 0, { color: '#7A5234' }], ['bed_queen', 'bed4', 6, 43, 0], ['bed_queen', 'sitarea', 5.5, 27, 0],
-  ...KITCHEN_SET, ...OFFICE_SET, ...TERRACE_SET,
+  // living room: piano in the corner by the office, bench on its keyboard side; black tub chair by the fireplace; navy sofa under the street windows; navy sectional with its ottoman; navy coffee ottoman
+  ['grand_piano', 'living', 58.6, 69.6, 90], ['bench', 'living', 54.9, 69.6, 90, { color: BLK, w: 1.0, d: 0.38, h: 0.5, name: 'Piano bench' }], ['armchair', 'living', 59.2, 75.6, 90, { color: BLK, w: 0.72, d: 0.7, h: 0.72, name: 'Black tub chair' }],
+  ['sofa', 'living', 52.4, 81.9, 180, { color: NAVY, w: 2.2, name: 'Navy sofa' }], ['coffee_table', 'living', 55.4, 77.6, 0, { color: NAVY, w: 1.0, d: 0.9, h: 0.44, name: 'Navy ottoman table' }],
+  ['sofa', 'living', 43.6, 74.2, 270, { color: NAVY, w: 2.8, d: 1.05, name: 'Navy sectional' }], ['bench', 'living', 48.2, 71.2, 0, { color: NAVY, w: 1.1, d: 1.1, h: 0.45, name: 'Sectional ottoman' }],
+  ['bar_stool', 'living', 47.6, 82, 0, { color: '#8A5E3C', h: 0.6, name: 'Wood stool' }], ['nightstand', 'living', 45.4, 82.4, 180, { color: BLK, w: 0.6, d: 0.4, h: 0.7, name: 'Side table' }],
+  ['art', 'living', 61.5, 73.3, 90, { w: 0.72, d: 0.03, h: 0.5, elev: 1.85, color: '#3B2A6B', pic: 'sunset1', name: 'Sunset painting (palms)' }], ['art', 'living', 61.5, 76.2, 90, { w: 0.6, d: 0.03, h: 0.5, elev: 1.85, color: '#6A3C9A', pic: 'sunset2', name: 'Sunset painting (blossom)' }],
+  ['art', 'living', 62.92, 79.6, 90, { w: 0.3, d: 0.03, h: 0.42, elev: 1.75, color: '#2B2B2B', pic: 'print', name: 'Framed print' }],
+  ...[41.5, 44, 46.5, 49, 51.5, 54, 56.5, 59].map((x, i) => ['plant', 'living', x, 83.2, 0, { w: 0.28, d: 0.28, h: 0.4 + (i % 3) * 0.12, elev: 1.17, color: ['#3F7A45', '#4E8A46', '#2F6B3A'][i % 3], name: 'Sill plant' }]),
+  // family room: the play mat; kitchen side: high chair and air purifier by the island; small wood table against the dining-area wall
+  ['rug', 'family', 16.5, 49.5, 0, { w: 2.4, d: 1.8, pic: 'playmat', color: '#57B56A', name: 'Foam play mat' }], ['chair', 'kitchen', 24.6, 60.4, 300, { color: '#E9E7E2', w: 0.55, d: 0.6, h: 0.95, name: 'High chair' }],
+  ['nightstand', 'kitchen', 23.4, 62.9, 270, { color: BLK, w: 0.5, d: 0.26, h: 0.62, name: 'Air purifier' }], ['desk', 'dining', 37.6, 62.5, 270, { w: 0.7, d: 0.4, h: 0.6, color: '#B58E62', name: 'Small wood table' }],
+  // rec room, as she asked: ping-pong and Pilates
+  ['ping_pong', 'rec', 13.5, 9, 0], ['pilates', 'rec', 20.5, 18.6, 0], ['rug', 'rec', 20.5, 18.6, 0, { w: 3, d: 1.4, color: '#5B6770', name: 'Exercise mat' }],
+  ...KITCHEN_SET, ...OFFICE_SET, ...TERRACE_SET, ['bench', 'rec', 28, -15.5, 300, { color: '#6B4630', w: 1.5, d: 0.6, h: 0.5, name: 'Wooden swing bench' }],
 ];
 const PAINTS = [['Warm white', '#F2EEE6'], ['Linen', '#E9E0D0'], ['Greige', '#D6CFC2'], ['Sage', '#B9C4B0'], ['Mist blue', '#BFCED6'], ['Clay', '#D9B9A3'], ['Charcoal', '#4A4F52'], ['Navy', '#2F3D55']];
 const SWATCH_ITEM = ['#F1EEE7', '#D8CBB5', '#B27F5C', '#7A5A3E', '#3F3F3D', '#8C9388', '#4F6E8C', '#2F6B4F', '#C46A4A', '#D9A441'];
@@ -459,9 +469,7 @@ const FLOORS = {
   concrete: { label: 'Concrete', tex: canvasTex(noise('#B5B3AD', 0.1, 14000)), tile: 2 },
   terracotta: { label: 'Terracotta tile', tex: canvasTex(grid('#B9714F', 'rgba(80,45,30,.55)', 3)), tile: 1 },
   lvp: { label: 'Light oak plank (LVP)', tex: canvasTex(planks('#B59D82', 0.13)), tile: 1.7 },
-  saltillo: { label: 'Saltillo tile, blue inlay', tex: canvasTex((g, s) => { const n = 3, k = s / n; for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { const c = new THREE.Color('#C9A57C'); c.offsetHSL((rnd() - .5) * .02, (rnd() - .5) * .08, (rnd() - .5) * .1); g.fillStyle = '#' + c.getHexString(); g.fillRect(i * k + 3, j * k + 3, k - 6, k - 6); const gr = g.createRadialGradient(i * k + k / 2, j * k + k / 2, k * .1, i * k + k / 2, j * k + k / 2, k * .7); gr.addColorStop(0, 'rgba(255,240,215,.22)'); gr.addColorStop(1, 'rgba(90,55,30,.2)'); g.fillStyle = gr; g.fillRect(i * k + 3, j * k + 3, k - 6, k - 6); }
-    g.globalCompositeOperation = 'destination-over'; g.fillStyle = '#8E7A66'; g.fillRect(0, 0, s, s); g.globalCompositeOperation = 'source-over';
-    for (let i = 0; i <= n; i++) for (let j = 0; j <= n; j++) { g.save(); g.translate(i * k, j * k); g.rotate(Math.PI / 4); const q = k * .16; g.fillStyle = '#F2F0EA'; g.fillRect(-q, -q, 2 * q, 2 * q); g.fillStyle = '#2F5C9E'; g.fillRect(-q * .62, -q * .62, q * 1.24, q * 1.24); g.fillStyle = '#F2F0EA'; g.fillRect(-q * .22, -q * .22, q * .44, q * .44); g.restore(); } }), tile: 1.25 },
+  saltillo: { label: 'Saltillo tile', tex: canvasTex((g, s) => { g.fillStyle = '#8E7A66'; g.fillRect(0, 0, s, s); const n = 3, k = s / n; for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { const c = new THREE.Color('#C6A37C'); c.offsetHSL((rnd() - .5) * .02, (rnd() - .5) * .08, (rnd() - .5) * .1); g.fillStyle = '#' + c.getHexString(); g.fillRect(i * k + 3, j * k + 3, k - 6, k - 6); const gr = g.createRadialGradient(i * k + k / 2, j * k + k / 2, k * .1, i * k + k / 2, j * k + k / 2, k * .7); gr.addColorStop(0, 'rgba(255,240,215,.22)'); gr.addColorStop(1, 'rgba(90,55,30,.22)'); g.fillStyle = gr; g.fillRect(i * k + 3, j * k + 3, k - 6, k - 6); } }), tile: 1.25 },
   marble_diag: { label: 'Rose marble, diagonal', tex: canvasTex((g, s) => { g.fillStyle = '#B7A4A4'; g.fillRect(0, 0, s, s); for (let i = 0; i < 60; i++) { g.strokeStyle = `rgba(${rnd() > .5 ? '250,244,242' : '96,72,80'},${0.12 + rnd() * 0.3})`; g.lineWidth = 0.6 + rnd() * 3; g.beginPath(); let x = rnd() * s, y = rnd() * s; g.moveTo(x, y); for (let k = 0; k < 5; k++) { x += (rnd() - .5) * 90; y += (rnd() - .5) * 90; g.lineTo(x, y); } g.stroke(); }
     g.strokeStyle = 'rgba(70,58,60,.55)'; g.lineWidth = 2; for (let i = -2; i <= 2; i++) { g.beginPath(); g.moveTo(i * s / 2, 0); g.lineTo(i * s / 2 + s, s); g.stroke(); g.beginPath(); g.moveTo(i * s / 2 + s, 0); g.lineTo(i * s / 2, s); g.stroke(); }
     g.strokeStyle = 'rgba(240,240,236,.95)'; g.lineWidth = 16; g.strokeRect(0, 0, s, s); }), tile: 1.7 },
@@ -671,6 +679,10 @@ fix(1, 0, 69.8, 1.4, 74.7, 0, 4.4, fixMat); fix(1, 1.3, 70.9, 1.5, 73.6, 0.2, 3,
   fix(0, 16.9, 62.5, 19.3, 63.9, 3.1, 3.13, steel); fix(0, 18, 63.95, 18.2, 64.15, 3.1, 4.5, steel); fix(0, 18, 63.3, 18.2, 64.15, 4.4, 4.55, steel);
   const glow = new THREE.MeshStandardMaterial({ color: 0xF6F8FA, emissive: 0xCFE6F5, emissiveIntensity: 0.7, roughness: 0.4 });
   for (const x of [15.4, 18, 20.6]) { const d = new THREE.Mesh(new THREE.CylinderGeometry(M(0.75), M(0.75), M(0.14), 20), glow); d.position.set(M(x), M(6.5), M(62.9)); G.levels[0].add(d); fix(0, x - 0.02, 62.88, x + 0.02, 62.92, 6.57, 9, navy).castShadow = false; } }
+// sunroom office floor: Talavera border tiles (blue pattern on white) set as rectangular bands in the Saltillo field (owner's photo)
+{ const tal = new THREE.MeshStandardMaterial({ map: canvasTex((g, s) => { g.fillStyle = '#EDEBE4'; g.fillRect(0, 0, s, s); g.strokeStyle = '#2F5C9E'; g.fillStyle = '#2F5C9E'; g.lineWidth = s * 0.05; g.strokeRect(s * 0.08, s * 0.08, s * 0.84, s * 0.84); g.beginPath(); g.ellipse(s / 2, s / 2, s * 0.26, s * 0.14, 0, 0, 7); g.stroke(); for (const [x, y] of [[.25, .25], [.75, .25], [.25, .75], [.75, .75]]) { g.beginPath(); g.arc(x * s, y * s, s * 0.06, 0, 7); g.fill(); } g.beginPath(); g.arc(s / 2, s / 2, s * 0.07, 0, 7); g.fill(); }, 128), roughness: 0.6 });
+  const strip = (x0, y0, x1, y1) => { const m = fix(0, x0, y0, x1, y1, 0, 0.03, tal.clone()); const L = Math.max(x1 - x0, y1 - y0); m.material.map = tal.map.clone(); m.material.map.repeat.set(x1 - x0 > y1 - y0 ? Math.round(L / 0.85) : 1, x1 - x0 > y1 - y0 ? 1 : Math.round(L / 0.85)); m.material.map.needsUpdate = true; m.castShadow = false; };
+  for (const [a, b, c, d] of [[41.6, 59.4, 51.6, 64.7], [52.9, 59.4, 59.6, 64.7]]) { strip(a, c - 0.8, b, c); strip(a, d, a + 0.8, c - 0.8); strip(b - 0.8, d, b, c - 0.8); strip(a, d - 0.8, b, d); } }
 // rec room wet bar (photo 31)
 fix(0, 0.5, 17.6, 8, 20.2, 0, 3.5, new THREE.MeshStandardMaterial({ color: 0x8C8F8C, roughness: 0.7 }));
 // baths
@@ -771,7 +783,8 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
   const sideN = ny > 0 ? 1 : -1; const off = (p, a, n) => [p[0] + ux * a + nx * n * sideN, p[1] + uy * a + ny * n * sideN];
   add(flat([off(C, -400, 0), off(D, 400, 0), off(D, 400, 5), off(C, -400, 5)], -0.02, walkC));
   add(flat([off(C, -400, 7), off(D, 400, 7), off(D, 400, 37), off(C, -400, 37)], -0.02, asphalt));
-  add(flat([[-12.8, -42.5], [1, -42.5], [1, 0], [-0.9, 0], [-0.9, 136.1], [-13.5, 139.5]], -0.015, drive)); // motor court + driveway
+  add(flat([[-10.6, -42.5], [1, -42.5], [1, 0], [-10.6, 0]], -0.012, terraceM)); add(flat([[-12.9, -42.5], [-10.6, -42.5], [-10.6, 0], [-12.9, 0]], -0.014, mulch)); // terrace continues to the west fence with a planting strip (owner's photos)
+  add(flat([[-12.9, 0], [-0.9, 0], [-0.9, 136.1], [-13.5, 139.5]], -0.015, drive)); // red concrete side yard and driveway
   add(flat([[1, -42.5], [lotX(-42.5) - 4, -42.5], [lotX(-14) - 6, -14], [27.5, -14], [27.5, 1], [27, 1], [27, 0], [1, 0]], -0.012, terraceM)); // white concrete terrace
   add(flat([[-12.8, -44], [lotX(-44) - 0.6, -44], [lotX(-25.7) - 0.6, -25.7], [lotX(1) - 0.6, 1], [27.5, 1], [27.5, -14], [lotX(-14) - 6, -14], [lotX(-42.5) - 4, -42.5], [-12.8, -42.5]], -0.02, mulch)); // planting beds along the north and east fences
   add(flat([[27, 1], [lotX(1) - 1, 1], [lotX(57.7) - 1, 57.7], [61.5, 57.7], [29.6, 57.7], [27, 23]], -0.012, aggregate)); // exposed-aggregate pool deck
@@ -922,7 +935,7 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
     for (let x = 37; x < 65; x += 2.6) { const y = 92.4 + Math.sin(x) * 0.8; agapanthus(x, y, 3.4 + (x % 1.3)); if ((x * 10 | 0) % 2) agapanthus(x + 0.9, y + 0.5, 2.9); }
     rose(21.2, 110.8, 4.6, [0xF6C9D2, 0xF3B5C4], 3); rose(27.6, 107.4, 3.6, [0xF6C9D2], 2); rose(44, 88.6, 4.8, [0xF07FA8, 0xF59AB8], 4); rose(50, 89.4, 4.4, [0xB81E2D, 0x9C1626], 4); rose(56, 88.8, 5, [0xF2A9BE, 0xEE8FAE], 3);
     daylily(19.4, 99.8); daylily(17.6, 102.2); verbena(47.5, 91, 4.5, 2.4); pelargonium(17.4, 105.2); rosemary(15.2, 108.4, 2.4);
-    citrus(-9, -24, 3.2, 3.5, 0xF2D23A); citrus(33.4, -13.2, 2.4, 2.6, 0xF39A1E);
+    citrus(-11.6, -24, 2.6, 3.5, 0xF2D23A); citrus(33.4, -13.2, 2.4, 2.6, 0xF39A1E);
     whiteDots(36, 124.6, 2.4); whiteDots(39.6, 127.2, 2.7); whiteDots(16, 124, 2.5); }
   { // north-east garden bed beside the terrace: round stepping stones, young trees in green pots, a log pile, a patio heater
     const disc = (x, y, r, h, c, y0 = 0) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(M(r), M(r), M(h), 16), std({ color: c })); m.position.set(M(x), M(y0 + h / 2), M(y)); m.castShadow = true; m.receiveShadow = true; S.add(m); return m; };
@@ -934,16 +947,41 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
     const st = new THREE.Mesh(new THREE.CircleGeometry(M(4.3), 24), new THREE.MeshStandardMaterial({ color: 0xBFE6DC, transparent: true, opacity: 0.55, roughness: 0.2 })); st.rotation.x = -Math.PI / 2; st.position.set(M(45), 0.018, M(44.2)); S.add(st);
     for (const y of [17, 23.4]) { const b = box(M(2), M(1.3), M(5.6), fenceWood); b.position.set(M(lotX(y) - 2.2), M(0.65), M(y)); b.rotation.y = -0.36; S.add(b); }
     for (const x of [34.4, 39, 43.6]) { const b = box(M(3.8), M(5), M(0.15), std({ color: 0xF2F1EC, transparent: true, opacity: 0.8 })); b.position.set(M(x), M(2.5), M(2.4)); S.add(b); } }
+  { // back-yard trees and shrubs, from the owner's and the listing's photos: clipped shrubs along the west and north fences, small yellow-green trees and Italian cypress right of the shed,
+    // tall eucalyptus and redwoods behind the north fence, citrus and young trees in the north-east bed, fan palms, a tall dense hedge beyond the east fence
+    const dk = [0x2F5F35, 0x3A6E3C, 0x356A38], cit = [0x2F6F35, 0x3A7D3C, 0x447F3A], yg = [0xB9C24A, 0xA8B846, 0xC8CC5A], euc = [0x6E8F5A, 0x7C9A62, 0x5F8250, 0x88A36C];
+    for (let y = -40; y < -3; y += 4.4) bush(-11.7, y, 1.7 + (y & 1) * 0.3, dk[(y / 4 | 0) % 3 < 0 ? 0 : Math.abs(y / 4 | 0) % 3], 1.15);
+    for (let x = -9; x < 24; x += 4.2) if (x < -8.6 || x > 0.5) bush(x, -43.2, 1.5, dk[Math.abs(x | 0) % 3], 1.1);
+    tree(13.2, -41, 2.6, 12, yg, { n: 7, tr: 0.22 }); tree(18, -41.6, 2.8, 13, yg, { n: 7, tr: 0.22 }); tree(22.5, -40, 2.4, 10, [0xC9A63A, 0xB98E34], { n: 6, tr: 0.2 });
+    cypress(15.6, -45.6, 38); cypress(20.4, -45.2, 34); cypress(-9.6, -46, 32); cypress(-6.8, -47, 28); cypress(-12, -47.5, 30);
+    tree(3, -53, 10, 56, euc, { flat: 1.5, n: 12, tr: 1.4 }); tree(-18, -46, 8, 34, [0x4F7A3C, 0x86A543]); tree(42, -47, 8, 36, [0x4F7C3C, 0x5E8A42]);
+    [[-15, -56, 6, 58], [25, -50, 6, 62], [31, -47, 5, 52], [46, -36, 6, 56], [52, -22, 6, 52], [57, -10, 6, 58], [61, 2, 6, 50], [12, -66, 7, 60]].forEach(a => conifer(...a));
+    [[27.4, -33.4, 2.8, 10], [30.6, -27.2, 3, 11], [33.6, -19.6, 2.6, 9], [35.6, -13.6, 2.8, 10], [29.4, -38.6, 2.6, 9]].forEach(([x, y, r, h]) => tree(x, y, r, h, cit, { n: 7, tr: 0.22 }));
+    for (const [x, y] of [[27.9, -32.6], [31.2, -26.4], [34, -18.9], [36, -12.8]]) for (let i = 0; i < 9; i++) blob(x + (rnd() - .5) * 4, 6 + rnd() * 3, y + (rnd() - .5) * 4, 0.17, 0xF39A1E, 1, sph);
+    palm(24.5, -43.4, 12, 6.5, 16, 0.6); palm(56.5, 7, 18, 6.5, 16, 0.5); palm(59.6, 11.5, 15, 6, 14, 0.45); palm(54, 3, 13, 5.5, 12, 0.45);
+    for (let y = -40; y < -6; y += 7.5) { const x = lotX(y) + 6; tree(x, y, 6, 24 + (y & 3), [0x3F6F3C, 0x4F7C3C, 0x5E8A42], { n: 9, flat: 1.3 }); }
+    tree(-23, -12, 8, 28, [0x4F7A3C, 0x5B8340]); tree(-24, 24, 8, 30, [0x5E8A42, 0x86A543]); }
   // lot outline
   const lp = LOT.concat([LOT[0]]).map(([x, y]) => new THREE.Vector3(M(x), 0.06, M(y)));
   const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints(lp), new THREE.LineDashedMaterial({ color: 0x2F6B57, dashSize: 0.6, gapSize: 0.35 })); ln.computeLineDistances(); S.add(ln);
 }
 const SITE_LABELS = [
-  ['Pool · heated, in-ground', 41.5, 31], ['Terrace', 14, -22], ['Motor court', -6, -22], ['Shed 7′ × 5′', -4.4, -47], ['Lawn', 48, 108],
+  ['Pool · heated, in-ground', 41.5, 31], ['Terrace', 14, -22], ['Shed 7′ × 5′', -4.4, -47], ['Lawn', 48, 108],
   ['Driveway', -7, 106], ['Arlington Rd', 36, 146], ['Pool deck', 45, 54],
 ];
 
 /* ================= FURNITURE ================= */
+const PICS = {
+  sunset1: (g, s) => { const gr = g.createLinearGradient(0, 0, 0, s); gr.addColorStop(0, '#3B2A6B'); gr.addColorStop(0.45, '#C2478E'); gr.addColorStop(0.62, '#F29A4A'); gr.addColorStop(0.63, '#5A2E6E'); gr.addColorStop(1, '#2A1F4A'); g.fillStyle = gr; g.fillRect(0, 0, s, s); g.fillStyle = '#FFD27A'; g.beginPath(); g.arc(s * 0.62, s * 0.56, s * 0.07, 0, 7); g.fill(); g.fillStyle = 'rgba(255,190,120,.5)'; g.fillRect(s * 0.5, s * 0.66, s * 0.24, s * 0.02); g.fillStyle = '#1B1230'; g.fillRect(s * 0.72, s * 0.58, s * 0.28, s * 0.05);
+    for (const [x, h] of [[0.16, 0.5], [0.3, 0.38]]) { g.strokeStyle = '#17102A'; g.lineWidth = s * 0.02; g.beginPath(); g.moveTo(x * s, s * 0.92); g.quadraticCurveTo((x + 0.04) * s, s * (0.92 - h * 0.5), (x + 0.02) * s, s * (0.92 - h)); g.stroke(); g.lineWidth = s * 0.012; for (let k = 0; k < 7; k++) { const a = -2.9 + k * 0.45; g.beginPath(); g.moveTo((x + 0.02) * s, s * (0.92 - h)); g.quadraticCurveTo((x + 0.02 + Math.cos(a) * 0.08) * s, s * (0.92 - h + Math.sin(a) * 0.1 - 0.03), (x + 0.02 + Math.cos(a) * 0.14) * s, s * (0.92 - h + Math.sin(a) * 0.12 + 0.04)); g.stroke(); } } g.fillStyle = '#17102A'; g.fillRect(0, s * 0.9, s, s * 0.1); },
+  sunset2: (g, s) => { const gr = g.createLinearGradient(0, 0, 0, s); gr.addColorStop(0, '#6A3C9A'); gr.addColorStop(0.4, '#F06A9A'); gr.addColorStop(0.68, '#F6B25A'); gr.addColorStop(0.7, '#7A3F7E'); gr.addColorStop(1, '#3A2456'); g.fillStyle = gr; g.fillRect(0, 0, s, s); g.strokeStyle = '#2A1638'; g.lineWidth = s * 0.03; g.beginPath(); g.moveTo(s * 0.4, s * 0.95); g.quadraticCurveTo(s * 0.44, s * 0.6, s * 0.38, s * 0.42); g.stroke(); for (let i = 0; i < 26; i++) { g.fillStyle = ['#F29AC0', '#E66FA8', '#F7B8D0'][i % 3]; g.beginPath(); g.arc(s * (0.2 + rnd() * 0.42), s * (0.2 + rnd() * 0.28), s * (0.035 + rnd() * 0.04), 0, 7); g.fill(); } g.fillStyle = '#2A1638'; g.fillRect(0, s * 0.92, s, s * 0.08); },
+  landscape: (g, s) => { g.fillStyle = '#EAE3D3'; g.fillRect(0, 0, s, s); const bands = [[0.0, '#EDE7D8'], [0.28, '#F6F2E8'], [0.4, '#C9B28F'], [0.5, '#8F9AA0'], [0.57, '#D8A27A'], [0.68, '#C98A62'], [0.8, '#D9C3A0'], [0.9, '#B98E6A']];
+    for (let k = 0; k < bands.length; k++) { const y0 = bands[k][0] * s, y1 = (bands[k + 1] ? bands[k + 1][0] : 1) * s; for (let i = 0; i < 26; i++) { const c = new THREE.Color(bands[k][1]); c.offsetHSL(0, (rnd() - .5) * .08, (rnd() - .5) * .1); g.fillStyle = '#' + c.getHexString(); g.globalAlpha = 0.75; g.fillRect(rnd() * s - s * 0.2, y0 + rnd() * (y1 - y0) - 4, s * (0.3 + rnd() * 0.7), 6 + rnd() * (y1 - y0) * 0.5); } } g.globalAlpha = 1; },
+  print: (g, s) => { g.fillStyle = '#F4F2EC'; g.fillRect(0, 0, s, s); g.strokeStyle = '#3B3F44'; g.lineWidth = 2; for (let i = 0; i < 26; i++) { const a = i * 0.5; g.beginPath(); g.moveTo(s / 2, s / 2); g.quadraticCurveTo(s / 2 + Math.cos(a) * s * 0.2, s / 2 + Math.sin(a) * s * 0.2 - 10, s / 2 + Math.cos(a + 0.4) * s * 0.32, s / 2 + Math.sin(a + 0.4) * s * 0.32); g.stroke(); } },
+  playmat: (g, s) => { const cols = ['#E24B4B', '#F2A93B', '#F2D94A', '#57B56A', '#4AA3D8', '#9A6AD0', '#EE7FB0', '#49C1B8'], n = 6, k = s / n; for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { g.fillStyle = cols[(i * 3 + j * 5) % 8]; g.fillRect(i * k, j * k, k, k); g.fillStyle = cols[(i * 5 + j * 3 + 3) % 8]; g.font = `bold ${k * 0.7}px sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[(i * n + j) % 36], i * k + k / 2, j * k + k / 2); g.strokeStyle = 'rgba(0,0,0,.25)'; g.strokeRect(i * k, j * k, k, k); } },
+  persian: (g, s) => { g.fillStyle = '#8D9AA6'; g.fillRect(0, 0, s, s); g.fillStyle = '#C9C2B4'; g.fillRect(s * 0.06, s * 0.06, s * 0.88, s * 0.88); g.fillStyle = '#7C8FA3'; g.fillRect(s * 0.12, s * 0.12, s * 0.76, s * 0.76); for (let i = 0; i < 160; i++) { g.fillStyle = ['#B9B2A6', '#5F7388', '#A7836E', '#D8D2C6'][i % 4]; g.globalAlpha = 0.6; g.beginPath(); g.ellipse(s * (0.14 + rnd() * 0.72), s * (0.14 + rnd() * 0.72), 3 + rnd() * 9, 3 + rnd() * 6, rnd() * 3, 0, 7); g.fill(); } g.globalAlpha = 1; g.fillStyle = '#B9B2A6'; g.beginPath(); g.ellipse(s / 2, s / 2, s * 0.16, s * 0.22, 0, 0, 7); g.fill(); },
+};
+const PICM = {}; const picMat = k => PICM[k] || (PICM[k] = new THREE.MeshStandardMaterial({ map: (() => { const t = canvasTex(PICS[k], 256); t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; return t; })(), roughness: 0.9 }));
 function itemGroup(it, ghost) {
   const g = new THREE.Group(), { w, d, h } = it;
   const base = new THREE.Color(it.color);
@@ -987,10 +1025,11 @@ function itemGroup(it, ghost) {
       break;
     }
     case 'tv': { B(w, d, 0.5, 0, 0, 0, m1); const sw = w * 0.82, sh = Math.max(0.2, h - 0.62); B(sw, 0.05, sh, 0, 0.58, -d / 4, dark); B(0.25, 0.12, 0.08, 0, 0.5, -d / 4, dark); break; }
-    case 'rug': { B(w, d, h, 0, 0, 0, m1); B(w - 0.16, d - 0.16, h + 0.002, 0, 0, 0, m2); break; }
+    case 'speaker': { B(0.26, 0.26, 0.02, 0, 0, 0, dark); B(0.035, 0.035, h - 0.36, 0, 0.02, 0, dark); B(w, d, 0.34, 0, h - 0.34, 0, m1); B(w * 0.86, 0.01, 0.3, 0, h - 0.32, d / 2, dark); break; }
+    case 'rug': { B(w, d, h, 0, 0, 0, m1); if (it.pic && PICS[it.pic]) { const pl = new THREE.Mesh(new THREE.PlaneGeometry(w, d), picMat(it.pic)); pl.rotation.x = -Math.PI / 2; pl.position.y = h + 0.003; pl.receiveShadow = true; g.add(pl); } else B(w - 0.16, d - 0.16, h + 0.002, 0, 0, 0, m2); break; }
     case 'floor_lamp': { Cy(w * 0.35, w * 0.4, 0.03, 0, 0, 0, dark); Cy(0.013, 0.013, h * 0.8, 0, 0.03, 0, dark); const sh = Cy(w * 0.3, w * 0.5, h * 0.22, 0, h * 0.78, 0, mk(it.color, { emissive: new THREE.Color(it.color), emissiveIntensity: 0.35, side: THREE.DoubleSide }), true); sh.castShadow = false; break; }
     case 'plant': { Cy(w * 0.3, w * 0.24, h * 0.28, 0, 0, 0, mk(0xB0694A)); const f = new THREE.Mesh(new THREE.IcosahedronGeometry(w * 0.5, 1), mk(it.color, { flatShading: true })); f.position.y = h * 0.28 + (h * 0.72) / 2; f.scale.y = (h * 0.72) / w; f.castShadow = !ghost; g.add(f); break; }
-    case 'art': { B(w, d, h, 0, -h / 2, 0, dark); B(w * 0.86, 0.01, h * 0.8, 0, -h * 0.4, d / 2, m1); break; }
+    case 'art': { if (it.pic && PICS[it.pic]) { B(w, d, h, 0, -h / 2, 0, m1); const pl = new THREE.Mesh(new THREE.PlaneGeometry(w * 0.95, h * 0.95), picMat(it.pic)); pl.position.z = d / 2 + 0.003; g.add(pl); } else { B(w, d, h, 0, -h / 2, 0, dark); B(w * 0.86, 0.01, h * 0.8, 0, -h * 0.4, d / 2, m1); } break; }
     case 'pool_table': { B(w, d, 0.16, 0, h - 0.2, 0, wood); B(w * 0.88, d * 0.8, 0.02, 0, h - 0.04, 0, m1); for (const s of [-1, 1]) { B(w, 0.07, 0.06, 0, h - 0.06, s * (d / 2 - 0.035), wood); B(0.07, d, 0.06, s * (w / 2 - 0.035), h - 0.06, 0, wood); } legs(h - 0.2, 0.12, 0.12, wood); break; }
     case 'ping_pong': { B(w, d, 0.025, 0, h - 0.025, 0, m1); B(w, 0.02, 0.003, 0, h, 0, white); B(0.02, d, 0.003, -w / 2 + 0.01, h, 0, white); B(0.02, d, 0.003, w / 2 - 0.01, h, 0, white); for (const sz of [-1, 1]) B(w, 0.02, 0.003, 0, h, sz * (d / 2 - 0.01), white);
       B(0.01, d + 0.3, 0.1525, 0, h, 0, mk(0xEDEDED, { transparent: true, opacity: ghost ? 0.4 : 0.75 })); for (const sz of [-1, 1]) B(0.03, 0.03, 0.17, 0, h, sz * (d / 2 + 0.15), dark);
@@ -1022,6 +1061,8 @@ const meshes = new Map();
 function makeItem(type, x, z, level, rot = 0, over = {}) { const c = CAT[type]; return Object.assign({ id: 'i' + (nextId++), type, name: c.label, x, z, level, rot, w: c.w, d: c.d, h: c.h, color: c.color, elev: c.elev || 0 }, over); }
 const tupleItem = ([t, room, x, y, rot, over], n) => makeItem(t, M(x), M(y), ROOM[room].level, rot, Object.assign({ name: CAT[t].label + (n > 1 ? ' ' + n : '') }, over || {}));
 function starterItems() { const counts = {}; return STARTER.map(tp => tupleItem(tp, counts[tp[0]] = (counts[tp[0]] || 0) + 1)); }
+// from this version the layout is rebuilt from the owner's photos, so older saved furniture is replaced once (marks and room paint are kept)
+function migrate6() { state.items = starterItems(); }
 // terrace furniture moved to where the owner's photo shows it; only pieces still at the first guess are moved
 function migrate5() { TERRACE_OLD.forEach(([ox, oy], k) => { const tp = TERRACE_SET[k], it = state.items.find(i => i.type === tp[0] && Math.abs(i.x - M(ox)) < 0.05 && Math.abs(i.z - M(oy)) < 0.05); if (it) { it.x = M(tp[2]); it.z = M(tp[3]); it.rot = tp[4]; } }); }
 // layouts saved while the rec room still had the listing's pool table: swap it for the ping-pong table and add the Pilates reformer
@@ -1045,12 +1086,13 @@ function removeItemMesh(id) { const g = meshes.get(id); if (g) { G.furn[g.userDa
 function applyRoomStyles() { for (const r of ROOMS) { const s = state.rooms[r.id] || {}; roomWallMat(r.id).color.set(s.wall || '#F2EEE6'); r.floorMesh.material = floorMats[s.floor || r.floor]; } }
 function loadState(obj, msg) {
   for (const id of [...meshes.keys()]) removeItemMesh(id);
-  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 5 };
+  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 6 };
   nextId = 1 + Math.max(0, ...state.items.map(i => parseInt(String(i.id).slice(1)) || 0));
   if ((obj.m | 0) < 2) migrate2();
   if ((obj.m | 0) < 3) migrate3();
   if ((obj.m | 0) < 4) migrate4();
   if ((obj.m | 0) < 5) migrate5();
+  if ((obj.m | 0) < 6) migrate6();
   state.items.forEach(syncItem); syncPins(); applyRoomStyles(); select(null); renderRooms(); if (msg) toast(msg); setStatus();
 }
 let saveT;
@@ -1321,7 +1363,7 @@ $('openRight').onclick = () => { $('left').classList.remove('open'); $('right').
 $('closeLeft').onclick = $('closeRight').onclick = closeSheets;
 $('bSave').onclick = () => save(true);
 let resetArm = 0;
-$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 5 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
+$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 6 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
 const dlg = $('dlg');
 function openDlg(kind) {
   const exp = kind === 'export'; $('dlgTitle').textContent = exp ? 'Export layout' : 'Import layout';
@@ -1405,7 +1447,7 @@ function tick() {
 
 /* ================= BOOT ================= */
 let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { saved = null; }
-if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 5 }); }
+if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 6 }); }
 setStatus(saved ? 'Loaded your saved layout' : null);
 $('viewhint').textContent = 'Drag to orbit · right-drag to pan · scroll to zoom · pick Main or Upper to look inside';
 applyVis(); renderInspector(); renderRooms();
