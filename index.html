@@ -252,8 +252,8 @@ const ROOMS = [
   { id: 'kitchen', name: 'Kitchen', level: 0, poly: [[0, 54.4], [12, 54.4], [12, 57.7], [27, 57.7], [27, 70.6], [0, 70.6], [0, 62], [9.7, 62], [9.7, 56.6], [0, 56.6]], dims: [26, 11], src: 'plan', floor: 'lvp', note: 'White shaker cabinets, navy backsplash, navy island with granite top, snack pantry shelves by the bathroom (your photos)' },
   { id: 'mech', name: 'Mech Room', level: 0, poly: R(0, 70.6, 7.7, 76.2), src: 'est', floor: 'concrete' },
   { id: 'laundry', name: 'Laundry', level: 0, poly: R(7.7, 70.6, 10.2, 76.2), src: 'est', floor: 'tile' },
-  { id: 'pantry', name: 'Pantry', level: 0, poly: R(13.9, 70.6, 17.9, 76.2), src: 'est', floor: 'stone' },
-  { id: 'stairs', name: 'Stairs', level: 0, poly: R(18.4, 70.6, 26.8, 76.5), src: 'est', floor: 'oak', noCeil: true },
+  { id: 'pantry', name: 'Pantry', level: 0, poly: R(13.9, 70.6, 17.9, 76.2), src: 'est', floor: 'stone', ceilH: 6, note: 'Under the upper flights of the stair, so its ceiling is low' },
+  { id: 'stairs', name: 'Stairs', level: 0, poly: R(18.4, 70.6, 26, 76.5), src: 'plan', floor: 'oak', noCeil: true, note: 'Three flights, traced from both plan levels: north from the foyer, west over the pantry, then south onto the upper hall' },
   { id: 'dining', name: 'Dining Room', level: 0, poly: R(27, 57.7, 39, 70.4), dims: [11, 13], src: 'plan', floor: 'lvp', note: 'Your renovation: wall to the kitchen removed, one open space' },
   { id: 'closet1', name: 'Closet', level: 0, poly: R(27, 70.4, 31, 75.5), src: 'est', floor: 'lvp' },
   { id: 'wic1', name: 'Walk-in Closet', level: 0, poly: R(35, 70.4, 39, 75.5), src: 'est', floor: 'lvp' },
@@ -265,10 +265,12 @@ const ROOMS = [
   { id: 'wic', name: 'Primary WIC', level: 1, poly: R(0, 53.7, 13.4, 59.6), src: 'est', floor: 'oak' },
   { id: 'primary', name: 'Primary Suite', level: 1, poly: R(0, 59.6, 13.4, 81.9), dims: [13, 22], src: 'plan', floor: 'oak', note: 'Fireplace, skylights' },
   { id: 'mech2', name: 'Mech', level: 1, poly: R(13.4, 53.7, 16.5, 57.5), src: 'est', floor: 'concrete' },
-  { id: 'pbath', name: 'Primary Bath', level: 1, poly: R(13.4, 57.5, 26, 68.5), src: 'est', floor: 'marble', note: 'Oversized tub, stall shower, double sinks' },
-  { id: 'bed2', name: 'Bedroom 2', level: 1, poly: R(26, 57.5, 37.6, 72.7), dims: [11, 13], src: 'plan', floor: 'carpet', wall: '#E3DCCB', note: 'Carpet, beige walls, built-in drawers and shelves (your video). I placed it in Bedroom 2.' },
-  { id: 'bath2', name: 'Bath', level: 1, poly: R(29.9, 72.7, 37.6, 81.9), src: 'est', floor: 'tile' },
-  { id: 'hall2', name: 'Upper Hall', level: 1, poly: [[13.4, 68.5], [26, 68.5], [26, 72.7], [29.9, 72.7], [29.9, 81.9], [13.4, 81.9]], src: 'est', floor: 'oak', holes: [R(18.4, 70.6, 26.8, 76.5)] },
+  { id: 'pbath', name: 'Primary Bath', level: 1, poly: [[13.4, 57.5], [26, 57.5], [26, 67], [23.4, 67], [23.4, 70.6], [13.4, 70.6]], src: 'est', floor: 'marble', note: 'As on the plan: tub along the east wall, double sinks on the west wall, toilet on the north wall, stall shower in the south corner' },
+  { id: 'lin2', name: 'Closet', level: 1, poly: R(23.4, 67, 26, 70.6), src: 'est', floor: 'carpet', note: 'Opens into Bedroom 2 (plan)' },
+  { id: 'bed2', name: 'Bedroom 2', level: 1, poly: R(26, 57.5, 37.6, 73.9), dims: [11, 13], src: 'plan', floor: 'carpet', wall: '#E3DCCB', note: 'Carpet, beige walls, built-in drawers and shelves (your video), on the south wall where the plan shows its closet.' },
+  { id: 'bath2', name: 'Bath', level: 1, poly: R(29.3, 73.9, 37.6, 81.9), src: 'est', floor: 'tile', note: 'As on the plan: toilet on the east wall, sink on the west wall, shower in the south-east corner' },
+  { id: 'hwic', name: 'Walk-in Closet', level: 1, poly: R(22.4, 73.5, 26, 77.2), src: 'est', floor: 'carpet', note: 'Hall walk-in closet (plan), over the first flight of the stair' },
+  { id: 'hall2', name: 'Upper Hall', level: 1, poly: [[13.4, 70.6], [26, 70.6], [26, 73.5], [22.4, 73.5], [22.4, 77.2], [26, 77.2], [26, 73.9], [29.3, 73.9], [29.3, 81.9], [13.4, 81.9]], label: [20, 79.5], src: 'est', floor: 'oak', holes: [[[13.9, 70.6], [26, 70.6], [26, 73.5], [16.7, 73.5], [16.7, 76.2], [13.9, 76.2]]] },
   { id: 'balcony', name: 'Covered Balcony', level: 1, poly: R(16.5, 53.7, 37.6, 57.5), src: 'est', floor: 'terracotta', outdoor: true },
 ];
 const ROOM = Object.fromEntries(ROOMS.map(r => [r.id, r]));
@@ -311,11 +313,12 @@ const WALLS = [[
   [0, 76.2, 12.8, 76.2, 'i'],
   [12.8, 76.2, 12.8, 81.9, 'i', [[2.8, 2.8, 'd']]],
   [13.9, 70.6, 18.4, 70.6, 'i'],
-  [13.9, 70.6, 13.9, 76.2, 'i', [[3, 2.4, 'd']]],
-  [17.9, 70.6, 17.9, 76.2, 'i'],
-  [13.9, 76.2, 17.9, 76.2, 'i'],
-  [18.4, 70.6, 26.8, 70.6, 'i'],
-  [18.4, 70.6, 18.4, 76.5, 'i'],
+  [13.9, 70.6, 13.9, 76.2, 'i', [[3, 2.4, 'd']], 7.4], // carries the stair landing at 7.5 ft
+  [17.9, 70.6, 17.9, 76.2, 'i', [], 6.2], // pantry east wall stops under the stair's middle flight
+  [13.9, 76.2, 17.9, 76.2, 'i', [], 9],
+  [18.4, 70.6, 26, 70.6, 'i'],
+  [18.4, 73.5, 18.4, 76.5, 'i'],
+  [26, 70.6, 26, 76.5, 'i'], // stair's east wall; Bedroom 2's west wall stands on it
   [27, 70.4, 31, 70.4, 'i'],
   [35, 70.4, 39, 70.4, 'i'],
   [27, 70.4, 27, 75.5, 'i'],
@@ -336,10 +339,16 @@ const WALLS = [[
   [0, 59.6, 13.4, 59.6, 'i', [[9.5, 3, 'd']]],
   [13.4, 53.7, 13.4, 81.9, 'i', [[8.8, 2.8, 'd'], [25.8, 3, 'd']]],
   [13.4, 57.5, 16.5, 57.5, 'i', [[1.6, 2, 'd']]],
-  [13.4, 68.5, 26, 68.5, 'i'],
-  [26, 57.5, 26, 72.7, 'i'],
-  [26, 72.7, 37.6, 72.7, 'i', [[2, 2.8, 'd']]],
-  [29.9, 72.7, 29.9, 81.9, 'i', [[6.3, 2.6, 'd']]],
+  [13.4, 70.6, 26, 70.6, 'i'], // primary bath south wall, over the main wall north of the stair
+  [23.4, 67, 26, 67, 'i'],
+  [23.4, 67, 23.4, 70.6, 'i'],
+  [26, 57.5, 26, 73.9, 'i', [[10.1, 2.6, 'd']]], // closet door into Bedroom 2
+  [26, 73.9, 37.6, 73.9, 'i', [[0.5, 2.6, 'd']]],
+  [29.3, 73.9, 29.3, 81.9, 'i', [[2.7, 2.4, 'd']]],
+  [22.4, 73.5, 26, 73.5, 'i'],
+  [22.4, 73.5, 22.4, 77.2, 'i'],
+  [22.4, 77.2, 26, 77.2, 'i', [[0.6, 2.4, 'd']]],
+  [26, 73.9, 26, 77.2, 'i'],
 ]];
 // Lot measured off the listing's site plan at the house's scale (5.72 px/ft). The drawing is approximate: traced area ≈ 12,700 sq ft vs 11,623 in public records.
 const LOT = [[9.1, -68.4], [-12.8, -43.4], [-13.5, 139.5], [86.4, 112.8], [33.9, -25.7]];
@@ -541,7 +550,7 @@ for (const r of ROOMS) {
   if (!r.outdoor && !r.vaulted && !r.noCeil) { const c = flat(r.poly, M(L.base + (r.ceilH || L.ceil)), r.woodCeil ? woodCeilMat : r.plankCeil ? plankCeilMat : ceilMat); G.ceilings[r.level].add(c); }
 }
 // upper slab edge so the upper floor reads as a solid floor from below
-{ const s = flat([[0, 53.7], [37.6, 53.7], [37.6, 81.9], [0, 81.9]], M(9.6), ceilMat, [R(18.4, 70.6, 26.8, 76.5)]); G.ceilings[0].add(s); }
+{ const s = flat([[0, 53.7], [37.6, 53.7], [37.6, 81.9], [0, 81.9]], M(9.6), ceilMat, [[[13.9, 70.6], [26, 70.6], [26, 73.5], [16.7, 73.5], [16.7, 76.2], [13.9, 76.2]]]); G.ceilings[0].add(s); }
 
 /* walls — finishes from the listing photos: red brick on the street side of the main level, white lap siding elsewhere, black window frames
    (white sashes on the pool-side double-hungs, white aluminium on the dining and living/sitting-room sliders) */
@@ -683,10 +692,17 @@ const woodMat = new THREE.MeshStandardMaterial({ color: 0x8A6544, roughness: 0.7
 const darkWoodMat = new THREE.MeshStandardMaterial({ color: 0x4A3023, roughness: 0.75 });
 function fix(lv, x0, y0, x1, y1, h0, h1, mat) { const m = box(M(x1 - x0), M(h1 - h0), M(y1 - y0), mat); m.position.set(M((x0 + x1) / 2), M(LEVELS[lv].base + (h0 + h1) / 2), M((y0 + y1) / 2)); G.levels[lv].add(m); return m; }
 const RISE = 10 / 16;
-for (let i = 0; i < 5; i++) fix(0, 23.8, 76.5 - (i + 1) * 0.6, 26.8, 76.5 - i * 0.6, 0, (i + 1) * RISE, woodMat);
-fix(0, 23.8, 70.6, 26.8, 73.5, 0, 6 * RISE, woodMat);
-for (let i = 0; i < 9; i++) fix(0, 23.8 - (i + 1) * 0.6, 70.6, 23.8 - i * 0.6, 73.5, 0, (7 + i) * RISE, woodMat);
-fix(1, 18.4, 70.55, 26.8, 70.7, 0, 3, fixMat); fix(1, 26.7, 70.6, 26.85, 76.5, 0, 3, fixMat); fix(1, 18.4, 76.45, 26.8, 76.6, 0, 3, fixMat);
+// stair: 16 risers in three flights, traced from both plan levels. Flight 1 climbs north from the foyer (solid underneath), flight 2 climbs west
+// over the pantry, flight 3 climbs south onto the upper hall. Over the pantry the stair is boxed in down to the pantry's 6 ft ceiling.
+const TR = 0.9, STW = woodMat;
+for (let i = 0; i < 3; i++) fix(0, 23, 76.5 - (i + 1) * TR, 26, 76.5 - i * TR, 0, (i + 1) * RISE, STW);
+fix(0, 23, 70.6, 26, 76.5 - 3 * TR, 0, 4 * RISE, STW);                                                   // landing
+for (let j = 0; j < 7; j++) { const h = (5 + j) * RISE, x1 = 23 - j * TR, x0 = x1 - TR; fix(0, x0, 70.6, x1, 73.5, x0 < 17.9 ? 6.05 : 0, h, STW); }
+fix(0, 13.9, 70.6, 16.7, 73.5, 6.05, 12 * RISE, STW);                                       // landing over the pantry
+for (let k = 0; k < 3; k++) { const h = (13 + k) * RISE; fix(0, 13.9, 73.5 + k * TR, 16.7, 73.5 + (k + 1) * TR, 6.05, h, STW); }
+fix(0, 16.65, 73.5, 16.75, 76.2, 6.05, 9.6, roomWallMat('pantry'));                                       // knee wall on the open side of flight 3
+// railings round the upper opening
+fix(1, 16.7, 73.45, 22.4, 73.6, 0, 3, fixMat); fix(1, 16.62, 73.5, 16.78, 76.2, 0, 3, fixMat); fix(1, 13.85, 70.6, 14, 76.2, 0, 3, fixMat);
 // covered balcony: solid siding half-wall and posts (photo 39)
 fix(1, 16.5, 53.6, 37.6, 53.9, 0, 3.2, sidingMat); fix(1, 37.3, 53.7, 37.6, 57.5, 0, 3.2, sidingMat);
 for (const x of [16.7, 21.9, 27.1, 32.3, 37.4]) fix(1, x - 0.2, 53.6, x + 0.2, 53.95, 3.2, 8.4, fixMat); fix(1, 37.25, 55.4, 37.6, 55.75, 3.2, 8.4, fixMat); fix(1, 16.5, 53.55, 37.6, 54, 8.4, 9, fixMat); fix(1, 37.2, 53.7, 37.65, 57.5, 8.4, 9, fixMat);
@@ -721,21 +737,21 @@ fix(0, 39.18, 57.88, 39.215, 65.86, 0, 9, new THREE.MeshStandardMaterial({ color
 { const wh = new THREE.MeshStandardMaterial({ color: 0xF4F3EF, roughness: 0.6 }), cols = [0xE0564F, 0xF2A93B, 0x4AA3D8, 0x57B56A, 0xEE7FB0, 0xF2D94A, 0x9A6AD0, 0xD9D5CC];
   fix(0, 9.88, 57.0, 9.96, 61.7, 0, 8, wh); fix(0, 9.9, 57.0, 11.3, 57.1, 0, 8, wh); fix(0, 9.9, 61.6, 11.3, 61.7, 0, 8, wh);
   for (let i = 0; i < 7; i++) { const h = 0.3 + i * 1.2; fix(0, 9.9, 57.1, 11.3, 61.6, h, h + 0.08, wh); if (i < 6) for (let k = 0; k < 8; k++) { const y0 = 57.25 + k * 0.54, bh = 0.45 + ((i * 3 + k * 5) % 5) * 0.12; fix(0, 10.1, y0, 10.1 + 0.6 + ((i + k) % 3) * 0.15, y0 + 0.42, h + 0.08, h + 0.08 + bh, new THREE.MeshStandardMaterial({ color: cols[(i * 3 + k) % 8], roughness: 0.8 })).castShadow = false; } } }
-// upstairs bedroom built-in (owner's video): white drawers below, open wood-lined shelves above with a white door standing open. She said it is an upstairs bedroom; Bedroom 2 and the south wall are my placement.
-{ const wh = new THREE.MeshStandardMaterial({ color: 0xF4F3EF, roughness: 0.6 }), wood = new THREE.MeshStandardMaterial({ color: 0xD9C7A6, roughness: 0.7 }), L = 1, y1 = 72.5, y0 = 70.7;
+// upstairs bedroom built-in (owner's video): white drawers below, open wood-lined shelves above with a white door standing open. She said it is an upstairs bedroom; the plan's Bedroom 2 closet is on its south wall, so it stands there.
+{ const wh = new THREE.MeshStandardMaterial({ color: 0xF4F3EF, roughness: 0.6 }), wood = new THREE.MeshStandardMaterial({ color: 0xD9C7A6, roughness: 0.7 }), L = 1, y1 = 73.7, y0 = 71.9;
   fix(L, 31, y0, 35.6, y1, 0, 3.2, wh); for (let i = 0; i < 4; i++) for (const x of [31.2, 33.4]) { fix(L, x, y0 - 0.06, x + 2.05, y0, 0.15 + i * 0.76, 0.82 + i * 0.76, wh); fix(L, x + 0.9, y0 - 0.12, x + 1.15, y0 - 0.06, 0.42 + i * 0.76, 0.5 + i * 0.76, wh); }
   fix(L, 31, y1 - 0.1, 35.6, y1, 3.2, 8, wood); fix(L, 31, y0 + 0.1, 31.1, y1, 3.2, 8, wh); fix(L, 35.5, y0 + 0.1, 35.6, y1, 3.2, 8, wh); for (let i = 0; i < 5; i++) { const h = 3.2 + i * 1.15; fix(L, 31.1, y0 + 0.2, 35.5, y1 - 0.1, h, h + 0.07, wood);
     for (let k = 0; k < 5; k++) fix(L, 31.3 + k * 0.84, y0 + 0.5, 31.95 + k * 0.84, y1 - 0.3, h + 0.07, h + 0.45 + ((i + k) % 3) * 0.15, new THREE.MeshStandardMaterial({ color: [0xE0564F, 0xF4F2EE, 0x23344E, 0xEE7FB0, 0x6B4630][(i * 2 + k) % 5], roughness: 0.8 })).castShadow = false; }
   fix(L, 29.1, y0 + 0.02, 31.1, y0 + 0.1, 3.2, 8, wh); }
 // the rec room's wet bar is gone (owner: the bar was removed when Bedroom 5 was built)
 // baths
-fix(1, 13.6, 63.5, 16.5, 68.3, 0, 1.9, fixMat); fix(1, 20.5, 57.7, 25.8, 59.6, 0, 3, darkWoodMat); fix(1, 20.5, 57.7, 25.8, 59.6, 3, 3.15, fixMat);
+fix(1, 23.5, 59.4, 25.8, 66.6, 0, 1.9, fixMat); fix(1, 13.6, 59.2, 15.5, 66.2, 0, 3, darkWoodMat); fix(1, 13.55, 59.15, 15.55, 66.25, 3, 3.15, fixMat); // primary bath: tub east, double vanity west (plan)
 // kitchen island (photo 21); bath fixtures placed from the plan symbols (photos 35-37, 42)
 { const toilet = (lv, x, y, bx, by) => { fix(lv, x - 0.65, y - 0.65, x + 0.65, y + 0.65, 0, 1.35, fixMat); fix(lv, x + bx * 0.9 - (by ? 0.8 : 0.3), y + by * 0.9 - (bx ? 0.8 : 0.3), x + bx * 0.9 + (by ? 0.8 : 0.3), y + by * 0.9 + (bx ? 0.8 : 0.3), 0, 2.5, fixMat); };
   const shower = (lv, x0, y0, x1, y1) => { fix(lv, x0, y0, x1, y1, 0, 0.3, fixMat); fix(lv, x0, y0, x1, y1, 0.3, 6.6, glassMat).castShadow = false; };
   shower(0, 0.4, 58.7, 3.4, 61.8); toilet(0, 6.6, 60.7, 0, 1); fix(0, 8.1, 57.1, 9.5, 59.9, 0, 2.8, fixMat);
-  toilet(1, 18.3, 58.9, 0, -1); shower(1, 22.4, 64.9, 25.8, 68.3);
-  shower(1, 34.3, 78.6, 37.3, 81.6); toilet(1, 31.3, 74.3, 0, -1); fix(1, 33.4, 73, 37.3, 74.8, 0, 2.8, darkWoodMat); fix(1, 33.3, 72.95, 37.35, 74.9, 2.8, 2.95, fixMat); }
+  toilet(1, 21.3, 58.6, 0, -1); shower(1, 19.6, 67.3, 23.2, 70.4);
+  shower(1, 33.8, 78.2, 37.3, 81.6); toilet(1, 36.5, 76, 1, 0); fix(1, 29.4, 77.6, 31.2, 80.6, 0, 2.8, darkWoodMat); fix(1, 29.35, 77.55, 31.25, 80.65, 2.8, 2.95, fixMat); }
 // beamed wood ceilings: family room (light planks, white beams) and the vaulted rec room (dark wood)
 for (let y = 28; y < 57; y += 5.6) { const b = fix(0, 11.3, y - 0.3, 27.2 + (y - 23) * 0.075, y + 0.3, 9.05, 9.85, fixMat); G.ceilings[0].add(b); }
 
@@ -1214,8 +1230,8 @@ function setLevel(l, quiet) {
   if (!quiet) applyVis();
 }
 function applyVis() {
-  const showL = lv => level === 'all' || level === String(lv);
-  const roofOn = ui.roof && level === 'all' && mode !== 'plan';
+  const showL = lv => mode === 'walk' || level === 'all' || level === String(lv); // walking, you are inside the whole house: both floors and the roof stay
+  const roofOn = ui.roof && (level === 'all' || mode === 'walk') && mode !== 'plan';
   G.roof.visible = roofOn;
   for (let l = 0; l < 2; l++) {
     G.levels[l].visible = showL(l) || (l === 0 && mode !== 'plan');
@@ -1417,7 +1433,7 @@ $('pane-info').innerHTML = `
 <p><span class="tag">real</span> Look of the house from the 47 listing photos: red brick on the street side, white lap siding elsewhere, black window frames, the long upper window band, flat gravel roof over the family room, fieldstone fireplace, wood-beamed ceilings, brick walk, and the planting (cordylines, yuccas, boxwood, palms, the street oak).</p>
 <p><span class="tag">yours</span> From the photos you sent of the house today: light oak plank floors in the living areas, rose marble laid on the diagonal in the foyer, Saltillo tile with blue inlay in the sunroom office, the white-and-navy kitchen with its island and columns, the piano and navy sofas in the living room, the office furniture, the pool's even rounded shape with its safety fence, and the terrace furniture. None of the photos are stored here.</p>
 <p><span class="tag">yours</span> Two changes you told me about: the wall between the kitchen and the dining room is removed (one open space), and the bar/sitting area is now Bedroom 5. I assumed where the new bedroom's wall and door are.</p>
-<p><span class="tag est">estimate</span> Halls, closets, baths, pantry and mech rooms (scaled off the plan drawing), wall thickness, door and window sizes and positions, ceiling heights (9′ main, 8.5′ upper), roof pitches, exact plant positions and sizes, stair shape, how the upper floor sits over the main floor (matched by chimney and south wall), tree sizes, colors.</p>
+<p><span class="tag est">estimate</span> Halls, closets, baths, pantry and mech rooms (scaled off the plan drawing), wall thickness, door and window sizes and positions, ceiling heights (9′ main, 8.5′ upper), roof pitches, exact plant positions and sizes, how the upper floor sits over the main floor (matched by chimney and south wall), tree sizes, colors. The stair is drawn from both plan levels (16 risers, three flights); the two drawings disagree by a few feet on where it lands upstairs, so its exact position is ±2 ft.</p>
 <p>Public records list 3,480 sq ft; the plan-measured 4,205 sq ft is used here. Treat all dimensions as ±1 ft and measure on site before buying furniture.</p>
 </div>
 <h3>Shortcuts</h3>
@@ -1475,7 +1491,7 @@ $('noteCancel').onclick = () => $('noteDlg').close();
 $('noteDel').onclick = () => { if (!editing) return; state.notes = state.notes.filter(x => x !== editing.n); editing.kept = true; $('noteDlg').close(); toast('Mark removed'); };
 $('noteDlg').addEventListener('close', () => { if (editing && editing.isNew && !editing.kept) state.notes = state.notes.filter(x => x !== editing.n); editing = null; syncPins(); save(true); });
 $('bMark').onclick = () => setMarking(!marking);
-$('wk-up').onclick = () => { walk.lvl = walk.lvl ? 0 : 1; walk.onStairs = false; const [x, y, yaw] = walk.lvl ? [16.4, 72.1, Math.PI / 2] : [25.3, 78.6, Math.PI]; persp.position.set(M(x), M(LEVELS[walk.lvl].base) + 1.6, M(y)); walk.yaw = yaw; walk.pitch = 0; toast(walk.lvl ? 'Upper level · walk onto the stairs or press this again to go down' : 'Main level'); };
+$('wk-up').onclick = () => { walk.lvl = walk.lvl ? 0 : 1; walk.onStairs = false; const [x, y, yaw] = walk.lvl ? [15.3, 78.4, 0] : [24.5, 78.6, 0]; persp.position.set(M(x), M(LEVELS[walk.lvl].base) + 1.6, M(y)); walk.yaw = yaw; walk.pitch = 0; toast(walk.lvl ? 'Upper level · walk onto the stairs or press this again to go down' : 'Main level'); };
 function notesText() { return state.notes.length ? 'Change requests for the 736 Arlington 3D model:\n' + state.notes.map((n, i) => `${i + 1}. [${noteWhere(n)}] ${n.text || '(no note written)'}`).join('\n') : ''; }
 function renderNotes() {
   const el = $('pane-notes'); el.textContent = '';
@@ -1508,9 +1524,12 @@ function tick() {
     const fx = -Math.sin(walk.yaw), fz = -Math.cos(walk.yaw);
     let mv = 0, st = 0; if (k.w || k.arrowup) mv += 1; if (k.s || k.arrowdown) mv -= 1; if (k.a) st -= 1; if (k.d) st += 1;
     persp.position.x += (fx * mv - fz * st) * sp; persp.position.z += (fz * mv + fx * st) * sp;
-    { // stairs: walking onto them carries you up or down; the lower flight climbs north from the foyer, the upper flight climbs west to the upper hall
+    { // stairs: walking onto them carries you up or down; north from the foyer, west over the pantry, south onto the upper hall
       const fx = persp.position.x / FT, fy = persp.position.z / FT;
-      if (fx > 18.4 && fx < 26.8 && fy > 70.6 && fy < 76.5) { const sh = fx >= 23.8 ? (fy > 73.5 ? (76.5 - fy) / 3 * 3.1 : 3.75) : 3.75 + (23.8 - fx) / 5.4 * 6.25, ty = M(sh) + 1.6;
+      const sh = fx > 23 && fx < 26 && fy > 73.8 && fy < 76.5 ? (76.5 - fy) / (3 * TR) * 3 * RISE : fx > 23 && fx < 26 && fy > 70.6 && fy <= 73.8 ? 4 * RISE
+        : fy > 70.6 && fy < 73.5 && fx > 16.7 && fx <= 23 ? 4 * RISE + (23 - fx) / (7 * TR) * 7 * RISE : fy > 70.6 && fy < 73.5 && fx > 13.9 && fx <= 16.7 ? 12 * RISE
+        : fx > 13.9 && fx < 16.7 && fy >= 73.5 && fy < 76.2 ? 12 * RISE + (fy - 73.5) / (3 * TR) * 4 * RISE : null;
+      if (sh !== null) { const ty = M(sh) + 1.6;
         if (Math.abs(ty - persp.position.y) < 1.1) { persp.position.y += (ty - persp.position.y) * Math.min(1, dt * 10); walk.lvl = sh > 6 ? 1 : 0; walk.onStairs = true; } }
       else if (walk.onStairs) { walk.onStairs = false; persp.position.y = M(LEVELS[walk.lvl].base) + 1.6; } }
     persp.rotation.order = 'YXZ'; persp.rotation.set(walk.pitch, walk.yaw, 0);
@@ -1534,7 +1553,7 @@ function supportAudit() { scene.updateMatrixWorld(true); const boxes = [], skip 
     for (const B of boxes) { if (B === A) continue; const b = B.b; if (b.max.x < a.min.x - tol || b.min.x > a.max.x + tol || b.max.z < a.min.z - tol || b.min.z > a.max.z + tol) continue; if ((b.min.y <= a.min.y + tol && b.max.y >= a.min.y - tol) || (b.min.y <= a.max.y + tol && b.max.y >= a.max.y - tol)) { ok = true; break; } } // resting on, leaning against, or hanging from something
     if (!ok) bad.push({ where: A.where, bottom_m: +a.min.y.toFixed(2), x_ft: +((a.min.x + a.max.x) / 2 / FT).toFixed(1), y_ft: +((a.min.z + a.max.z) / 2 / FT).toFixed(1), size_m: [a.max.x - a.min.x, a.max.y - a.min.y, a.max.z - a.min.z].map(v => +v.toFixed(2)), item: A.o.userData.itemId || '' }); }
   if (bad.length) console.warn('Unsupported meshes: ' + bad.length, bad); return { checked: boxes.length, bad }; }
-window.__planner = { audit: supportAudit, eye: (px, pz, yawDeg, pitch = 0, h = 5.3) => { setMode('walk'); persp.position.set(M(px), M(h), M(pz)); walk.yaw = yawDeg * Math.PI / 180; walk.pitch = pitch; }, state: () => state, setMode, setLevel, select, startPlacing, scene, meshes, view: (px, py, pz, tx, ty, tz) => { persp.position.set(M(px), M(py), M(pz)); orbitCtl.target.set(M(tx), M(ty), M(tz)); orbitCtl.update(); } };
+window.__planner = { audit: supportAudit, eye: (px, pz, yawDeg, pitch = 0, h = 5.3) => { setMode('walk'); persp.position.set(M(px), M(h), M(pz)); walk.yaw = yawDeg * Math.PI / 180; walk.pitch = pitch; }, state: () => state, setMode, setLevel, select, startPlacing, scene, meshes, planView: (x, y, zoom = 1) => { planCtl.target.set(M(x), 0, M(y)); ortho.position.set(M(x), 80, M(y)); ortho.zoom = zoom; ortho.updateProjectionMatrix(); planCtl.update(); }, view: (px, py, pz, tx, ty, tz) => { persp.position.set(M(px), M(py), M(pz)); orbitCtl.target.set(M(tx), M(ty), M(tz)); orbitCtl.update(); } };
 if (location.hash === '#audit') setTimeout(supportAudit, 800);
 tick();
 </script>
