@@ -1224,13 +1224,14 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
       for (let z = -30; z < -4; z += 1.7) blob(-9.9, 0.4, z, 0.95, [0x8A3B2E, 0x9A4632, 0x7A3328][(z * 3 | 0) % 3 < 0 ? 0 : Math.abs(z * 3 | 0) % 3], 0.5); } }
 }
 /* ADU options (structural what-ifs, not furniture): a custom-built cottage at the back of the lot, behind the patio, in two layouts on one footprint.
-   A: one bedroom, a full bath, and a pool bath whose only door opens onto the patio. B: two bedrooms and one bath with two doors, one from inside and one from the patio for party guests.
+   Both have exactly one bath with two doors: one from inside, one from the patio so party guests never walk through the cottage.
+   A: one bedroom, a larger great room, a walk-in closet / storage room. B: two bedrooms, laundry and storage in the north-west room.
    Everything here is built hidden and shown only when an ADU option is picked in the Plan menu; the house as it is today (Original) never changes.
    Footprint: the lot's back triangle less 4 ft from the side and rear lot lines (state ADU setback), ≈545 sq ft gross. The lot drawing is approximate: survey first. */
 const ADU_POLY = [[-8.8, -31.5], [25.9, -31.5], [14, -52], [0, -52], [-8.8, -41.9]];
 const ADU = new THREE.Group(), ADU_VAR = { adu: new THREE.Group(), adu2: new THREE.Group() }, ADU_ROOFS = []; ADU.visible = false; for (const g of Object.values(ADU_VAR)) { g.visible = false; ADU.add(g); } G.site.add(ADU);
 let aduOn = ''; const aduHide = [];
-const ADU_LABELS = { adu: [['ADU option A · 1 bed + 2 baths · ≈545 sq ft', 3.5, -29.2], ['Great room', 2, -38.2], ['Bedroom', 9, -47.6], ['Bath', -3.2, -46.4], ['Pool bath · patio door only', 19.6, -33.6], ['Laundry', 17.4, -39.3]],
+const ADU_LABELS = { adu: [['ADU option A · 1 bed + 1 bath · ≈545 sq ft', 3.5, -29.2], ['Great room', 2, -38.2], ['Bedroom', 9, -47.6], ['Closet · storage', -3.2, -46.4], ['Bath · inside + patio doors', 19.6, -33.6], ['Laundry', 17.4, -39.3]],
   adu2: [['ADU option B · 2 beds + 1 bath · ≈545 sq ft', 3.5, -29.2], ['Great room', 2.5, -38.6], ['Bedroom 1', 9, -47.6], ['Bedroom 2', 19.2, -37], ['Bath · inside + patio doors', 11.4, -35.2], ['Laundry · storage', -3.2, -46.4]] };
 {
   const keep = seed, FL = 0.35, HW = 9.8, WT = HW + 0.3, APX = [4.5, 15.4, -41.8], P = ADU_POLY;
@@ -1283,11 +1284,11 @@ const ADU_LABELS = { adu: [['ADU option A · 1 bed + 2 baths · ≈545 sq ft', 3
     // A: great room | pool bath + laundry at x 14, pool bath | laundry at y −37.  B: great room | bedroom 2 at x 14; the shared bath x 9–14, y −31.5 to −38.5 with a pocket door from the great room
     wall([xOn(-42, 3), -42], [xOn(-42, 1), -42], 0.4, FL, WT, [inner, inner], [[-2.6 - xOn(-42, 3), 2.5, FL, 6.9, 'door', -1, 1], [10 - xOn(-42, 3), 2.7, FL, 6.9, 'door', -1, 1]]);
     wall([3.5, -42.2], [3.5, -51.5], 0.4, FL, WT, [inner, inner]);
-    if (A) { wall([14, -31.75], [14, -41.8], 0.4, FL, WT, [inner, inner], [[6.4, 2.5, FL, 6.9, 'door', -1, 1]]); wall([14.2, -37], [xOn(-37, 1), -37], 0.4, FL, WT, [inner, inner]); }
+    if (A) { wall([14, -31.75], [14, -41.8], 0.4, FL, WT, [inner, inner], [[0.45, 2.4, FL, 6.9, 'pocket'], [6.4, 2.5, FL, 6.9, 'door', -1, 1]]); wall([14.2, -37], [xOn(-37, 1), -37], 0.4, FL, WT, [inner, inner]); }
     else { wall([14, -31.75], [14, -41.8], 0.4, FL, WT, [inner, inner], [[6.85, 2.5, FL, 6.9, 'door', 1, 1]]); wall([9, -31.75], [9, -38.7], 0.4, FL, WT, [inner, inner], [[0.6, 2.4, FL, 6.9, 'pocket']]); wall([9.2, -38.5], [13.8, -38.5], 0.4, FL, WT, [inner, inner]); }
     // floors: oak in the living rooms, tile in the baths and laundry
     const fl = (poly, m, y = FL) => { const f = flat(poly, M(y), m); f.receiveShadow = true; return add(f); };
-    fl(IN, oak); fl([[xOn(-42.2, 3), -42.2], [3.3, -42.2], [3.3, -51.6], [xOn(-51.6, 3), -51.6]], tile, FL + 0.01);
+    fl(IN, oak); if (!A) fl([[xOn(-42.2, 3), -42.2], [3.3, -42.2], [3.3, -51.6], [xOn(-51.6, 3), -51.6]], tile, FL + 0.01);
     if (A) fl([[14.2, -31.75], [xOn(-31.75, 1), -31.75], [xOn(-41.8, 1), -41.8], [14.2, -41.8]], tile, FL + 0.01); else fl([[9.2, -31.75], [13.8, -31.75], [13.8, -38.3], [9.2, -38.3]], tile, FL + 0.01);
     add(flat([[-8.8, -31.5], [25.9, -31.5], [26.4, -30.4], [-8.8, -30.4]], -0.011, apronM)); // concrete apron joining the patio
     // pavilion roof in the house's charcoal composition shingle, eaves ≈1.5 ft past the walls, top 15.75 ft above grade (under the 16 ft detached-ADU limit)
@@ -1312,11 +1313,9 @@ const ADU_LABELS = { adu: [['ADU option A · 1 bed + 2 baths · ≈545 sq ft', 3
     for (const x of [6.7, 13.15]) { bx(1.2, 1.3, 2, white, x, -51, FL); cyl(0.4, 0.9, lampM, x, -51, FL + 2, 0.3); }
     bx(2, 5.5, 7, white, 4.75, -45.2);
     if (A) {
-      // full bath in the north-west room: navy vanity with mirror, toilet, walk-in glass shower
-      bx(3.4, 1.8, 2.8, navy, -4.6, -43.1); bx(3.5, 1.9, 0.1, counterMat, -4.6, -43.1, FL + 2.8); bx(1.6, 1.1, 0.3, white, -4.6, -43.2, FL + 2.9); bx(2.8, 0.08, 2.6, mirror, -4.6, -42.3, FL + 3.6);
-      bx(1.5, 2.2, 1.35, white, 2.55, -44.6); bx(0.6, 1.6, 1.4, white, 3.0, -44.6, FL + 1.35);
-      bx(3.2, 4, 0.12, showerM, 1.7, -48.3); glassAt(0.02, 6.6, 4, 0.1, -48.3, FL); glassAt(2.2, 6.6, 0.02, 1.2, -46.3, FL);
-      // pool bath (door from the patio only): toilet, vanity, shower to rinse off after the pool
+      // north-west room: walk-in closet and storage (white shelving along the bedroom wall and under the window)
+      bx(1.4, 8.6, 6.5, white, 2.55, -46.6); bx(4, 1.4, 6.5, white, -4.4, -42.95); bx(1.2, 2.4, 3, oakM, -0.6, -44.6);
+      // the one bath: a pocket door from the great room and a door from the patio; toilet, vanity, shower to rinse off after the pool
       bx(2.2, 1.5, 1.35, white, 15.35, -35.4); bx(0.6, 1.6, 1.4, white, 14.5, -35.4, FL + 1.35); bx(2.4, 1.6, 2.8, navy, 18.3, -36.0); bx(2.5, 1.7, 0.1, counterMat, 18.3, -36.0, FL + 2.8); bx(1.4, 1, 0.3, white, 18.3, -36.0, FL + 2.9); bx(2, 0.08, 2.4, mirror, 18.3, -36.75, FL + 3.6);
       bx(2.8, 2.8, 0.12, showerM, 22.0, -33.3); glassAt(0.02, 6.6, 2.8, 20.6, -33.3, FL);
       // laundry: stacked washer-dryer, heat-pump water heater
@@ -1332,7 +1331,7 @@ const ADU_LABELS = { adu: [['ADU option A · 1 bed + 2 baths · ≈545 sq ft', 3
       // north-west room: laundry and storage
       bx(2.3, 2.3, 5.6, white, -4.6, -43.4); cyl(0.9, 5, white, 0.6, -46.2); bx(1.2, 5.4, 6.5, white, 2.6, -45.3);
     }
-    // outside: sconces by the slider and the bath door; in A an outdoor rinse shower by the pool bath
+    // outside: sconces by the slider and the bath door; in A an outdoor rinse shower beside the bath door
     for (const x of A ? [-0.6, 12.6, 16.2] : [-1.6, 8.4, 13.4]) { bx(0.4, 0.35, 0.7, dark, x, -31.2, 6.6); bx(0.25, 0.25, 0.4, lampM, x, -31.05, 6.7); }
     if (A) { cyl(0.08, 7.4, steel, 22, -30.9, 0); cyl(0.5, 0.08, steel, 22, -30.6, 7.2); bx(2.6, 2.6, 0.12, oakM, 22, -29.6, 0); }
   };
@@ -1553,7 +1552,7 @@ const PLANS_KEY = 'arlington736.plans.v1'; let plans = { cur: 'gt', list: [] }, 
 try { const p0 = JSON.parse(localStorage.getItem(PLANS_KEY) || 'null'); if (p0 && Array.isArray(p0.list)) plans = p0; } catch (e) {}
 const designSig = () => JSON.stringify([state.items, state.rooms]), curPlan = () => plans.list.find(p => p.id === plans.cur);
 function storePlans() { localStorage.setItem(PLANS_KEY, JSON.stringify(plans)); }
-const OPTIONS = [{ id: 'adu', name: 'ADU option A · 1 bed + 2 baths, pool bath opens to the patio' }, { id: 'adu2', name: 'ADU option B · 2 beds + 1 bath, bath also opens to the patio' }], optOf = id => OPTIONS.find(o => o.id === id);
+const OPTIONS = [{ id: 'adu', name: 'ADU option A · 1 bed + 1 bath, bath also opens to the patio' }, { id: 'adu2', name: 'ADU option B · 2 beds + 1 bath, bath also opens to the patio' }], optOf = id => OPTIONS.find(o => o.id === id);
 function renderPlans() { const sel = $('planSel'); sel.innerHTML = ''; const o = new Option('Original (as it is today)', 'gt'); sel.add(o); for (const op of OPTIONS) sel.add(new Option(op.name, op.id)); for (const p of plans.list) sel.add(new Option(p.name + (p.opt && optOf(p.opt) ? ' · on ' + optOf(p.opt).name.split(' ·')[0] : ''), p.id)); sel.value = curPlan() ? plans.cur : optOf(plans.cur) ? plans.cur : 'gt'; $('planDel').hidden = $('planRen').hidden = !curPlan(); }
 function originalData() { let o = null; try { o = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {} return o && Array.isArray(o.items) ? o : { items: starterItems(), rooms: {}, m: 16 }; }
 function openPlan(id, msg) { clearTimeout(saveT); const op = optOf(id); if (op) { plans.cur = id; select(null); loadState(JSON.parse(JSON.stringify(originalData())), msg); gtBase = designSig(); try { storePlans(); } catch (e) {} renderPlans(); applyStruct(id); setStatus('Option · ' + op.name.split(' · ')[1] + ' · the original is unchanged'); return; } const p = plans.list.find(q => q.id === id); plans.cur = p ? id : 'gt'; select(null); loadState(JSON.parse(JSON.stringify(p ? p.data : originalData())), msg); applyStruct(p && p.opt || ''); if (!p) gtBase = designSig(); try { storePlans(); } catch (e) {} renderPlans(); setStatus(p ? 'Design plan · ' + p.name : 'Original · changes go into a new design'); }
