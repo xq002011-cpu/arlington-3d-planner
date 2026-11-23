@@ -245,7 +245,7 @@ const LEVELS = [
 const R = (x0, y0, x1, y1) => [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
 const ROOMS = [
   // main level
-  { id: 'rec', name: 'Rec Room', level: 0, poly: R(0, 0, 27, 23), dims: [26, 21], src: 'plan', floor: 'lvp', vaulted: true, note: 'Vaulted dark-wood ceiling, French doors to terrace. Now ping-pong and Pilates.' },
+  { id: 'rec', name: 'Rec Room', level: 0, poly: R(0, 0, 27, 23), dims: [26, 21], src: 'plan', floor: 'lvp', vaulted: true, note: 'Vaulted dark-wood ceiling, French doors to terrace, wet bar in the south-west corner (plan). Now ping-pong, a basketball arcade machine and Pilates.' },
   { id: 'sitarea', name: 'Bedroom 5', level: 0, poly: R(0, 23, 11, 39.3), src: 'est', floor: 'lvp', ceilH: 8.4, note: 'Your renovation: the bar and sitting area (plan: 10′ × 10′ + bar) enclosed as a bedroom. Wall and door position assumed.' },
   { id: 'family', name: 'Family Room', level: 0, poly: [[11, 23], [27, 23], [29.6, 57.7], [12, 57.7], [12, 39.3], [11, 39.3]], dims: [15, 31], src: 'plan', floor: 'lvp', ceilH: 9.85, woodCeil: true, note: 'Fieldstone fireplace, wood ceiling with beams, clerestory windows, French doors to pool deck' },
   { id: 'bed4', name: 'Bedroom 4', level: 0, poly: R(0, 39.3, 12, 54.4), dims: [11, 14], src: 'plan', floor: 'oak', ceilH: 8.4 },
@@ -401,6 +401,7 @@ const CAT = {
   standing_desk: { label: 'Standing desk', w: 1.5, d: 0.75, h: 1.1, color: '#C9B08A' },
   grand_piano: { label: 'Grand piano', w: 1.5, d: 1.9, h: 1.0, color: '#17171A' },
   bench: { label: 'Bench', w: 1.4, d: 0.4, h: 0.45, color: '#A48463' },
+  hoops: { label: 'Basketball arcade machine', w: 1.1, d: 2.3, h: 2.6, color: '#1E3A6E' },
   toy_shelf: { label: 'Toy shelf with bins', w: 1.2, d: 0.35, h: 0.62, color: '#F4F2EE' },
 };
 const NAVY = '#1B2440', OUT = '#8E9499', BLK = '#1A1B1D', WAL = '#6B4630';
@@ -440,12 +441,13 @@ const STARTER = [
   ['bed_king', 'primary', 9.7, 70, 90],
   ['bed_queen', 'bed2', 30.4, 62.6, 270, { color: '#5B6FA8', name: 'Bed, blue bedding' }],
   // rec room and Bedroom 5, from her photo taken in the rec room: charcoal sofa on the west wall, grey leaf-pattern rug with the dinosaur quilt on it; through the doorway, a bed on an oak base and a wall-mounted TV
-  ['sofa', 'rec', 1.9, 13.6, 270, { color: '#2A2D33', w: 2.0, name: 'Charcoal sofa' }], ['rug', 'rec', 8.6, 15.4, 0, { w: 2.8, d: 2.2, color: '#CFCDC8', name: 'Grey leaf rug' }], ['rug', 'rec', 8.2, 15.2, 0, { w: 1.7, d: 1.3, h: 0.02, pic: 'dino', color: '#2F6B5E', name: 'Dinosaur quilt' }],
+  ['sofa', 'rec', 1.9, 13.6, 270, { color: '#2A2D33', w: 2.0, name: 'Charcoal sofa' }], ['rug', 'rec', 7.2, 12.4, 90, { w: 2.8, d: 2.2, color: '#CFCDC8', name: 'Grey leaf rug' }], ['rug', 'rec', 7.2, 12.4, 90, { w: 1.7, d: 1.3, h: 0.02, pic: 'dino', color: '#2F6B5E', name: 'Dinosaur quilt' }],
   ['bed_queen', 'sitarea', 3.4, 30.6, 0, { color: '#F1EEE7', name: 'Bed on oak base' }], ['art', 'sitarea', 6.6, 39.05, 180, { w: 1.05, d: 0.04, h: 0.6, elev: 1.4, color: '#111214', name: 'Wall TV' }],
   // Adam's office (owner's note): standing desk under the street window, facing it; the children's toy area on the west side; the closet is built in
   ...ADAM_SET,
-  // rec room, as she asked: ping-pong and Pilates
-  ['ping_pong', 'rec', 17.5, 8.4, 0], ['pilates', 'rec', 20.5, 18.6, 0], ['rug', 'rec', 20.5, 18.6, 0, { w: 3, d: 1.4, color: '#5B6770', name: 'Exercise mat' }],
+  // rec room (owner's notes): ping-pong moved toward the bar; a basketball arcade machine with its hoop to the south wall; the Pilates reformer against the east wall beside it; stools at the bar
+  ['ping_pong', 'rec', 15.3, 10.0, 0], ['hoops', 'rec', 20.5, 18.7, 180], ['pilates', 'rec', 25.2, 18.4, 90], ['rug', 'rec', 25.2, 18.4, 90, { w: 2.9, d: 1.1, color: '#5B6770', name: 'Exercise mat' }],
+  ['bar_stool', 'rec', 4.6, 15.8, 0, { color: '#6B5A48', name: 'Bar stool (rec)' }], ['bar_stool', 'rec', 7.0, 15.8, 0, { color: '#6B5A48', name: 'Bar stool (rec) 2' }],
   ...KITCHEN_SET, ...OFFICE_SET, ...TERRACE_SET, ['porch_swing', 'rec', 25.4, -13.4, 90], ['sandbox', 'rec', 24.6, -22.4, 0], ['raised_bed', 'rec', 32.6, -18.6, 60], ['raised_bed', 'rec', 30.0, -26.0, 60], ['chair', 'rec', 28.4, -20.4, 250, { color: BLK, w: 0.6, d: 0.6, h: 0.9, name: 'Outdoor armchair' }],
 ];
 const PAINTS = [['Warm white', '#F2EEE6'], ['Linen', '#E9E0D0'], ['Greige', '#D6CFC2'], ['Sage', '#B9C4B0'], ['Mist blue', '#BFCED6'], ['Clay', '#D9B9A3'], ['Charcoal', '#4A4F52'], ['Navy', '#2F3D55']];
@@ -689,9 +691,11 @@ function lantern(x, y, h, nx, ny) { const g = new THREE.Group(), add = (m, yy) =
 
 /* fixtures: stairs, railings, fireplaces, counters, bar (shapes from the plan, finishes from the photos) */
 const fixMat = new THREE.MeshStandardMaterial({ color: 0xF1F0EC, roughness: 0.7 });
+const seedKeep = seed; // the new bath textures must not shift the random sequence the planting uses
 const porcelain = new THREE.MeshStandardMaterial({ color: 0xFAFAF8, roughness: 0.12 }), chromeMat = new THREE.MeshStandardMaterial({ color: 0xD4DADF, roughness: 0.22, metalness: 0.3 });
 const quartz = new THREE.MeshStandardMaterial({ map: canvasTex(marble), color: 0xF4F2EE, roughness: 0.2 }), mirrorMat = new THREE.MeshStandardMaterial({ color: 0xD6E2E8, roughness: 0.04, metalness: 0, emissive: 0x52636B, emissiveIntensity: 0.35 });
 const walnutV = new THREE.MeshStandardMaterial({ color: 0x4A3122, roughness: 0.55 }), glowMat = new THREE.MeshStandardMaterial({ color: 0xFFF6E0, emissive: 0xFFE2A8, emissiveIntensity: 0.8 });
+seed = seedKeep;
 const stoneT = canvasTex((g, s) => { g.fillStyle = '#6E655B'; g.fillRect(0, 0, s, s); for (let i = 0; i < 70; i++) { const x = rnd() * s, y = rnd() * s, w = 40 + rnd() * 70, h = 26 + rnd() * 44, c = new THREE.Color('#B9AC9A'); c.offsetHSL((rnd() - .5) * .04, (rnd() - .5) * .1, (rnd() - .5) * .16); g.fillStyle = '#' + c.getHexString(); g.beginPath(); g.ellipse(x, y, w / 2, h / 2, rnd(), 0, Math.PI * 2); g.fill(); } });
 const stoneMat = new THREE.MeshStandardMaterial({ map: stoneT, roughness: 0.95 });
 const counterMat = new THREE.MeshStandardMaterial({ color: 0xEFE6D2, roughness: 0.5 });
@@ -773,7 +777,16 @@ fix(0, 39.18, 57.88, 39.215, 65.86, 0, 9, new THREE.MeshStandardMaterial({ color
   fix(L, 31, y1 - 0.1, 35.6, y1, 3.2, 8, wood); fix(L, 31, y0 + 0.1, 31.1, y1, 3.2, 8, wh); fix(L, 35.5, y0 + 0.1, 35.6, y1, 3.2, 8, wh); for (let i = 0; i < 5; i++) { const h = 3.2 + i * 1.15; fix(L, 31.1, y0 + 0.2, 35.5, y1 - 0.1, h, h + 0.07, wood);
     for (let k = 0; k < 5; k++) fix(L, 31.3 + k * 0.84, y0 + 0.5, 31.95 + k * 0.84, y1 - 0.3, h + 0.07, h + 0.45 + ((i + k) % 3) * 0.15, new THREE.MeshStandardMaterial({ color: [0xE0564F, 0xF4F2EE, 0x23344E, 0xEE7FB0, 0x6B4630][(i * 2 + k) % 5], roughness: 0.8 })).castShadow = false; }
   fix(L, 29.1, y0 + 0.02, 31.1, y0 + 0.1, 3.2, 8, wh); }
-// the rec room's wet bar is gone (owner: the bar was removed when Bedroom 5 was built)
+// rec room wet bar (floor plan and listing photo 31; owner: the rec room has its bar): a white panelled counter running from the west wall with a rounded east end,
+// stools on its north side, a back bar with glass shelves of bottles against the south-west corner, pendants over the counter
+{ const panel = new THREE.MeshStandardMaterial({ color: 0xE3E4E0, roughness: 0.55 }), top = new THREE.MeshStandardMaterial({ color: 0xBFC2C0, roughness: 0.25 }), glassS = new THREE.MeshStandardMaterial({ color: 0xDDEBEE, transparent: true, opacity: 0.5, roughness: 0.05 });
+  fix(0, 0.2, 17.2, 8.2, 19.4, 0, 3.4, panel); fix(0, 0.2, 17.0, 8.3, 19.5, 3.4, 3.55, top);
+  const end = new THREE.Mesh(new THREE.CylinderGeometry(M(1.1), M(1.1), M(3.4), 24, 1, false, 0, Math.PI), panel); end.position.set(M(8.2), M(1.7), M(18.3)); end.castShadow = true; G.levels[0].add(end);
+  const endTop = new THREE.Mesh(new THREE.CylinderGeometry(M(1.2), M(1.2), M(0.15), 24, 1, false, 0, Math.PI), top); endTop.position.set(M(8.25), M(3.475), M(18.25)); G.levels[0].add(endTop);
+  for (const x of [1.4, 3.2, 5.0, 6.8]) fix(0, x - 0.6, 17.14, x + 0.6, 17.2, 0.4, 3.0, top);
+  fix(0, 0.2, 21.2, 4.8, 22.8, 0, 3.0, panel); fix(0, 0.15, 21.15, 4.85, 22.82, 3.0, 3.12, top);
+  for (const h of [4.6, 5.6, 6.6]) { fix(0, 0.2, 21.9, 4.8, 22.8, h, h + 0.05, glassS); for (let k = 0; k < 7; k++) { const b = new THREE.Mesh(new THREE.CylinderGeometry(M(0.1), M(0.12), M(0.85), 10), new THREE.MeshStandardMaterial({ color: [0x3D5A2A, 0x7A3B1E, 0xE9E2CF, 0x2B3F66, 0x8C1F2A, 0xC9A44A, 0x4A4A4A][(k + h * 3) % 7 | 0], roughness: 0.2 })); b.position.set(M(0.6 + k * 0.6), M(h + 0.05 + 0.425), M(22.35)); b.castShadow = false; G.levels[0].add(b); } }
+  for (const x of [2.2, 4.6, 7.0]) { const pd = new THREE.Mesh(new THREE.SphereGeometry(M(0.35), 14, 10), glowMat); pd.position.set(M(x), M(7.2), M(18.3)); G.levels[0].add(pd); fix(0, x - 0.02, 18.28, x + 0.02, 18.32, 7.5, 11, glowMat).castShadow = false; } }
 // baths
 // primary bath (owner's notes): a real alcove bathtub on the east wall, the glass shower room beside it, a TOTO-style toilet with a washlet seat and closed lid,
 // a double vanity with mirrors on the west wall south of the bedroom door, and to its left, against the same wall, a makeup table with a lit mirror and a stool
@@ -814,7 +827,7 @@ for (let y = 28; y < 57; y += 5.6) { const b = fix(0, 11.3, y - 0.3, 27.2 + (y -
    living room and sitting room; brick gable on the bedroom wing; entry skirt roof sharing the living wing's eave line; hip over the rec room;
    flat gravel roof over the tall family room, with a shingle shed falling west over bedroom 4 and bedroom 5. Pitches and heights are estimates. */
 // the flat roof is finished as a simple Japanese stone garden (owner's note): pale raked gravel in straight lines, rings raked round three moss-edged stones
-const gravelMat = new THREE.MeshStandardMaterial({ map: (() => { const t = canvasTex((g, s) => { noise('#E4E1DA', 0.12, 26000)(g, s); g.strokeStyle = 'rgba(120,114,104,.35)'; g.lineWidth = 3; for (let y = 8; y < s; y += 16) { g.beginPath(); g.moveTo(0, y); g.lineTo(s, y); g.stroke(); } }); t.repeat.set(1, 1); return t; })(), roughness: 1 });
+const gravelMat = new THREE.MeshStandardMaterial({ map: (() => { const keep = seed, t = canvasTex((g, s) => { noise('#E4E1DA', 0.12, 30000)(g, s); g.strokeStyle = 'rgba(120,114,104,.35)'; g.lineWidth = 3; for (let y = 8; y < s; y += 16) { g.beginPath(); g.moveTo(0, y); g.lineTo(s, y); g.stroke(); } }); seed = keep; t.repeat.set(1, 1); return t; })(), roughness: 1 });
 const soffitMat = new THREE.MeshStandardMaterial({ color: 0xF1F0EC, roughness: 0.9, side: THREE.DoubleSide });
 const V3 = (x, h, y) => [M(x), M(h), M(y)];
 function triMesh(P, mat, group = G.roof) { const g = new THREE.BufferGeometry(), pos = P.flat(), uv = []; for (let i = 0; i < pos.length; i += 3) uv.push(pos[i] + pos[i + 2], pos[i + 1]); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); g.computeVertexNormals(); const m = new THREE.Mesh(g, mat); m.castShadow = true; m.receiveShadow = true; group.add(m); return m; }
@@ -1191,6 +1204,13 @@ function itemGroup(it, ghost) {
       B(0.03, d - 0.1, 0.03, w / 2 - 0.12, h + 0.38, 0, mk(0xC4C9CD, { metalness: 0.5, roughness: 0.3 })); for (let i = 0; i < 4; i++) B(w * 0.36, 0.012, 0.012, w * 0.31, h - 0.1, (i - 1.5) * 0.07, mk(0x9A9EA2)); break; }
     case 'office_chair': { const r = w / 2; for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2, leg = B(r * 0.95, 0.045, 0.035, Math.cos(a) * r * 0.48, 0.04, Math.sin(a) * r * 0.48, dark); leg.rotation.y = -a; } Cy(0.03, 0.03, h * 0.38, 0, 0.06, 0, dark); B(w * 0.78, d * 0.74, 0.07, 0, h * 0.44, 0.02, m1); const bk = B(w * 0.74, 0.05, h * 0.48, 0, h * 0.5, -d * 0.36, m1); bk.rotation.x = -0.12; for (const sx of [-1, 1]) B(0.05, d * 0.42, 0.03, sx * w * 0.42, h * 0.62, 0, dark); break; }
     case 'umbrella': { Cy(0.035, 0.035, h, w * 0.42, 0, 0, dark); B(0.75, 0.75, 0.12, w * 0.42, 0, 0, dark); B(w * 0.42, 0.05, 0.05, w * 0.21, h - 0.08, 0, dark); const cn = new THREE.Mesh(new THREE.ConeGeometry(w / 2, 0.55, 8, 1, true), mk(base, { side: THREE.DoubleSide })); cn.position.y = h - 0.3; cn.castShadow = !ghost; g.add(cn); break; }
+    case 'hoops': { // arcade basketball: ramped lane with net sides, backboard and hoop at the back (local -z), score panel on top, front console with a ball return
+      const net = mk(0xDDE3EA, { transparent: true, opacity: ghost ? 0.2 : 0.3, side: THREE.DoubleSide, depthWrite: false }), red = mk(0xD8402F), wh = mk(0xF4F2EE), blk = mk(0x1A1B1D);
+      B(w, d * 0.32, 0.95, 0, 0, d / 2 - d * 0.16, m1); B(w - 0.1, d * 0.3, 0.05, 0, 0.95, d / 2 - d * 0.16, blk);
+      const lane = new THREE.Mesh(new THREE.BoxGeometry(w, 0.06, d * 0.7), m1); lane.position.set(0, 0.62, -d * 0.15); lane.rotation.x = -0.18; lane.castShadow = !ghost; g.add(lane); B(w, d * 0.66, 0.45, 0, 0, -d * 0.16, m3);
+      for (const sx of [-1, 1]) { B(0.04, d * 0.68, 1.5, sx * (w / 2 - 0.02), 0.9, -d * 0.16, net); B(0.06, 0.06, 2.4, sx * (w / 2 - 0.03), 0, -d / 2 + 0.03, m1); }
+      B(w, 0.06, 1.0, 0, 1.5, -d / 2 + 0.04, wh); B(w + 0.1, 0.25, 0.4, 0, 2.2, -d / 2 + 0.1, blk); B(w * 0.6, 0.02, 0.16, 0, 2.32, -d / 2 + 0.235, mk(0xFF5533, { emissive: 0xFF3311, emissiveIntensity: 0.6 }));
+      const rim = new THREE.Mesh(new THREE.TorusGeometry(0.17, 0.012, 8, 24), red); rim.rotation.x = Math.PI / 2; rim.position.set(0, 1.62, -d / 2 + 0.28); g.add(rim); for (const k of [0, 1, 2]) { const bl = new THREE.Mesh(new THREE.SphereGeometry(0.09, 12, 8), mk(0xE07A2B)); bl.position.set(-0.25 + k * 0.25, 0.2, d / 2 - 0.25); bl.position.y = 0.95 + 0.09; g.add(bl); } break; }
     case 'toy_shelf': { B(w, d, 0.02, 0, 0, 0, m1); B(w, d, 0.02, 0, h - 0.02, 0, m1); B(w, d, 0.02, 0, h / 2 - 0.01, 0, m1); for (const k of [0, 1, 2, 3]) B(0.02, d, h, -w / 2 + 0.01 + k * (w - 0.02) / 3, 0, 0, m1); B(w, 0.01, h, 0, 0, -d / 2 + 0.005, m1);
       const cols = [0xE24B4B, 0x4AA3D8, 0xF2D94A, 0x57B56A, 0xF2A93B, 0x9A6AD0]; for (let r = 0; r < 2; r++) for (let c = 0; c < 3; c++) B((w - 0.1) / 3 - 0.04, d - 0.06, h / 2 - 0.08, -w / 2 + 0.03 + (c + 0.5) * (w - 0.06) / 3, 0.03 + r * (h / 2 - 0.01), 0.02, mk(cols[r * 3 + c], { roughness: 0.9 })); break; }
     case 'standing_desk': { B(w, d, 0.035, 0, h - 0.035, 0, m1); for (const sx of [-1, 1]) { B(0.07, 0.05, h - 0.06, sx * (w / 2 - 0.22), 0.02, 0, dark); B(0.07, d * 0.9, 0.02, sx * (w / 2 - 0.22), 0, 0, dark); } B(w - 0.5, 0.04, 0.06, 0, h - 0.1, 0, dark); break; }
@@ -1219,6 +1239,11 @@ const MOVE12 = [['bench', 54.9, 69.6, 54.3, 69.6], ['nightstand', 48.4, 82.4, 47
   ['office_chair', 46.9, 58.9, 47.6, 59.1, { rot: 0 }], ['zz_plant', 40.0, 62.4, 40.3, 62.4, { w: 0.4, d: 0.6 }], ['speaker', 41.4, 59.7, 42.5, 60.6], ['ladder_shelf', 40.1, 58.6, 40.6, 59.1], ['rack', 60.0, 60.2, 59.7, 61.0, { w: 0.9 }], ['rack', 59.9, 58.6, 58.9, 58.75],
   ['desk', 59.7, 64.2, 59.5, 64.1, { w: 1.0 }], ['raised_bed', 30.6, -19.6, 32.6, -18.6], ['raised_bed', 28.2, -24.6, 30.0, -26.0], ['chair', 28.6, -21, 28.4, -20.4],
   ...[41.5, 44, 46.5, 49, 51.5, 54, 56.5, 59].map((x, i) => ['plant', x, 83.2, 43.8 + i * 2.3, 83.05, { elev: 1.22 }])];
+function migrate14() { const at = (t, x, y) => state.items.find(i => i.type === t && Math.abs(i.x - M(x)) < 0.05 && Math.abs(i.z - M(y)) < 0.05), mv = (it, x, y, o) => it && Object.assign(it, { x: M(x), z: M(y) }, o || {});
+  mv(at('ping_pong', 17.5, 8.4), 15.3, 10.0); mv(at('pilates', 20.5, 18.6), 25.2, 18.4, { rot: 90 }); const mat = state.items.find(i => i.name === 'Exercise mat' && Math.abs(i.x - M(20.5)) < 0.05); mv(mat, 25.2, 18.4, { rot: 90, w: 2.9, d: 1.1 });
+  for (const n of ['Grey leaf rug', 'Dinosaur quilt']) { const r = state.items.find(i => i.name === n && i.level === 0 && i.z < M(23)); if (r && Math.abs(r.z - M(15.3)) < 0.5) mv(r, 7.2, 12.4, { rot: 90 }); }
+  if (!state.items.some(i => i.type === 'hoops')) state.items.push(makeItem('hoops', M(20.5), M(18.7), 0, 180));
+  if (!state.items.some(i => i.name === 'Bar stool (rec)')) { state.items.push(makeItem('bar_stool', M(4.6), M(15.8), 0, 0, { color: '#6B5A48', name: 'Bar stool (rec)' })); state.items.push(makeItem('bar_stool', M(7.0), M(15.8), 0, 0, { color: '#6B5A48', name: 'Bar stool (rec) 2' })); } }
 function migrate13() { if (!state.items.some(i => i.level === 1 && /bed_/.test(i.type) && i.x > M(26) && i.x < M(37.6) && i.z < M(73.9))) state.items.push(makeItem('bed_queen', M(30.4), M(62.6), 1, 270, { color: '#5B6FA8', name: 'Bed, blue bedding' }));
   if (!state.items.some(i => i.level === 0 && i.type === 'standing_desk' && i.z > M(76.2) && i.x < M(12.8))) ADAM_SET.forEach((tp, k) => state.items.push(tupleItem(tp, k + 1))); }
 function migrate12() { for (const [t, ox, oy, nx, ny, o] of MOVE12) { const it = state.items.find(i => i.type === t && Math.abs(i.x - M(ox)) < 0.05 && Math.abs(i.z - M(oy)) < 0.05); if (it) Object.assign(it, { x: M(nx), z: M(ny) }, o || {}); } }
@@ -1247,7 +1272,7 @@ function removeItemMesh(id) { const g = meshes.get(id); if (g) { G.furn[g.userDa
 function applyRoomStyles() { for (const r of ROOMS) { const s = state.rooms[r.id] || {}; roomWallMat(r.id).color.set(s.wall || r.wall || '#F2EEE6'); r.floorMesh.material = floorMats[s.floor || r.floor]; } }
 function loadState(obj, msg) {
   for (const id of [...meshes.keys()]) removeItemMesh(id);
-  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 13 };
+  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 14 };
   nextId = 1 + Math.max(0, ...state.items.map(i => parseInt(String(i.id).slice(1)) || 0));
   if ((obj.m | 0) < 2) migrate2();
   if ((obj.m | 0) < 3) migrate3();
@@ -1256,6 +1281,7 @@ function loadState(obj, msg) {
   if ((obj.m | 0) < 11) migrate6();
   if ((obj.m | 0) < 12) migrate12();
   if ((obj.m | 0) < 13) migrate13();
+  if ((obj.m | 0) < 14) migrate14();
   state.items.forEach(syncItem); syncPins(); applyRoomStyles(); select(null); renderRooms(); if (msg) toast(msg); setStatus();
 }
 let saveT;
@@ -1644,7 +1670,7 @@ function tick() {
 
 /* ================= BOOT ================= */
 let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { saved = null; }
-if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 13 }); }
+if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 14 }); }
 setStatus(saved ? 'Loaded your saved layout' : null);
 $('viewhint').textContent = 'Drag to orbit · right-drag to pan · scroll to zoom · pick Main or Upper to look inside';
 applyVis(); renderInspector(); renderRooms();
