@@ -874,11 +874,56 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
       const m = new THREE.Mesh(new THREE.PlaneGeometry(M(L2), M(3.6)), std({ map: t, transparent: true, alphaTest: 0.4, side: THREE.DoubleSide })); m.position.set(M((p0[0] + p1[0]) / 2), M(1.8), M((p0[1] + p1[1]) / 2)); m.rotation.y = -Math.atan2(p1[1] - p0[1], p1[0] - p0[0]); S.add(m);
       for (const q of [p0, p1]) { const b = box(M(0.25), M(4), M(0.25), pmt); b.position.set(M(q[0]), M(2), M(q[1])); S.add(b); } };
     span(0, 13); span(13, 39.6); span(46, L); }
-  { // flowers: blue hydrangea by the walk, agapanthus in bloom under the living-room windows, roses in that bed
-    const hyd = (x, y, r) => { bush(x, y, r, 0x4E8A46, 0.8); for (let i = 0; i < 10; i++) { const a = i * 0.66, d = r * (0.25 + rnd() * 0.6); blob(x + Math.cos(a) * d, r * 0.95 + rnd() * r * 0.45, y + Math.sin(a) * d, 0.58, [0x6F8FD8, 0x8FA8E6, 0x7B7FD0][i % 3], 0.8, sph); } };
-    hyd(30.4, 116.2, 2.1); hyd(47, 96.5, 1.8);
-    for (let x = 37; x < 65; x += 2.6) { const y = 92.4 + Math.sin(x) * 0.8; stem(x, y, 3.3, 0.05, x + 0.2, y, pmat(0x6E9150)); blob(x + 0.2, 3.5, y, 0.55, [0x8E9FE0, 0xA7B3EA][(x | 0) & 1], 0.85, sph); }
-    for (const [x, y, c] of [[44, 88.6, 0xF07FA8], [50, 89.4, 0xB81E2D], [56, 88.8, 0xF2A9BE], [27.4, 107.2, 0xF6C9D2], [21.5, 111, 0xF6C9D2]]) { bush(x, y, 1.2, 0x3F7A45, 1.3); for (let i = 0; i < 3; i++) blob(x + (rnd() - .5) * 1.2, 2.6 + rnd() * 1.2, y + (rnd() - .5) * 1.2, 0.3, c, 0.9, sph); } }
+  { // flowers, modelled species by species from the owner's photos (geometry in feet, scaled to meters on the mesh)
+    const q = new THREE.Quaternion(), dv = new THREE.Vector3(), m4 = new THREE.Matrix4();
+    const place = (geo, d, pos, sc = 1) => { q.setFromUnitVectors(up, dv.copy(d).normalize()); const g2 = geo.clone(); g2.applyMatrix4(m4.compose(pos, q, new THREE.Vector3(sc, sc, sc))); return g2; };
+    const fib = (n, fn, cap = 1) => { for (let i = 0; i < n; i++) { const yv = 1 - (i + 0.5) / n * (1 + cap), r = Math.sqrt(Math.max(0, 1 - yv * yv)), a = i * 2.399963; fn(new THREE.Vector3(Math.cos(a) * r, yv, Math.sin(a) * r), i); } };
+    const put = (geo, c, x, h, y, o = {}) => { const m = new THREE.Mesh(geo, o.mat || pmat(c)); m.position.set(M(x), M(h), M(y)); m.scale.setScalar(M(o.s || 1)); if (o.rx) m.rotation.x = o.rx; if (o.rz) m.rotation.z = o.rz; m.rotation.y = o.ry ?? rnd() * 6.28; m.castShadow = true; S.add(m); return m; };
+    const disc = (rx, rz, th = 0.12) => { const g = new THREE.SphereGeometry(1, 7, 4); g.scale(rx, th * Math.min(rx, rz), rz); return g; };
+    const ring = (parts, petal, n, rr, tilt, hh, a0 = 0) => { for (let i = 0; i < n; i++) { const a = a0 + i / n * 6.283; parts.push(place(petal, new THREE.Vector3(Math.cos(a) * Math.sin(tilt), Math.cos(tilt), Math.sin(a) * Math.sin(tilt)), new THREE.Vector3(Math.cos(a) * rr, hh, Math.sin(a) * rr))); } };
+    // hydrangea macrophylla: mophead of four-petalled florets, big ovate leaves
+    const floret = mergeGeos([0, 1, 2, 3].map(k => { const g = disc(0.05, 0.05, 0.25); g.translate(Math.cos(k * 1.5708) * 0.05, 0, Math.sin(k * 1.5708) * 0.05); return g; }));
+    const mophead = (() => { const parts = []; fib(46, v => parts.push(place(floret, v, v.clone().multiplyScalar(0.4))), 0.45); return mergeGeos(parts); })();
+    const hydLeaf = (() => { const parts = []; fib(26, (v, i) => { const g = disc(0.34, 0.52, 0.06); parts.push(place(g, new THREE.Vector3(v.x, Math.abs(v.y) * 0.6 + 0.5, v.z), new THREE.Vector3(v.x, Math.max(-0.1, v.y) * 0.75, v.z))); }, 0.5); return mergeGeos(parts); })();
+    const hydrangea = (x, y, r) => { put(hydLeaf, 0x2F7A36, x, r * 0.55, y, { s: r }); put(hydLeaf, 0x3E8A3C, x, r * 0.5, y, { s: r * 0.82 }); bush(x, y, r * 0.7, 0x2B5F2E, 0.8);
+      fib(11, (v, i) => { const hx = x + v.x * r * 0.86, hz = y + v.z * r * 0.86, hh = r * 0.62 + Math.max(0, v.y) * r * 0.78; put(new THREE.SphereGeometry(0.34, 8, 6), [0x5F7FCB, 0x7C86D2, 0x8A7BC6][i % 3], hx, hh, hz); put(mophead, [0x6C90E4, 0x8E9BEC, 0x9C8BD8, 0x7FA6EE, 0xCFE3C2][i % 5], hx, hh, hz, { s: 1 + (i % 3) * 0.12 }); }, 0.1); };
+    // agapanthus: round umbel of trumpet florets on a tall bare stalk above strappy leaves
+    const trumpet = (r, h) => { const g = new THREE.ConeGeometry(r, h, 6, 1, true); g.rotateX(Math.PI); g.translate(0, h / 2, 0); return g; };
+    const umbel = (() => { const parts = []; fib(44, v => parts.push(place(trumpet(0.045, 0.2), v, v.clone().multiplyScalar(0.2))), 0.7); return mergeGeos(parts); })();
+    const agapanthus = (x, y, h) => { const tx = x + (rnd() - .5) * 0.8, ty = y + (rnd() - .5) * 0.6; stem(x, y, h, 0.035, tx, ty, pmat(0x6E9150)); put(new THREE.SphereGeometry(0.16, 8, 6), 0x7FA06A, tx, h, ty); put(umbel, [0x7F8FE0, 0x9AA6EE, 0x8C86DC][(x * 3 | 0) % 3], tx, h, ty); };
+    // rose: layered bloom on a thorny cane, dark compound leaves
+    const roseGeo = (() => { const parts = [], p1 = disc(0.1, 0.1, 0.22), p2 = disc(0.085, 0.085, 0.22), p3 = disc(0.06, 0.07, 0.25); ring(parts, p1, 6, 0.11, 0.55, 0); ring(parts, p2, 5, 0.075, 1.0, 0.035, 0.5); ring(parts, p3, 4, 0.04, 1.3, 0.07, 0.2); parts.push(new THREE.SphereGeometry(0.04, 6, 5).translate(0, 0.09, 0)); return mergeGeos(parts); })();
+    const roseLeaf = (() => { const parts = []; fib(9, v => parts.push(place(disc(0.11, 0.17, 0.08), new THREE.Vector3(v.x, 0.7, v.z), new THREE.Vector3(v.x * 0.3, v.y * 0.25, v.z * 0.3))), 0.6); return mergeGeos(parts); })();
+    const rose = (x, y, h, cols, n = 4) => { for (let i = 0; i < n; i++) { const a = i * 1.7 + rnd(), d = 0.5 + rnd() * 0.9, hh = h * (0.7 + rnd() * 0.35), tx = x + Math.cos(a) * d, ty = y + Math.sin(a) * d; stem(x + Math.cos(a) * 0.2, y + Math.sin(a) * 0.2, hh, 0.04, tx, ty, pmat(0x4C7A3E));
+        for (const t of [0.35, 0.6, 0.85]) put(roseLeaf, [0x2F6B3A, 0x3B7A40][i % 2], x + (tx - x) * t + (rnd() - .5) * 0.5, hh * t, y + (ty - y) * t + (rnd() - .5) * 0.5, { s: 1.5 });
+        const c = cols[i % cols.length]; put(roseGeo, c, tx, hh + 0.02, ty, { s: 1.5 + rnd() * 0.5, rx: (rnd() - .5) * 0.6 }); if (i % 2) put(new THREE.SphereGeometry(0.06, 6, 5).scale(1, 1.6, 1), c, tx + 0.35, hh - 0.35, ty + 0.2); } };
+    // daylily: trumpet of six recurved tepals on leafless scapes over a fountain of strap leaves
+    const lilyGeo = (() => { const parts = [trumpet(0.07, 0.16)]; ring(parts, disc(0.055, 0.1, 0.18), 6, 0.12, 0.95, 0.15); parts.push(new THREE.SphereGeometry(0.03, 5, 4).translate(0, 0.2, 0)); return mergeGeos(parts); })();
+    const daylily = (x, y) => { crown(x, 0.15, y, [16, 2.1, 0.17, 1.05, 0.95], 0x5E9A45); for (let i = 0; i < 4; i++) { const tx = x + (rnd() - .5) * 1.6, ty = y + (rnd() - .5) * 1.6, h = 2.5 + rnd() * 0.9; stem(x, y, h, 0.03, tx, ty, pmat(0x6E9150)); put(lilyGeo, [0xF2B62E, 0xF08A24, 0xF6C84A][i % 3], tx, h, ty, { s: 1.5, rx: 0.5, rz: (rnd() - .5) * 0.6 }); } };
+    // white flower plumes beside the hydrangea
+    const plume = (x, y, h) => { stem(x, y, h, 0.03, x, y, pmat(0x6E9150)); for (let i = 0; i < 30; i++) { const t = i / 30, r = 0.2 * (1 - t) + 0.03; blob(x + (rnd() - .5) * r * 1.6, h * 0.55 + t * h * 0.5, y + (rnd() - .5) * r * 1.6, 0.09 * (1 - t * 0.6), [0xF3F0E4, 0xE9E6D2][i % 2], 1.2, sph); } bush(x, y, 0.8, 0x4E8A46, 0.7); };
+    // purple verbena mat
+    const verbena = (x, y, w, d) => { blob(x, 0.25, y, Math.max(w, d) / 2, 0x4A7F45, 0.18); for (let i = 0; i < 46; i++) blob(x + (rnd() - .5) * w, 0.45 + rnd() * 0.25, y + (rnd() - .5) * d, 0.11 + rnd() * 0.05, [0x8A5BD0, 0x9F78E0, 0x7A4CC0][i % 3], 0.7, sph); };
+    // pelargonium (geranium): rounded scalloped leaves and pink flower heads on long stalks
+    const pelLeaf = (() => { const parts = []; fib(22, v => parts.push(place(disc(0.26, 0.26, 0.07), new THREE.Vector3(v.x * 0.5, 1, v.z * 0.5), new THREE.Vector3(v.x * 1.2, Math.max(0, v.y) * 0.9 + rnd() * 0.3, v.z * 1.2))), 0.3); return mergeGeos(parts); })();
+    const pelHead = (() => { const parts = []; fib(12, v => parts.push(place(floret, v, v.clone().multiplyScalar(0.13), 0.9)), 0.3); return mergeGeos(parts); })();
+    const pelargonium = (x, y) => { put(pelLeaf, 0x6FA84F, x, 0.9, y, { s: 1.5 }); put(pelLeaf, 0x5E9644, x, 0.5, y, { s: 1.2 }); for (let i = 0; i < 6; i++) { const tx = x + (rnd() - .5) * 2.6, ty = y + (rnd() - .5) * 2.6, h = 2.3 + rnd() * 1.2; stem(x, y, h, 0.03, tx, ty, pmat(0x7BA05A)); put(pelHead, [0xE8588C, 0xF07FA8][i % 2], tx, h, ty, { s: 1.3 }); } };
+    // rosemary: upright grey-green needles with tiny pale-blue flowers
+    const rosemary = (x, y, r) => { spiky(x, y, r, 0, 0x58786A, 70, 0.03, 0.75, 0.035); spiky(x, y, r * 0.8, 0, 0x6B8A78, 50, 0.1, 1.0, 0.03); for (let i = 0; i < 24; i++) blob(x + (rnd() - .5) * r, r * (0.3 + rnd() * 0.6), y + (rnd() - .5) * r, 0.05, 0xB9C6F0, 1, sph); };
+    // morning glory on the north-east fence: heart-shaped leaves and blue funnels with white throats
+    const funnel = (() => mergeGeos([trumpet(0.2, 0.16), new THREE.SphereGeometry(0.06, 6, 5).translate(0, 0.05, 0)]))();
+    for (let y = -40; y < -13; y += 2.4) { const fx = lotX(y) - 0.9; for (let k = 0; k < 3; k++) blob(fx + 0.15, 3 + k * 1.5 + rnd(), y + (rnd() - .5) * 2, 0.9 + rnd() * 0.5, [0x3F7F3C, 0x4E8F45][k % 2], 0.9); for (let k = 0; k < 3; k++) put(funnel, [0x4E5FD8, 0x5B6FE6][k % 2], fx - 0.75, 3.2 + rnd() * 3.4, y + (rnd() - .5) * 2.2, { ry: 0, rz: Math.PI / 2 - 0.15, s: 1.3 }); }
+    // citrus: glossy dark foliage with fruit
+    const citrus = (x, y, r, h, fruit) => { stem(x, y, h, 0.16); for (const [ox, oy, k] of [[0, 0, 1], [0.5, 0.3, 0.7], [-0.45, 0.35, 0.72], [0.1, -0.5, 0.68]]) blob(x + ox * r, h + r * 0.5 * k, y + oy * r, r * k * 0.7, [0x2F6F35, 0x3A7D3C][(k * 10 | 0) % 2], 0.85); fib(16, v => blob(x + v.x * r * 0.95, h + r * 0.45 + v.y * r * 0.55, y + v.z * r * 0.95, 0.16, fruit, 1, sph), 0.6); };
+    // pittosporum: small white flower clusters over the clipped mounds by the street
+    const whiteDots = (x, y, r) => fib(22, v => blob(x + v.x * r * 0.95, r * 0.64 + v.y * r * 0.62, y + v.z * r * 0.95, 0.09, 0xF6F4EA, 1, sph), 0.05);
+    // ---- where each one grows ----
+    hydrangea(30.4, 116.2, 2.1); hydrangea(47, 96.6, 1.8); plume(29.4, 119.6, 3.4); plume(30.8, 120.4, 2.9); plume(31.6, 119.2, 2.5);
+    for (let x = 37; x < 65; x += 2.6) { const y = 92.4 + Math.sin(x) * 0.8; agapanthus(x, y, 3.4 + (x % 1.3)); if ((x * 10 | 0) % 2) agapanthus(x + 0.9, y + 0.5, 2.9); }
+    rose(21.2, 110.8, 4.6, [0xF6C9D2, 0xF3B5C4], 3); rose(27.6, 107.4, 3.6, [0xF6C9D2], 2); rose(44, 88.6, 4.8, [0xF07FA8, 0xF59AB8], 4); rose(50, 89.4, 4.4, [0xB81E2D, 0x9C1626], 4); rose(56, 88.8, 5, [0xF2A9BE, 0xEE8FAE], 3);
+    daylily(19.4, 99.8); daylily(17.6, 102.2); verbena(47.5, 91, 4.5, 2.4); pelargonium(17.4, 105.2); rosemary(15.2, 108.4, 2.4);
+    citrus(-9, -24, 3.2, 3.5, 0xF2D23A); citrus(33.4, -13.2, 2.4, 2.6, 0xF39A1E);
+    whiteDots(36, 124.6, 2.4); whiteDots(39.6, 127.2, 2.7); whiteDots(16, 124, 2.5); }
   { // north-east garden bed beside the terrace: round stepping stones, young trees in green pots, a log pile, a patio heater
     const disc = (x, y, r, h, c, y0 = 0) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(M(r), M(r), M(h), 16), std({ color: c })); m.position.set(M(x), M(y0 + h / 2), M(y)); m.castShadow = true; m.receiveShadow = true; S.add(m); return m; };
     for (const [x, y] of [[31, -24], [32.6, -20.6], [29.6, -27.6], [28, -31], [26.6, -34.4], [25, -38], [33.6, -17.2]]) disc(x, y, 0.85, 0.12, 0xDAD6CC);
