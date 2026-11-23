@@ -244,7 +244,7 @@ const LEVELS = [
 const R = (x0, y0, x1, y1) => [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
 const ROOMS = [
   // main level
-  { id: 'rec', name: 'Rec Room', level: 0, poly: R(0, 0, 27, 23), dims: [26, 21], src: 'plan', floor: 'walnut', vaulted: true, note: 'Vaulted dark-wood ceiling, wet bar, French doors to terrace' },
+  { id: 'rec', name: 'Rec Room', level: 0, poly: R(0, 0, 27, 23), dims: [26, 21], src: 'plan', floor: 'walnut', vaulted: true, note: 'Vaulted dark-wood ceiling, wet bar, French doors to terrace. Now ping-pong and Pilates.' },
   { id: 'sitarea', name: 'Bedroom 5', level: 0, poly: R(0, 23, 11, 39.3), src: 'est', floor: 'lvp', ceilH: 8.4, note: 'Your renovation: the bar and sitting area (plan: 10′ × 10′ + bar) enclosed as a bedroom. Wall and door position assumed.' },
   { id: 'family', name: 'Family Room', level: 0, poly: [[11, 23], [27, 23], [29.6, 57.7], [12, 57.7], [12, 39.3], [11, 39.3]], dims: [15, 31], src: 'plan', floor: 'lvp', ceilH: 9.85, woodCeil: true, note: 'Fieldstone fireplace, wood ceiling with beams, clerestory windows, French doors to pool deck' },
   { id: 'bed4', name: 'Bedroom 4', level: 0, poly: R(0, 39.3, 12, 54.4), dims: [11, 14], src: 'plan', floor: 'oak', ceilH: 8.4 },
@@ -365,6 +365,8 @@ const CAT = {
   art: { label: 'Art frame', w: 1.0, d: 0.04, h: 0.7, color: '#C46A4A', elev: 1.15 },
   pool_table: { label: 'Pool table', w: 2.6, d: 1.45, h: 0.8, color: '#2F6B4F' },
   bar_stool: { label: 'Bar stool', w: 0.42, d: 0.42, h: 0.75, color: '#333333' },
+  ping_pong: { label: 'Ping-pong table', w: 2.74, d: 1.525, h: 0.76, color: '#1F5FA8' },
+  pilates: { label: 'Pilates reformer', w: 2.4, d: 0.66, h: 0.38, color: '#C9A77A' },
   office_chair: { label: 'Office chair', w: 0.66, d: 0.66, h: 1.05, color: '#2A2C2F' },
   umbrella: { label: 'Patio umbrella', w: 3.0, d: 3.0, h: 2.6, color: '#B8AE9F' },
   standing_desk: { label: 'Standing desk', w: 1.5, d: 0.75, h: 1.1, color: '#C9B08A' },
@@ -384,7 +386,7 @@ const STARTER = [
   ['grand_piano', 'living', 57.3, 69.3, 90], ['bench', 'living', 57.3, 73.2, 0, { color: BLK, w: 1.0, d: 0.38, h: 0.5, name: 'Piano bench' }], ['art', 'living', 62.9, 74.8, 270, { color: '#D98A6A', h: 0.5 }],
   ['dining_table', 'dining', 33, 64, 90], ['chair', 'dining', 30.6, 61.5, 270], ['chair', 'dining', 30.6, 64, 270], ['chair', 'dining', 30.6, 66.5, 270],
   ['chair', 'dining', 35.4, 61.5, 90], ['chair', 'dining', 35.4, 64, 90], ['chair', 'dining', 35.4, 66.5, 90],
-  ['pool_table', 'rec', 13.5, 9.5, 0], ['sofa', 'family', 19.5, 45, 180], ['tv', 'family', 19.5, 35, 0], ['rug', 'family', 19.5, 40, 0],
+  ['ping_pong', 'rec', 13.5, 9, 0], ['pilates', 'rec', 20.5, 18.6, 0], ['rug', 'rec', 20.5, 18.6, 0, { w: 3, d: 1.4, color: '#5B6770', name: 'Exercise mat' }], ['sofa', 'family', 19.5, 45, 180], ['tv', 'family', 19.5, 35, 0], ['rug', 'family', 19.5, 40, 0],
   ['bed_king', 'primary', 9.7, 70, 90], ['nightstand', 'primary', 12.6, 65.6, 90], ['nightstand', 'primary', 12.6, 74.4, 90],
   ['bed_queen', 'bed2', 29.8, 65, 270], ['desk', 'bed2', 36.3, 66, 90], ['desk', 'bed3', 6.4, 78.2, 0], ['chair', 'bed3', 6.4, 80.6, 180], ['shelf', 'bed3', 1, 86, 90],
   ['standing_desk', 'sitroom', 50, 61.5, 0, { color: '#7A5234' }], ['bed_queen', 'bed4', 6, 43, 0], ['bed_queen', 'sitarea', 5.5, 27, 0],
@@ -918,6 +920,13 @@ function itemGroup(it, ghost) {
     case 'plant': { Cy(w * 0.3, w * 0.24, h * 0.28, 0, 0, 0, mk(0xB0694A)); const f = new THREE.Mesh(new THREE.IcosahedronGeometry(w * 0.5, 1), mk(it.color, { flatShading: true })); f.position.y = h * 0.28 + (h * 0.72) / 2; f.scale.y = (h * 0.72) / w; f.castShadow = !ghost; g.add(f); break; }
     case 'art': { B(w, d, h, 0, -h / 2, 0, dark); B(w * 0.86, 0.01, h * 0.8, 0, -h * 0.4, d / 2, m1); break; }
     case 'pool_table': { B(w, d, 0.16, 0, h - 0.2, 0, wood); B(w * 0.88, d * 0.8, 0.02, 0, h - 0.04, 0, m1); for (const s of [-1, 1]) { B(w, 0.07, 0.06, 0, h - 0.06, s * (d / 2 - 0.035), wood); B(0.07, d, 0.06, s * (w / 2 - 0.035), h - 0.06, 0, wood); } legs(h - 0.2, 0.12, 0.12, wood); break; }
+    case 'ping_pong': { B(w, d, 0.025, 0, h - 0.025, 0, m1); B(w, 0.02, 0.003, 0, h, 0, white); B(0.02, d, 0.003, -w / 2 + 0.01, h, 0, white); B(0.02, d, 0.003, w / 2 - 0.01, h, 0, white); for (const sz of [-1, 1]) B(w, 0.02, 0.003, 0, h, sz * (d / 2 - 0.01), white);
+      B(0.01, d + 0.3, 0.1525, 0, h, 0, mk(0xEDEDED, { transparent: true, opacity: ghost ? 0.4 : 0.75 })); for (const sz of [-1, 1]) B(0.03, 0.03, 0.17, 0, h, sz * (d / 2 + 0.15), dark);
+      for (const sx of [-1, 1]) { for (const sz of [-1, 1]) B(0.04, 0.04, h - 0.025, sx * w * 0.3, 0, sz * (d / 2 - 0.2), dark); B(0.04, d - 0.4, 0.04, sx * w * 0.3, 0.12, 0, dark); } break; }
+    case 'pilates': { for (const sz of [-1, 1]) B(w, 0.07, 0.14, 0, h - 0.14, sz * (d / 2 - 0.035), m1); B(0.07, d, 0.14, -w / 2 + 0.035, h - 0.14, 0, m1); B(0.07, d, 0.14, w / 2 - 0.035, h - 0.14, 0, m1); legs(h - 0.14, 0.06, 0.06, m3);
+      B(w * 0.42, d * 0.78, 0.07, -w * 0.08, h - 0.04, 0, dark); B(0.16, d * 0.3, 0.08, -w * 0.33, h + 0.02, 0, dark); for (const sz of [-1, 1]) B(0.1, 0.1, 0.12, w * 0.1, h + 0.02, sz * d * 0.25, dark);
+      for (const sz of [-1, 1]) { B(0.03, 0.03, 0.42, w / 2 - 0.12, h - 0.02, sz * (d / 2 - 0.05), mk(0xC4C9CD, { metalness: 0.5, roughness: 0.3 })); B(0.03, 0.03, 0.75, -w / 2 + 0.05, h - 0.02, sz * (d / 2 - 0.05), mk(0xC4C9CD, { metalness: 0.5, roughness: 0.3 })); }
+      B(0.03, d - 0.1, 0.03, w / 2 - 0.12, h + 0.38, 0, mk(0xC4C9CD, { metalness: 0.5, roughness: 0.3 })); for (let i = 0; i < 4; i++) B(w * 0.2, 0.012, 0.012, w * 0.3, h - 0.1, (i - 1.5) * 0.07, mk(0x9A9EA2)); break; }
     case 'office_chair': { const r = w / 2; for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2, leg = B(r * 0.95, 0.045, 0.035, Math.cos(a) * r * 0.48, 0.04, Math.sin(a) * r * 0.48, dark); leg.rotation.y = -a; } Cy(0.03, 0.03, h * 0.38, 0, 0.06, 0, dark); B(w * 0.78, d * 0.74, 0.07, 0, h * 0.44, 0.02, m1); const bk = B(w * 0.74, 0.05, h * 0.48, 0, h * 0.5, -d * 0.36, m1); bk.rotation.x = -0.12; for (const sx of [-1, 1]) B(0.05, d * 0.42, 0.03, sx * w * 0.42, h * 0.62, 0, dark); break; }
     case 'umbrella': { Cy(0.035, 0.035, h, w * 0.42, 0, 0, dark); B(0.75, 0.75, 0.12, w * 0.42, 0, 0, dark); B(w * 0.42, 0.05, 0.05, w * 0.21, h - 0.08, 0, dark); const cn = new THREE.Mesh(new THREE.ConeGeometry(w / 2, 0.55, 8, 1, true), mk(base, { side: THREE.DoubleSide })); cn.position.y = h - 0.3; cn.castShadow = !ghost; g.add(cn); break; }
     case 'standing_desk': { B(w, d, 0.04, 0, h - 0.04, 0, m1); for (const sx of [-1, 1]) { B(0.07, 0.07, h - 0.06, sx * (w / 2 - 0.2), 0.02, 0, dark); B(0.08, d * 0.85, 0.02, sx * (w / 2 - 0.2), 0, 0, dark); } B(w - 0.5, 0.03, 0.06, 0, h - 0.1, 0, dark); B(0.5, 0.2, 0.32, 0, h, -d / 4, dark); B(0.06, 0.06, 0.1, 0, h, -d / 4, dark).scale.y = 1; break; }
@@ -941,6 +950,10 @@ const meshes = new Map();
 function makeItem(type, x, z, level, rot = 0, over = {}) { const c = CAT[type]; return Object.assign({ id: 'i' + (nextId++), type, name: c.label, x, z, level, rot, w: c.w, d: c.d, h: c.h, color: c.color, elev: c.elev || 0 }, over); }
 const tupleItem = ([t, room, x, y, rot, over], n) => makeItem(t, M(x), M(y), ROOM[room].level, rot, Object.assign({ name: CAT[t].label + (n > 1 ? ' ' + n : '') }, over || {}));
 function starterItems() { const counts = {}; return STARTER.map(tp => tupleItem(tp, counts[tp[0]] = (counts[tp[0]] || 0) + 1)); }
+// layouts saved while the rec room still had the listing's pool table: swap it for the ping-pong table and add the Pilates reformer
+function migrate4() { const pt = state.items.filter(i => i.type === 'pool_table'); if (!pt.length && state.items.some(i => i.type === 'ping_pong')) return; state.items = state.items.filter(i => i.type !== 'pool_table');
+  const t = pt[0]; if (!state.items.some(i => i.type === 'ping_pong')) state.items.push(makeItem('ping_pong', t ? t.x : M(13.5), t ? t.z : M(9), 0, t ? t.rot : 0));
+  if (!state.items.some(i => i.type === 'pilates')) { state.items.push(makeItem('pilates', M(20.5), M(18.6), 0, 0)); state.items.push(makeItem('rug', M(20.5), M(18.6), 0, 0, { w: 3, d: 1.4, color: '#5B6770', name: 'Exercise mat' })); } }
 // layouts saved before the owner's photos arrived: move the piano and desk if they are still where the first guess put them, add the pieces the photos show
 function migrate3() { const has = t => state.items.some(i => i.type === t), at = (i, x, y) => i && Math.abs(i.x - M(x)) < 0.05 && Math.abs(i.z - M(y)) < 0.05, addSet = set => set.forEach((tp, k) => state.items.push(tupleItem(tp, k + 1)));
   const p = state.items.find(i => i.type === 'grand_piano'); if (at(p, 44, 69.4)) { p.x = M(57.3); p.z = M(69.3); }
@@ -958,10 +971,11 @@ function removeItemMesh(id) { const g = meshes.get(id); if (g) { G.furn[g.userDa
 function applyRoomStyles() { for (const r of ROOMS) { const s = state.rooms[r.id] || {}; roomWallMat(r.id).color.set(s.wall || '#F2EEE6'); r.floorMesh.material = floorMats[s.floor || r.floor]; } }
 function loadState(obj, msg) {
   for (const id of [...meshes.keys()]) removeItemMesh(id);
-  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 3 };
+  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 4 };
   nextId = 1 + Math.max(0, ...state.items.map(i => parseInt(String(i.id).slice(1)) || 0));
   if ((obj.m | 0) < 2) migrate2();
   if ((obj.m | 0) < 3) migrate3();
+  if ((obj.m | 0) < 4) migrate4();
   state.items.forEach(syncItem); syncPins(); applyRoomStyles(); select(null); renderRooms(); if (msg) toast(msg); setStatus();
 }
 let saveT;
@@ -1232,7 +1246,7 @@ $('openRight').onclick = () => { $('left').classList.remove('open'); $('right').
 $('closeLeft').onclick = $('closeRight').onclick = closeSheets;
 $('bSave').onclick = () => save(true);
 let resetArm = 0;
-$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 3 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
+$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 4 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
 const dlg = $('dlg');
 function openDlg(kind) {
   const exp = kind === 'export'; $('dlgTitle').textContent = exp ? 'Export layout' : 'Import layout';
@@ -1316,7 +1330,7 @@ function tick() {
 
 /* ================= BOOT ================= */
 let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { saved = null; }
-if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 3 }); }
+if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 4 }); }
 setStatus(saved ? 'Loaded your saved layout' : null);
 $('viewhint').textContent = 'Drag to orbit · right-drag to pan · scroll to zoom · pick Main or Upper to look inside';
 applyVis(); renderInspector(); renderRooms();
