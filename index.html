@@ -183,7 +183,7 @@ dialog textarea{width:100%;min-height:220px;box-sizing:border-box;font-family:va
       <div id="labels"></div>
       <div id="viewhint"></div>
       <div id="walkpad" hidden>
-        <span class="sp"></span><button id="wk-f" data-k="f" aria-label="Walk forward">▲</button><span class="sp"></span>
+        <button id="wk-up" aria-label="Go upstairs or downstairs" title="Upstairs / downstairs">⇅</button><button id="wk-f" data-k="f" aria-label="Walk forward">▲</button><span class="sp"></span>
         <button id="wk-l" data-k="l" aria-label="Turn left">◀</button><button id="wk-b" data-k="b" aria-label="Walk back">▼</button><button id="wk-r" data-k="r" aria-label="Turn right">▶</button>
       </div>
       <div id="toast"></div>
@@ -279,7 +279,7 @@ const WALLS = [[
   [27, 0, 27, 23, 'e', [[6.5, 2.8, 'x', 3.2, 6.8], [11.4, 3, 'f', 0, 6.8, { n: 1 }], [16.2, 2.8, 'x', 3.2, 6.8]], 9], // rec room east: window, black door, window (photos 43, 44)
   [27, 23, 29.6, 57.7, 'e', [[12.6, 22.9, 'h'], [27.3, 6.5, 'c', 0, 0, { n: 2 }], [31.9, 2.7, 'h']]],             // family room east: clerestory band + French doors (photos 26-28, 43)
   [29.6, 57.7, 39, 57.7, 'e', [[4.7, 7, 's', 0, 6.8, { n: 2, white: 1 }]]],                                       // dining: white sliding door (photos 25, 44)
-  [39, 57.7, 60.7, 57.7, 'e', [[5.5, 2.6, 'x', 3, 7.2], [8.5, 2.6, 'x', 3, 7.2], [11.5, 2.6, 'x', 3, 7.2], [17.5, 6, 's', 0, 6.8, { n: 2 }]]], // sitting room north (photos 20, 43, 44)
+  [39, 57.7, 60.7, 57.7, 'e', [[5.5, 2.6, 'x', 3, 7.2, { wi: 1 }], [8.5, 2.6, 'x', 3, 7.2, { wi: 1 }], [11.5, 2.6, 'x', 3, 7.2, { wi: 1 }], [17.5, 6, 's', 0, 6.8, { n: 2 }]]], // sitting room north (photos 20, 43, 44)
   [60.7, 57.7, 61.5, 66, 'e'],
   [61.5, 66, 63, 66, 'e'],
   [63, 66, 63, 83.7, 'e'],
@@ -360,6 +360,15 @@ const CAT = {
   shelf: { label: 'Bookshelf', w: 1.0, d: 0.35, h: 1.9, color: '#6B4F3A' },
   tv: { label: 'TV + console', w: 1.8, d: 0.45, h: 1.3, color: '#2A2A2A' },
   rug: { label: 'Rug', w: 2.4, d: 1.7, h: 0.012, color: '#C9B79C' },
+  ladder_shelf: { label: 'Corner ladder shelf', w: 0.5, d: 0.42, h: 1.7, color: '#1A1B1D' },
+  rack: { label: 'Storage rack', w: 1.2, d: 0.45, h: 1.6, color: '#E9E7E2' },
+  zz_plant: { label: 'ZZ plant', w: 0.7, d: 0.7, h: 0.75, color: '#2F6B3A' },
+  console: { label: 'Console table', w: 1.1, d: 0.36, h: 0.8, color: '#8A5E3C' },
+  amp: { label: 'Guitar amp', w: 0.38, d: 0.2, h: 0.32, color: '#1A1B1D' },
+  ukulele: { label: 'Ukulele (wall)', w: 0.2, d: 0.07, h: 0.56, color: '#D9E3EC', elev: 1.55 },
+  ring_light: { label: 'Ring light on tripod', w: 0.5, d: 0.5, h: 1.5, color: '#1A1B1D' },
+  laptop: { label: 'Laptop', w: 0.33, d: 0.24, h: 0.23, color: '#2B2D30', elev: 0.76 },
+  basket: { label: 'Waste basket', w: 0.3, d: 0.3, h: 0.34, color: '#8A6A44' },
   speaker: { label: 'Speaker on stand', w: 0.22, d: 0.26, h: 1.05, color: '#8A6544' },
   floor_lamp: { label: 'Floor lamp', w: 0.4, d: 0.4, h: 1.6, color: '#E8DCC2' },
   plant: { label: 'Plant', w: 0.55, d: 0.55, h: 1.3, color: '#4F7A4A' },
@@ -378,12 +387,18 @@ const NAVY = '#1B2440', OUT = '#8E9499', BLK = '#1A1B1D', WAL = '#6B4630';
 // Every piece below is one the owner's own photos show, in the place, direction and colour seen there. Rooms she has not photographed are left empty.
 const KITCHEN_SET = [['bar_stool', 'kitchen', 15.4, 60, 0, { color: '#6B4A33' }], ['bar_stool', 'kitchen', 18, 60, 0, { color: '#6B4A33' }], ['bar_stool', 'kitchen', 20.6, 60, 0, { color: '#6B4A33' }]];
 const OFFICE_SET = [
-  ['standing_desk', 'sitroom', 48.2, 61.6, 90, { color: WAL, w: 1.6, d: 0.75 }], ['office_chair', 'sitroom', 45.4, 61.4, 270], ['office_chair', 'sitroom', 48, 58.9, 0, { name: 'Office chair (headrest)', h: 1.25 }], ['office_chair', 'sitroom', 57.2, 64.6, 200],
-  ['desk', 'sitroom', 40.15, 61.9, 90, { w: 1.1, d: 0.36, h: 0.8, color: '#8A5E3C', name: 'Console table' }], ['plant', 'sitroom', 40.2, 61.9, 0, { w: 0.6, d: 0.6, h: 0.75, elev: 0.8, color: '#2F6B3A', name: 'ZZ plant' }],
-  ['art', 'sitroom', 39.26, 60.6, 270, { w: 0.82, d: 0.03, h: 0.66, elev: 1.6, color: '#D9C7A6', pic: 'landscape', name: 'Landscape canvas' }], ['art', 'sitroom', 39.26, 63.4, 270, { w: 0.82, d: 0.03, h: 0.66, elev: 1.6, color: '#D9C7A6', pic: 'landscape', name: 'Landscape canvas 2' }],
-  ['speaker', 'sitroom', 40.1, 65.1, 270], ['speaker', 'sitroom', 40.6, 59.6, 270], ['shelf', 'sitroom', 40, 58.5, 315, { w: 0.5, d: 0.42, h: 1.7, color: BLK, name: 'Corner ladder shelf' }],
-  ['nightstand', 'sitroom', 52.4, 58.4, 0, { w: 0.32, d: 0.26, h: 0.42, color: BLK, name: 'Shredder' }], ['rug', 'sitroom', 55.6, 61.8, 0, { w: 2.4, d: 1.6, pic: 'persian', color: '#8D9AA6', name: 'Blue-grey rug' }],
-  ['shelf', 'sitroom', 60, 60.4, 270, { w: 1.2, d: 0.45, h: 1.6, color: '#E9E7E2', name: 'Storage shelves' }], ['desk', 'sitroom', 59.6, 64.4, 270, { w: 1.2, d: 0.6, color: BLK, name: 'Side desk' }]];
+  // desk group, under the second and third windows: walnut standing desk running away from the living-room doors, laptop on it, Aeron on its west side, headrest chair at its window end, basket and ring light on its east side
+  ['standing_desk', 'sitroom', 48.2, 61.5, 90, { color: WAL, w: 1.6, d: 0.75, h: 0.76 }], ['laptop', 'sitroom', 47.9, 61.0, 250, { elev: 0.76 }],
+  ['office_chair', 'sitroom', 45.4, 61.6, 270, { name: 'Aeron chair' }], ['office_chair', 'sitroom', 46.9, 58.9, 20, { name: 'Headrest chair', h: 1.28 }],
+  ['basket', 'sitroom', 50.4, 60.2, 0], ['ring_light', 'sitroom', 51.2, 61.2, 200],
+  // west wall: two landscape canvases over a wood console with the ZZ plant on it and the amp under it; a speaker on a stand each side; black corner ladder shelf; ukulele on the window wall
+  ['art', 'sitroom', 39.26, 60.55, 270, { w: 0.84, d: 0.03, h: 0.68, elev: 1.62, color: '#D9C7A6', pic: 'landscape', name: 'Landscape canvas' }], ['art', 'sitroom', 39.26, 63.45, 270, { w: 0.84, d: 0.03, h: 0.68, elev: 1.62, color: '#D9C7A6', pic: 'landscape', name: 'Landscape canvas 2' }],
+  ['console', 'sitroom', 40.0, 62.0, 270], ['zz_plant', 'sitroom', 40.0, 62.4, 0, { elev: 0.8 }], ['amp', 'sitroom', 40.0, 62.5, 270, { elev: 0.16 }],
+  ['speaker', 'sitroom', 40.2, 65.0, 270], ['speaker', 'sitroom', 41.4, 59.7, 300], ['ladder_shelf', 'sitroom', 40.1, 58.6, 315], ['ukulele', 'sitroom', 41.9, 57.98, 0],
+  // by the sliding door and the east half: shredder, blue-grey rug with the exercise machine on it, storage racks, side desk and a third chair
+  ['nightstand', 'sitroom', 52.3, 58.5, 0, { w: 0.32, d: 0.26, h: 0.42, color: BLK, name: 'Shredder' }], ['rug', 'sitroom', 55.6, 61.6, 0, { w: 2.5, d: 1.6, pic: 'persian', color: '#8D9AA6', name: 'Blue-grey rug' }],
+  ['bench', 'sitroom', 54.6, 61.2, 20, { w: 1.3, d: 0.4, h: 0.22, color: BLK, name: 'Exercise machine' }], ['rack', 'sitroom', 60.0, 60.2, 270], ['rack', 'sitroom', 59.9, 58.6, 0, { w: 0.9, color: BLK }],
+  ['desk', 'sitroom', 59.7, 64.2, 270, { w: 1.2, d: 0.6, color: BLK, name: 'Side desk' }], ['office_chair', 'sitroom', 57.3, 64.7, 110]];
 const TERRACE_OLD = [[15, -35], [9.5, -31], [20.5, -31], [15, -31], [24, -19], [21.6, -21.2], [24, -21.2], [26.4, -21.2], [21.6, -16.8], [24, -16.8], [26.4, -16.8], [24, -19]];
 const TERRACE_SET = [['sofa', 'rec', -2.6, -35.6, 0, { color: OUT, name: 'Outdoor sofa' }], ['armchair', 'rec', -7.4, -31.8, 90, { color: OUT, name: 'Outdoor chair' }], ['armchair', 'rec', 2.4, -31.6, 270, { color: OUT, name: 'Outdoor chair 2' }], ['coffee_table', 'rec', -2.6, -31.8, 0, { color: '#8A8F94', name: 'Outdoor table' }],
   ['dining_table', 'rec', 10, -30, 0, { color: BLK, name: 'Outdoor dining table' }], ['chair', 'rec', 7.6, -32.2, 0, { color: BLK }], ['chair', 'rec', 10, -32.2, 0, { color: BLK }], ['chair', 'rec', 12.4, -32.2, 0, { color: BLK }], ['chair', 'rec', 7.6, -27.8, 180, { color: BLK }], ['chair', 'rec', 10, -27.8, 180, { color: BLK }], ['chair', 'rec', 12.4, -27.8, 180, { color: BLK }], ['umbrella', 'rec', 10, -30, 180]];
@@ -399,6 +414,8 @@ const STARTER = [
   // family room: the play mat; kitchen side: high chair and air purifier by the island; small wood table against the dining-area wall
   ['rug', 'family', 16.5, 49.5, 0, { w: 2.4, d: 1.8, pic: 'playmat', color: '#57B56A', name: 'Foam play mat' }], ['chair', 'kitchen', 24.6, 60.4, 300, { color: '#E9E7E2', w: 0.55, d: 0.6, h: 0.95, name: 'High chair' }],
   ['nightstand', 'kitchen', 23.4, 62.9, 270, { color: BLK, w: 0.5, d: 0.26, h: 0.62, name: 'Air purifier' }], ['desk', 'dining', 37.6, 62.5, 270, { w: 0.7, d: 0.4, h: 0.6, color: '#B58E62', name: 'Small wood table' }],
+  // primary suite upstairs: the bed (the fireplace, bathtub and walk-in closet are built in)
+  ['bed_king', 'primary', 9.7, 70, 90],
   // rec room, as she asked: ping-pong and Pilates
   ['ping_pong', 'rec', 13.5, 9, 0], ['pilates', 'rec', 20.5, 18.6, 0], ['rug', 'rec', 20.5, 18.6, 0, { w: 3, d: 1.4, color: '#5B6770', name: 'Exercise mat' }],
   ...KITCHEN_SET, ...OFFICE_SET, ...TERRACE_SET, ['bench', 'rec', 28, -15.5, 300, { color: '#6B4630', w: 1.5, d: 0.6, h: 0.5, name: 'Wooden swing bench' }],
@@ -587,6 +604,7 @@ function glazing(lv, cx, cy, rotY, w, b, tp, kind, o = {}) {
     mk(p, 0.26, 0.05, dx, dy - 0.42, 0.064, brassMat);
   } else if (kind === 'x') { // double-hung: two white sashes with divided lites inside the black casing
     pane(g, W, Hh, 0); const iw = W - 2 * t, ih = Hh - 2 * t, s = 0.045, d2 = 0.07, wm = whiteFrameMat;
+    if (o.wi) { const z = o.wi * 0.078, tt = t + 0.035; mk(g, W + 0.07, tt, 0, Hh / 2 - t / 2, 0.03, wm, z); mk(g, W + 0.12, tt + 0.02, 0, -Hh / 2 + t / 2, 0.06, wm, z); mk(g, tt, Hh, -W / 2 + t / 2, 0, 0.03, wm, z); mk(g, tt, Hh, W / 2 - t / 2, 0, 0.03, wm, z); }
     for (const sy of [-1, 1]) { const c0 = sy * ih / 4; bar(iw, s, 0, c0 + ih / 4 - s / 2, d2, wm); bar(iw, s, 0, c0 - ih / 4 + s / 2, d2, wm); bar(s, ih / 2, -iw / 2 + s / 2, c0, d2, wm); bar(s, ih / 2, iw / 2 - s / 2, c0, d2, wm);
       bar(0.018, ih / 2, -iw / 6, c0, 0.04, wm); bar(0.018, ih / 2, iw / 6, c0, 0.04, wm); bar(iw, 0.018, 0, c0, 0.04, wm); }
   } else if (kind === 'f' || kind === 's') { // French doors (centre leaves swing out) and sliders (one panel slides over its neighbour)
@@ -679,6 +697,8 @@ fix(1, 0, 69.8, 1.4, 74.7, 0, 4.4, fixMat); fix(1, 1.3, 70.9, 1.5, 73.6, 0.2, 3,
   fix(0, 16.9, 62.5, 19.3, 63.9, 3.1, 3.13, steel); fix(0, 18, 63.95, 18.2, 64.15, 3.1, 4.5, steel); fix(0, 18, 63.3, 18.2, 64.15, 4.4, 4.55, steel);
   const glow = new THREE.MeshStandardMaterial({ color: 0xF6F8FA, emissive: 0xCFE6F5, emissiveIntensity: 0.7, roughness: 0.4 });
   for (const x of [15.4, 18, 20.6]) { const d = new THREE.Mesh(new THREE.CylinderGeometry(M(0.75), M(0.75), M(0.14), 20), glow); d.position.set(M(x), M(6.5), M(62.9)); G.levels[0].add(d); fix(0, x - 0.02, 62.88, x + 0.02, 62.92, 6.57, 9, navy).castShadow = false; } }
+// sunroom office: the west wall, where the two canvases hang, is painted dark green (owner, most recent change); the other walls stay white
+fix(0, 39.18, 57.88, 39.215, 65.86, 0, 9, new THREE.MeshStandardMaterial({ color: 0x1F3D2E, roughness: 0.9 })).castShadow = false;
 // sunroom office floor: Talavera border tiles (blue pattern on white) set as rectangular bands in the Saltillo field (owner's photo)
 { const tal = new THREE.MeshStandardMaterial({ map: canvasTex((g, s) => { g.fillStyle = '#EDEBE4'; g.fillRect(0, 0, s, s); g.strokeStyle = '#2F5C9E'; g.fillStyle = '#2F5C9E'; g.lineWidth = s * 0.05; g.strokeRect(s * 0.08, s * 0.08, s * 0.84, s * 0.84); g.beginPath(); g.ellipse(s / 2, s / 2, s * 0.26, s * 0.14, 0, 0, 7); g.stroke(); for (const [x, y] of [[.25, .25], [.75, .25], [.25, .75], [.75, .75]]) { g.beginPath(); g.arc(x * s, y * s, s * 0.06, 0, 7); g.fill(); } g.beginPath(); g.arc(s / 2, s / 2, s * 0.07, 0, 7); g.fill(); }, 128), roughness: 0.6 });
   const strip = (x0, y0, x1, y1) => { const m = fix(0, x0, y0, x1, y1, 0, 0.03, tal.clone()); const L = Math.max(x1 - x0, y1 - y0); m.material.map = tal.map.clone(); m.material.map.repeat.set(x1 - x0 > y1 - y0 ? Math.round(L / 0.85) : 1, x1 - x0 > y1 - y0 ? 1 : Math.round(L / 0.85)); m.material.map.needsUpdate = true; m.castShadow = false; };
@@ -1025,6 +1045,20 @@ function itemGroup(it, ghost) {
       break;
     }
     case 'tv': { B(w, d, 0.5, 0, 0, 0, m1); const sw = w * 0.82, sh = Math.max(0.2, h - 0.62); B(sw, 0.05, sh, 0, 0.58, -d / 4, dark); B(0.25, 0.12, 0.08, 0, 0.5, -d / 4, dark); break; }
+    case 'ladder_shelf': { for (let i = 0; i < 5; i++) { const k = 1 - i * 0.13; B(w * k, d * k, 0.022, 0, 0.1 + i * (h - 0.25) / 4, -d * 0.065 * i, m1); } for (const sx of [-1, 1]) { B(0.025, 0.025, h, sx * w / 2, 0, -d / 2 + 0.012, m1); const f = B(0.025, 0.025, h * 1.01, sx * w / 2, 0, d * 0.16, m1); f.rotation.x = -0.2; }
+      for (const [i, c] of [[1, 0x7A5A3E], [2, 0x9A8463], [3, 0x6B4A33], [4, 0x7A5A3E]]) { const o = new THREE.Mesh(new THREE.IcosahedronGeometry(0.06, 0), mk(c)); o.position.set(0, 0.19 + i * (h - 0.25) / 4, -d * 0.065 * i); g.add(o); } break; }
+    case 'rack': { for (const sx of [-1, 1]) for (const sz of [-1, 1]) B(0.03, 0.03, h, sx * (w / 2 - 0.015), 0, sz * (d / 2 - 0.015), m1); for (let i = 0; i < 4; i++) { const y = 0.08 + i * (h - 0.1) / 4; B(w, d, 0.02, 0, y, 0, m1); for (const sx of [-1, 1]) B(w * 0.42, d * 0.8, (h - 0.1) / 4 * 0.6, sx * w * 0.24, y + 0.02, 0, mk([0x9AA3AA, 0xD8D5CC, 0x6F7780][(i + (sx > 0)) % 3], { transparent: true, opacity: ghost ? 0.4 : 0.92 })); } break; }
+    case 'zz_plant': { Cy(w * 0.2, w * 0.15, h * 0.26, 0, 0, 0, white); Cy(w * 0.203, w * 0.18, h * 0.07, 0, h * 0.1, 0, mk(0xC9705A)); Cy(w * 0.203, w * 0.19, h * 0.04, 0, h * 0.17, 0, mk(0x4C8FA8));
+      for (let i = 0; i < 9; i++) { const a = i * 0.7 + 0.3, lean = 0.35 + (i % 3) * 0.22, L = h * (0.62 + (i % 4) * 0.08), dx = Math.cos(a) * Math.sin(lean), dz = Math.sin(a) * Math.sin(lean), dy = Math.cos(lean);
+        const st = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.014, L, 5), m1); st.position.set(dx * L / 2, h * 0.26 + dy * L / 2, dz * L / 2); st.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(dx, dy, dz)); g.add(st);
+        for (let k = 2; k < 8; k++) for (const sd of [-1, 1]) { const lf = new THREE.Mesh(new THREE.SphereGeometry(1, 6, 4), k % 2 ? m1 : m3); lf.scale.set(0.022, 0.006, 0.05); const t = k / 8 * L; lf.position.set(dx * t - dz * sd * 0.045, h * 0.26 + dy * t, dz * t + dx * sd * 0.045); lf.rotation.y = -a + sd * 1.2; lf.castShadow = !ghost; g.add(lf); } } break; }
+    case 'console': { B(w, d, 0.035, 0, h - 0.035, 0, m1); B(w * 0.9, d * 0.78, 0.022, 0, 0.14, 0, m1); for (const sx of [-1, 1]) for (const sz of [-1, 1]) { const l = B(0.04, 0.04, h - 0.035, sx * (w / 2 - 0.07), 0, sz * (d / 2 - 0.04), m3); l.rotation.z = sx * 0.07; } break; }
+    case 'amp': { B(w, d, h, 0, 0, 0, m1); B(w * 0.9, 0.01, h * 0.62, 0, h * 0.06, d / 2, mk(0x4A4D52)); B(w * 0.9, 0.012, h * 0.16, 0, h * 0.76, d / 2, mk(0xC4C9CD, { metalness: 0.5, roughness: 0.35 })); break; }
+    case 'ukulele': { const bodyM = mk(base), dk = mk(0x23344E), wd = mk(0x8A5E3C); const b1 = new THREE.Mesh(new THREE.SphereGeometry(1, 12, 8), bodyM); b1.scale.set(w * 0.5, h * 0.2, d * 0.5); b1.position.y = -h * 0.28; g.add(b1); const b2 = new THREE.Mesh(new THREE.SphereGeometry(1, 12, 8), dk); b2.scale.set(w * 0.4, h * 0.15, d * 0.5); b2.position.y = -h * 0.08; g.add(b2);
+      B(w * 0.2, d * 0.4, h * 0.42, 0, 0.0, 0, wd); B(w * 0.34, d * 0.45, h * 0.12, 0, h * 0.4, 0, dark); const hole = new THREE.Mesh(new THREE.CylinderGeometry(w * 0.11, w * 0.11, 0.004, 12), dark); hole.rotation.x = Math.PI / 2; hole.position.set(0, -h * 0.17, d * 0.5); g.add(hole); break; }
+    case 'ring_light': { for (let i = 0; i < 3; i++) { const a = i * 2.094, l = B(0.02, 0.02, 0.5, Math.cos(a) * 0.14, 0, Math.sin(a) * 0.14, m1); l.rotation.z = Math.cos(a) * 0.55; l.rotation.x = -Math.sin(a) * 0.55; } Cy(0.012, 0.012, h - 0.5, 0, 0.4, 0, m1); const r = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.02, 8, 24), mk(0xF4F2EC, { emissive: new THREE.Color(0xFFF4DC), emissiveIntensity: 0.6 })); r.position.y = h - 0.15; g.add(r); break; }
+    case 'laptop': { B(w, d, 0.014, 0, 0, 0, m1); const sc = B(w, 0.01, d * 0.92, 0, 0.012, -d / 2, m1); sc.rotation.x = -0.28; const scr = B(w * 0.92, 0.004, d * 0.8, 0, 0.03, -d / 2 + 0.008, mk(0x9FB6D8, { emissive: new THREE.Color(0x6F8FC0), emissiveIntensity: 0.5 })); scr.rotation.x = -0.28; break; }
+    case 'basket': { Cy(w / 2, w * 0.4, h, 0, 0, 0, m1, true); Cy(w * 0.4, w * 0.4, 0.01, 0, 0, 0, m3); break; }
     case 'speaker': { B(0.26, 0.26, 0.02, 0, 0, 0, dark); B(0.035, 0.035, h - 0.36, 0, 0.02, 0, dark); B(w, d, 0.34, 0, h - 0.34, 0, m1); B(w * 0.86, 0.01, 0.3, 0, h - 0.32, d / 2, dark); break; }
     case 'rug': { B(w, d, h, 0, 0, 0, m1); if (it.pic && PICS[it.pic]) { const pl = new THREE.Mesh(new THREE.PlaneGeometry(w, d), picMat(it.pic)); pl.rotation.x = -Math.PI / 2; pl.position.y = h + 0.003; pl.receiveShadow = true; g.add(pl); } else B(w - 0.16, d - 0.16, h + 0.002, 0, 0, 0, m2); break; }
     case 'floor_lamp': { Cy(w * 0.35, w * 0.4, 0.03, 0, 0, 0, dark); Cy(0.013, 0.013, h * 0.8, 0, 0.03, 0, dark); const sh = Cy(w * 0.3, w * 0.5, h * 0.22, 0, h * 0.78, 0, mk(it.color, { emissive: new THREE.Color(it.color), emissiveIntensity: 0.35, side: THREE.DoubleSide }), true); sh.castShadow = false; break; }
@@ -1040,7 +1074,7 @@ function itemGroup(it, ghost) {
       B(0.03, d - 0.1, 0.03, w / 2 - 0.12, h + 0.38, 0, mk(0xC4C9CD, { metalness: 0.5, roughness: 0.3 })); for (let i = 0; i < 4; i++) B(w * 0.2, 0.012, 0.012, w * 0.3, h - 0.1, (i - 1.5) * 0.07, mk(0x9A9EA2)); break; }
     case 'office_chair': { const r = w / 2; for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2, leg = B(r * 0.95, 0.045, 0.035, Math.cos(a) * r * 0.48, 0.04, Math.sin(a) * r * 0.48, dark); leg.rotation.y = -a; } Cy(0.03, 0.03, h * 0.38, 0, 0.06, 0, dark); B(w * 0.78, d * 0.74, 0.07, 0, h * 0.44, 0.02, m1); const bk = B(w * 0.74, 0.05, h * 0.48, 0, h * 0.5, -d * 0.36, m1); bk.rotation.x = -0.12; for (const sx of [-1, 1]) B(0.05, d * 0.42, 0.03, sx * w * 0.42, h * 0.62, 0, dark); break; }
     case 'umbrella': { Cy(0.035, 0.035, h, w * 0.42, 0, 0, dark); B(0.75, 0.75, 0.12, w * 0.42, 0, 0, dark); B(w * 0.42, 0.05, 0.05, w * 0.21, h - 0.08, 0, dark); const cn = new THREE.Mesh(new THREE.ConeGeometry(w / 2, 0.55, 8, 1, true), mk(base, { side: THREE.DoubleSide })); cn.position.y = h - 0.3; cn.castShadow = !ghost; g.add(cn); break; }
-    case 'standing_desk': { B(w, d, 0.04, 0, h - 0.04, 0, m1); for (const sx of [-1, 1]) { B(0.07, 0.07, h - 0.06, sx * (w / 2 - 0.2), 0.02, 0, dark); B(0.08, d * 0.85, 0.02, sx * (w / 2 - 0.2), 0, 0, dark); } B(w - 0.5, 0.03, 0.06, 0, h - 0.1, 0, dark); B(0.5, 0.2, 0.32, 0, h, -d / 4, dark); B(0.06, 0.06, 0.1, 0, h, -d / 4, dark).scale.y = 1; break; }
+    case 'standing_desk': { B(w, d, 0.035, 0, h - 0.035, 0, m1); for (const sx of [-1, 1]) { B(0.07, 0.05, h - 0.06, sx * (w / 2 - 0.22), 0.02, 0, dark); B(0.07, d * 0.9, 0.02, sx * (w / 2 - 0.22), 0, 0, dark); } B(w - 0.5, 0.04, 0.06, 0, h - 0.1, 0, dark); break; }
     case 'grand_piano': {
       const sh = new THREE.Shape(); sh.moveTo(-w / 2, -d / 2); sh.lineTo(w / 2, -d / 2); sh.lineTo(w / 2, 0.02 * d); sh.bezierCurveTo(w / 2, d * 0.26, w * 0.12, d * 0.14, -w * 0.04, d * 0.36); sh.quadraticCurveTo(-w * 0.14, d / 2, -w / 2 + 0.12, d / 2); sh.quadraticCurveTo(-w / 2, d / 2, -w / 2, d / 2 - 0.12); sh.closePath();
       const body = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: h * 0.3, bevelEnabled: false, curveSegments: 16 }), mk(base, { roughness: 0.25 })); body.rotation.x = -Math.PI / 2; body.position.y = h * 0.62; body.castShadow = !ghost; g.add(body);
@@ -1086,13 +1120,13 @@ function removeItemMesh(id) { const g = meshes.get(id); if (g) { G.furn[g.userDa
 function applyRoomStyles() { for (const r of ROOMS) { const s = state.rooms[r.id] || {}; roomWallMat(r.id).color.set(s.wall || '#F2EEE6'); r.floorMesh.material = floorMats[s.floor || r.floor]; } }
 function loadState(obj, msg) {
   for (const id of [...meshes.keys()]) removeItemMesh(id);
-  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 6 };
+  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 8 };
   nextId = 1 + Math.max(0, ...state.items.map(i => parseInt(String(i.id).slice(1)) || 0));
   if ((obj.m | 0) < 2) migrate2();
   if ((obj.m | 0) < 3) migrate3();
   if ((obj.m | 0) < 4) migrate4();
   if ((obj.m | 0) < 5) migrate5();
-  if ((obj.m | 0) < 6) migrate6();
+  if ((obj.m | 0) < 8) migrate6();
   state.items.forEach(syncItem); syncPins(); applyRoomStyles(); select(null); renderRooms(); if (msg) toast(msg); setStatus();
 }
 let saveT;
@@ -1133,7 +1167,7 @@ function setMode(m) {
   camera = m === 'plan' ? ortho : persp;
   document.querySelectorAll('#modeSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === m));
   $('walkpad').hidden = m !== 'walk';
-  $('viewhint').textContent = { orbit: 'Drag to orbit · right-drag to pan · scroll to zoom · click a floor to select a room', plan: 'Top-down plan · drag to pan · scroll to zoom · drag furniture to arrange', walk: 'Drag to look · W A S D to walk · Q / E or ← → to turn · Shift to run' }[m];
+  $('viewhint').textContent = { orbit: 'Drag to orbit · right-drag to pan · scroll to zoom · click a floor to select a room', plan: 'Top-down plan · drag to pan · scroll to zoom · drag furniture to arrange', walk: 'Drag to look · W A S D to walk · Q / E or ← → to turn · Shift to run · walk onto the stairs or press ⇅ to change floor' }[m];
   skyPlan = m === 'plan'; applySky();
   enableCtl(); applyVis();
 }
@@ -1363,7 +1397,7 @@ $('openRight').onclick = () => { $('left').classList.remove('open'); $('right').
 $('closeLeft').onclick = $('closeRight').onclick = closeSheets;
 $('bSave').onclick = () => save(true);
 let resetArm = 0;
-$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 6 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
+$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 8 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
 const dlg = $('dlg');
 function openDlg(kind) {
   const exp = kind === 'export'; $('dlgTitle').textContent = exp ? 'Export layout' : 'Import layout';
@@ -1401,11 +1435,12 @@ function addNoteAt() {
   state.notes.push(n); setMarking(false); syncPins(); openNote(n, true);
 }
 function openNote(n, isNew) { editing = { n, isNew, kept: false }; $('noteTitle').textContent = 'Mark ' + (state.notes.indexOf(n) + 1); $('noteWhere').textContent = noteWhere(n); $('noteText').value = n.text || ''; $('noteDel').hidden = isNew; $('noteDlg').showModal(); $('noteText').focus(); }
-$('noteSave').onclick = () => { if (!editing) return; editing.n.text = $('noteText').value.trim(); editing.kept = true; $('noteDlg').close(); };
+$('noteSave').onclick = () => { if (!editing) return; editing.n.text = $('noteText').value.trim(); editing.kept = true; $('noteDlg').close(); const t = notesText(); navigator.clipboard?.writeText(t).then(() => toast('Mark saved · all marks copied, paste them to Claude'), () => toast('Mark saved · open Marks to copy them')); };
 $('noteCancel').onclick = () => $('noteDlg').close();
 $('noteDel').onclick = () => { if (!editing) return; state.notes = state.notes.filter(x => x !== editing.n); editing.kept = true; $('noteDlg').close(); toast('Mark removed'); };
 $('noteDlg').addEventListener('close', () => { if (editing && editing.isNew && !editing.kept) state.notes = state.notes.filter(x => x !== editing.n); editing = null; syncPins(); save(true); });
 $('bMark').onclick = () => setMarking(!marking);
+$('wk-up').onclick = () => { walk.lvl = walk.lvl ? 0 : 1; walk.onStairs = false; const [x, y, yaw] = walk.lvl ? [16.4, 72.1, Math.PI / 2] : [25.3, 78.6, Math.PI]; persp.position.set(M(x), M(LEVELS[walk.lvl].base) + 1.6, M(y)); walk.yaw = yaw; walk.pitch = 0; toast(walk.lvl ? 'Upper level · walk onto the stairs or press this again to go down' : 'Main level'); };
 function notesText() { return state.notes.length ? 'Change requests for the 736 Arlington 3D model:\n' + state.notes.map((n, i) => `${i + 1}. [${noteWhere(n)}] ${n.text || '(no note written)'}`).join('\n') : ''; }
 function renderNotes() {
   const el = $('pane-notes'); el.textContent = '';
@@ -1438,6 +1473,11 @@ function tick() {
     const fx = -Math.sin(walk.yaw), fz = -Math.cos(walk.yaw);
     let mv = 0, st = 0; if (k.w || k.arrowup) mv += 1; if (k.s || k.arrowdown) mv -= 1; if (k.a) st -= 1; if (k.d) st += 1;
     persp.position.x += (fx * mv - fz * st) * sp; persp.position.z += (fz * mv + fx * st) * sp;
+    { // stairs: walking onto them carries you up or down; the lower flight climbs north from the foyer, the upper flight climbs west to the upper hall
+      const fx = persp.position.x / FT, fy = persp.position.z / FT;
+      if (fx > 18.4 && fx < 26.8 && fy > 70.6 && fy < 76.5) { const sh = fx >= 23.8 ? (fy > 73.5 ? (76.5 - fy) / 3 * 3.1 : 3.75) : 3.75 + (23.8 - fx) / 5.4 * 6.25, ty = M(sh) + 1.6;
+        if (Math.abs(ty - persp.position.y) < 1.1) { persp.position.y += (ty - persp.position.y) * Math.min(1, dt * 10); walk.lvl = sh > 6 ? 1 : 0; walk.onStairs = true; } }
+      else if (walk.onStairs) { walk.onStairs = false; persp.position.y = M(LEVELS[walk.lvl].base) + 1.6; } }
     persp.rotation.order = 'YXZ'; persp.rotation.set(walk.pitch, walk.yaw, 0);
   } else if (mode === 'orbit') orbitCtl.update(); else planCtl.update();
   updateDoors(dt);
@@ -1447,12 +1487,12 @@ function tick() {
 
 /* ================= BOOT ================= */
 let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { saved = null; }
-if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 6 }); }
+if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 8 }); }
 setStatus(saved ? 'Loaded your saved layout' : null);
 $('viewhint').textContent = 'Drag to orbit · right-drag to pan · scroll to zoom · pick Main or Upper to look inside';
 applyVis(); renderInspector(); renderRooms();
 setMode('walk'); // open at the front door
-window.__planner = { state: () => state, setMode, setLevel, select, startPlacing, scene, meshes, view: (px, py, pz, tx, ty, tz) => { persp.position.set(M(px), M(py), M(pz)); orbitCtl.target.set(M(tx), M(ty), M(tz)); orbitCtl.update(); } };
+window.__planner = { eye: (px, pz, yawDeg, pitch = 0, h = 5.3) => { setMode('walk'); persp.position.set(M(px), M(h), M(pz)); walk.yaw = yawDeg * Math.PI / 180; walk.pitch = pitch; }, state: () => state, setMode, setLevel, select, startPlacing, scene, meshes, view: (px, py, pz, tx, ty, tz) => { persp.position.set(M(px), M(py), M(pz)); orbitCtl.target.set(M(tx), M(ty), M(tz)); orbitCtl.update(); } };
 tick();
 </script>
 </body>
