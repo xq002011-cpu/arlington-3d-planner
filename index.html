@@ -194,6 +194,10 @@ dialog textarea{width:100%;min-height:220px;box-sizing:border-box;font-family:va
   </main>
 
   <footer class="foot">
+    <label class="grp" title="The original is the house as it is today and is never changed. Design plans are your own what-if layouts."><small>Plan</small><select id="planSel" class="btn"></select></label>
+    <button class="btn" id="planNew" title="Start a new design from what you see now">New design</button>
+    <button class="btn" id="planRen" hidden>Rename</button>
+    <button class="btn danger" id="planDel" hidden>Delete design</button>
     <button class="btn" id="bSave">Save</button>
     <button class="btn" id="bExport">Export JSON</button>
     <button class="btn" id="bImport">Import JSON</button>
@@ -1372,7 +1376,20 @@ function loadState(obj, msg) {
   state.items.forEach(syncItem); syncPins(); applyRoomStyles(); select(null); renderRooms(); if (msg) toast(msg); setStatus();
 }
 let saveT;
-function save(now) { clearTimeout(saveT); const run = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); starter = false; setStatus('Saved in this browser'); } catch (e) { setStatus('Not saved: this browser blocks storage. Use Export JSON.'); } }; if (now) run(); else saveT = setTimeout(run, 500); }
+/* design plans: "Original" is the house as it is (ground truth) and is never overwritten by a design change. Any change to furniture, paint or floors made while the
+   original is showing goes into a new design plan instead; marks (change requests) may still be added to the original. Plans live in this browser next to the original. */
+const PLANS_KEY = 'arlington736.plans.v1'; let plans = { cur: 'gt', list: [] }, gtBase = '';
+try { const p0 = JSON.parse(localStorage.getItem(PLANS_KEY) || 'null'); if (p0 && Array.isArray(p0.list)) plans = p0; } catch (e) {}
+const designSig = () => JSON.stringify([state.items, state.rooms]), curPlan = () => plans.list.find(p => p.id === plans.cur);
+function storePlans() { localStorage.setItem(PLANS_KEY, JSON.stringify(plans)); }
+function renderPlans() { const sel = $('planSel'); sel.innerHTML = ''; const o = new Option('Original (as it is today)', 'gt'); sel.add(o); for (const p of plans.list) sel.add(new Option(p.name, p.id)); sel.value = curPlan() ? plans.cur : 'gt'; $('planDel').hidden = $('planRen').hidden = !curPlan(); }
+function originalData() { let o = null; try { o = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {} return o && Array.isArray(o.items) ? o : { items: starterItems(), rooms: {}, m: 16 }; }
+function openPlan(id, msg) { clearTimeout(saveT); const p = plans.list.find(q => q.id === id); plans.cur = p ? id : 'gt'; select(null); loadState(JSON.parse(JSON.stringify(p ? p.data : originalData())), msg); if (!p) gtBase = designSig(); try { storePlans(); } catch (e) {} renderPlans(); setStatus(p ? 'Design plan · ' + p.name : 'Original · changes go into a new design'); }
+function newPlan(name, quiet) { const n = plans.list.length + 1, p = { id: 'p' + Date.now().toString(36), name: name || 'Design ' + n, data: JSON.parse(JSON.stringify(state)) }; plans.list.push(p); plans.cur = p.id; try { storePlans(); } catch (e) {} renderPlans(); if (!quiet) toast('New design plan · ' + p.name); return p; }
+function save(now) { clearTimeout(saveT); const run = () => { try { const p = curPlan();
+      if (p) { p.data = JSON.parse(JSON.stringify(state)); storePlans(); setStatus('Design plan · ' + p.name + ' · saved'); return; }
+      if (gtBase && designSig() !== gtBase) { const np = newPlan(null, true); toast('The original is kept as it is · your change is in "' + np.name + '"'); setStatus('Design plan · ' + np.name + ' · saved'); return; }
+      localStorage.setItem(KEY, JSON.stringify(state)); starter = false; setStatus('Saved in this browser'); } catch (e) { setStatus('Not saved: this browser blocks storage. Use Export JSON.'); } }; if (now) run(); else saveT = setTimeout(run, 500); }
 function setStatus(prefix) { $('status').textContent = `${prefix ? prefix + ' · ' : starter ? 'Starter example layout · ' : ''}${state.items.length} pieces placed`; }
 
 /* ================= CAMERAS / CONTROLS ================= */
@@ -1639,7 +1656,7 @@ $('openRight').onclick = () => { $('left').classList.remove('open'); $('right').
 $('closeLeft').onclick = $('closeRight').onclick = closeSheets;
 $('bSave').onclick = () => save(true);
 let resetArm = 0;
-$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 11 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
+$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 16 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
 const dlg = $('dlg');
 function openDlg(kind) {
   const exp = kind === 'export'; $('dlgTitle').textContent = exp ? 'Export layout' : 'Import layout';
@@ -1764,7 +1781,12 @@ function tick() {
 /* ================= BOOT ================= */
 let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { saved = null; }
 if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 16 }); }
-setStatus(saved ? 'Loaded your saved layout' : null);
+gtBase = designSig(); if (curPlan()) loadState(JSON.parse(JSON.stringify(curPlan().data))); else plans.cur = 'gt';
+renderPlans(); $('planSel').onchange = e => openPlan(e.target.value, 'Plan opened');
+$('planNew').onclick = () => { const nm = prompt('Name for the new design plan', 'Design ' + (plans.list.length + 1)); if (nm === null) return; newPlan(nm.trim() || null); setStatus('Design plan · ' + curPlan().name); };
+$('planRen').onclick = () => { const p = curPlan(); if (!p) return; const nm = prompt('Rename this design plan', p.name); if (nm && nm.trim()) { p.name = nm.trim(); storePlans(); renderPlans(); } };
+let delArm = 0; $('planDel').onclick = () => { const p = curPlan(); if (!p) return; if (Date.now() - delArm < 3000) { delArm = 0; $('planDel').textContent = 'Delete design'; plans.list = plans.list.filter(q => q !== p); openPlan('gt', 'Design deleted · back to the original'); return; } delArm = Date.now(); $('planDel').textContent = 'Click again to delete'; setTimeout(() => { $('planDel').textContent = 'Delete design'; }, 3000); };
+setStatus(curPlan() ? 'Design plan · ' + curPlan().name : saved ? 'Original · changes go into a new design' : null);
 $('viewhint').textContent = 'Drag to orbit · right-drag to pan · scroll to zoom · pick Main or Upper to look inside';
 applyVis(); renderInspector(); renderRooms();
 setMode('walk'); // open at the front door
@@ -1797,7 +1819,7 @@ function physicsAudit() { scene.updateMatrixWorld(true); const out = { doors: []
     if (inHouse(...c)) out.plants.push({ at_ft: c.map(v => +v.toFixed(1)), size_m: [b.max.x - b.min.x, b.max.y - b.min.y, b.max.z - b.min.z].map(v => +v.toFixed(2)), bottom: +b.min.y.toFixed(2) });
     else for (const w of walls[0]) if (pen(b, w.b, 0.05)) { out.plants.push({ through_wall_at_ft: c.map(v => +v.toFixed(1)), size_m: [b.max.x - b.min.x, b.max.y - b.min.y, b.max.z - b.min.z].map(v => +v.toFixed(2)) }); break; } });
   return out; }
-window.__planner = { audit: supportAudit, physics: physicsAudit, walkTo: (x, z, yawDeg, sec = 3, h = 5.3) => new Promise(res => { setMode('walk'); document.getElementById('tSolid').checked = true; walk.yaw = yawDeg * Math.PI / 180; walk.pitch = 0; walk.keys.w = true; setTimeout(() => { walk.keys.w = false; res([+(persp.position.x / FT).toFixed(2), +(persp.position.z / FT).toFixed(2), +(persp.position.y / FT).toFixed(2)]); }, sec * 1000); }), eye: (px, pz, yawDeg, pitch = 0, h = 5.3) => { setMode('walk'); persp.position.set(M(px), M(h), M(pz)); walk.yaw = yawDeg * Math.PI / 180; walk.pitch = pitch; }, state: () => state, setMode, setLevel, select, startPlacing, scene, meshes, planView: (x, y, zoom = 1) => { planCtl.target.set(M(x), 0, M(y)); ortho.position.set(M(x), 80, M(y)); ortho.zoom = zoom; ortho.updateProjectionMatrix(); planCtl.update(); }, view: (px, py, pz, tx, ty, tz) => { persp.position.set(M(px), M(py), M(pz)); orbitCtl.target.set(M(tx), M(ty), M(tz)); orbitCtl.update(); } };
+window.__planner = { save, openPlan, plans: () => plans, audit: supportAudit, physics: physicsAudit, walkTo: (x, z, yawDeg, sec = 3, h = 5.3) => new Promise(res => { setMode('walk'); document.getElementById('tSolid').checked = true; walk.yaw = yawDeg * Math.PI / 180; walk.pitch = 0; walk.keys.w = true; setTimeout(() => { walk.keys.w = false; res([+(persp.position.x / FT).toFixed(2), +(persp.position.z / FT).toFixed(2), +(persp.position.y / FT).toFixed(2)]); }, sec * 1000); }), eye: (px, pz, yawDeg, pitch = 0, h = 5.3) => { setMode('walk'); persp.position.set(M(px), M(h), M(pz)); walk.yaw = yawDeg * Math.PI / 180; walk.pitch = pitch; }, state: () => state, setMode, setLevel, select, startPlacing, scene, meshes, planView: (x, y, zoom = 1) => { planCtl.target.set(M(x), 0, M(y)); ortho.position.set(M(x), 80, M(y)); ortho.zoom = zoom; ortho.updateProjectionMatrix(); planCtl.update(); }, view: (px, py, pz, tx, ty, tz) => { persp.position.set(M(px), M(py), M(pz)); orbitCtl.target.set(M(tx), M(ty), M(tz)); orbitCtl.update(); } };
 if (location.hash === '#audit') setTimeout(supportAudit, 800);
 tick();
 </script>
