@@ -492,37 +492,84 @@ const sidingMat = new THREE.MeshStandardMaterial({ map: sidingT, roughness: 0.85
 const frameMat = new THREE.MeshStandardMaterial({ color: 0x191A1C, roughness: 0.5 });
 const whiteFrameMat = new THREE.MeshStandardMaterial({ color: 0xF4F3EF, roughness: 0.6 });
 const brassMat = new THREE.MeshStandardMaterial({ color: 0xC9A24A, roughness: 0.35, metalness: 0.25 });
-// front-door glass: iris stained glass, teal leaves and purple flowers on frosted glass (photo 15)
-const stainedT = canvasTex((g, s) => { g.fillStyle = '#DDE7E3'; g.fillRect(0, 0, s, s); g.strokeStyle = 'rgba(70,80,80,.55)'; g.lineWidth = 3; g.strokeRect(s * .12, s * .04, s * .76, s * .92);
-  const leaf = (x1, y1, bend, c) => { g.strokeStyle = c; g.lineWidth = s * 0.055; g.lineCap = 'round'; g.beginPath(); g.moveTo(.5 * s, .98 * s); g.quadraticCurveTo((.5 + x1) / 2 * s + bend * s, (.98 + y1) / 2 * s, x1 * s, y1 * s); g.stroke(); };
-  leaf(.42, .25, -.12, '#2E9C8C'); leaf(.62, .4, .14, '#3BB39F'); leaf(.3, .55, -.1, '#2A8F7F'); leaf(.7, .62, .1, '#2E9C8C'); leaf(.5, .3, 0, '#4C7F4A');
-  for (const [x, y] of [[.44, .24], [.6, .42], [.5, .6]]) { g.fillStyle = '#7A2E5E'; g.beginPath(); g.ellipse(x * s, y * s, s * .085, s * .055, .5, 0, 7); g.fill(); g.fillStyle = '#A8477E'; g.beginPath(); g.ellipse(x * s + s * .03, y * s - s * .04, s * .05, s * .04, -.6, 0, 7); g.fill(); } }, 256);
-const stainedMat = new THREE.MeshStandardMaterial({ map: stainedT, transparent: true, opacity: 0.94, roughness: 0.2, emissive: 0x33443F, emissiveIntensity: 0.3 });
+// front-door glass, drawn from photo 15: leaded sidelights with a frosted border of rectangular panes, a clear inner panel with rounded top corners,
+// three burgundy irises on long teal leaves and a grey-green flower cluster at the top; the door's narrow lites carry the same motif
+const irisDraw = (g, X, Y, cx, cy, r, rot) => { g.save(); g.translate(X(cx), Y(cy)); g.rotate(rot); const sx = X(r) - X(0), sy = (Y(r) - Y(0)) * 0.27;
+  for (const [a, c, k] of [[-0.9, '#8E2E63', 1], [0.9, '#7A2454', 1], [0, '#A63C78', 1.15], [Math.PI, '#5E1B42', 0.8], [2.3, '#6E2150', 0.75], [-2.3, '#6E2150', 0.75]]) { g.save(); g.rotate(a); g.fillStyle = c; g.beginPath(); g.ellipse(0, -sy * 0.9 * k, sx * 0.42, sy * k, 0, 0, 7); g.fill(); g.restore(); }
+  g.fillStyle = '#D9B04A'; g.beginPath(); g.ellipse(0, 0, sx * 0.16, sy * 0.3, 0, 0, 7); g.fill(); g.restore(); };
+const bladeDraw = (g, X, Y, x0, y0, x1, y1, bend, wd, c) => { const mx = (x0 + x1) / 2 + bend, my = (y0 + y1) / 2; g.fillStyle = c; g.beginPath(); g.moveTo(X(x0 - wd / 2), Y(y0)); g.quadraticCurveTo(X(mx - wd), Y(my), X(x1), Y(y1)); g.quadraticCurveTo(X(mx + wd * 0.2), Y(my), X(x0 + wd / 2), Y(y0)); g.fill(); g.strokeStyle = 'rgba(30,45,45,.55)'; g.lineWidth = 1.2; g.stroke(); };
+const stainedT = canvasTex((g, s) => { const X = u => u * s, Y = v => v * s, lead = 'rgba(52,58,60,.85)';
+  g.fillStyle = '#E6EEF1'; g.fillRect(0, 0, s, s); for (let i = 0; i < 2500; i++) { g.fillStyle = `rgba(255,255,255,${rnd() * 0.25})`; g.fillRect(rnd() * s, rnd() * s, 2, 2); }
+  g.strokeStyle = lead; g.lineWidth = 3; for (let i = 1; i < 8; i++) { g.beginPath(); g.moveTo(0, Y(i / 8)); g.lineTo(s, Y(i / 8)); g.stroke(); }
+  const x0 = 0.21, x1 = 0.79, y0 = 0.075, y1 = 0.925, rr = 0.2; const inner = () => { g.beginPath(); g.moveTo(X(x0), Y(y1)); g.lineTo(X(x0), Y(y0 + rr * 0.25)); g.quadraticCurveTo(X(x0), Y(y0), X(x0 + rr), Y(y0)); g.lineTo(X(x1 - rr), Y(y0)); g.quadraticCurveTo(X(x1), Y(y0), X(x1), Y(y0 + rr * 0.25)); g.lineTo(X(x1), Y(y1)); g.closePath(); };
+  const gr = g.createLinearGradient(0, 0, s, s); gr.addColorStop(0, '#7C8B86'); gr.addColorStop(0.5, '#55645F'); gr.addColorStop(1, '#75847C'); inner(); g.fillStyle = gr; g.fill();
+  g.save(); inner(); g.clip();
+  bladeDraw(g, X, Y, 0.5, 0.93, 0.3, 0.17, -0.12, 0.09, '#1FA08C'); bladeDraw(g, X, Y, 0.52, 0.93, 0.74, 0.3, 0.16, 0.08, '#27B39C'); bladeDraw(g, X, Y, 0.5, 0.93, 0.76, 0.66, 0.2, 0.08, '#1B8E7E'); bladeDraw(g, X, Y, 0.46, 0.93, 0.26, 0.56, -0.16, 0.07, '#27B39C'); bladeDraw(g, X, Y, 0.4, 0.3, 0.3, 0.13, -0.12, 0.07, '#2C9A62');
+  g.strokeStyle = '#2F7F5E'; g.lineWidth = s * 0.016; for (const [ax, ay, bx, by] of [[0.5, 0.93, 0.42, 0.25], [0.5, 0.93, 0.44, 0.48], [0.52, 0.93, 0.56, 0.7]]) { g.beginPath(); g.moveTo(X(ax), Y(ay)); g.quadraticCurveTo(X((ax + bx) / 2 + 0.06), Y((ay + by) / 2), X(bx), Y(by)); g.stroke(); }
+  irisDraw(g, X, Y, 0.42, 0.235, 0.17, -0.3); irisDraw(g, X, Y, 0.44, 0.47, 0.16, 0.25); irisDraw(g, X, Y, 0.56, 0.7, 0.18, -0.15);
+  g.restore(); inner(); g.strokeStyle = lead; g.lineWidth = 3.5; g.stroke();
+  for (const [cx, cy] of [[0.7, 0.065], [0.82, 0.085], [0.76, 0.115], [0.64, 0.1], [0.86, 0.05]]) { g.fillStyle = '#9FB5A6'; g.strokeStyle = lead; g.lineWidth = 1.5; g.beginPath(); g.ellipse(X(cx), Y(cy), s * 0.07, s * 0.02, 0, 0, 7); g.fill(); g.stroke(); g.fillStyle = '#7C9486'; g.beginPath(); g.ellipse(X(cx), Y(cy), s * 0.022, s * 0.007, 0, 0, 7); g.fill(); }
+  bladeDraw(g, X, Y, 0.74, 0.12, 0.8, 0.165, 0.03, 0.07, '#3E9A5E'); g.strokeStyle = lead; g.lineWidth = 4; g.strokeRect(1, 1, s - 2, s - 2); }, 512);
+const liteT = canvasTex((g, s) => { const X = u => u * s, Y = v => v * s; const gr = g.createLinearGradient(0, 0, s, s); gr.addColorStop(0, '#9AA28C'); gr.addColorStop(1, '#6E7868'); g.fillStyle = gr; g.fillRect(0, 0, s, s);
+  bladeDraw(g, X, Y, 0.45, 1, 0.75, 0.2, 0.3, 0.2, '#1FA08C'); bladeDraw(g, X, Y, 0.4, 1, 0.2, 0.42, -0.25, 0.18, '#27B39C'); bladeDraw(g, X, Y, 0.6, 1, 0.5, 0.5, 0.1, 0.16, '#2C9A62'); irisDraw(g, X, Y, 0.5, 0.36, 0.34, 0.1);
+  g.strokeStyle = 'rgba(40,45,45,.9)'; g.lineWidth = 6; g.strokeRect(2, 2, s - 4, s - 4); }, 256);
+const stainedMat = new THREE.MeshStandardMaterial({ map: stainedT, roughness: 0.25, emissive: 0xffffff, emissiveMap: stainedT, emissiveIntensity: 0.28 });
+const liteMat = new THREE.MeshStandardMaterial({ map: liteT, roughness: 0.25, emissive: 0xffffff, emissiveMap: liteT, emissiveIntensity: 0.25 });
+const fluteMat = new THREE.MeshStandardMaterial({ color: 0x2E2A29, roughness: 0.45 }), doorWood = new THREE.MeshStandardMaterial({ color: 0x1D1716, roughness: 0.42 }), doorWhite = new THREE.MeshStandardMaterial({ color: 0xF6F5F1, roughness: 0.6 });
 function worldUV(geo, lenM, hM, u0, v0) { const uv = geo.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * lenM + u0, uv.getY(i) * hM + v0); }
 // opening types: d door, f French/glass door (black, divided lites), s sliding glass door, o cased opening, w window band (black), x double-hung (white sash, black casing),
 // e entry door with sidelights, c French door + clerestory above, h clerestory only. Opening = [distFromStart, width, type, sill, top, {n: lites/panels, white: white frame}]
 const GAPS = { d: [[0, 6.8]], f: [[0, 7]], s: [[0, 6.8]], o: [[0, 7.5]], e: [[0, 7]], c: [[0, 6.9], [8, 9.6]], h: [[8, 9.6]] };
+/* doors — every door has a real leaf: hinged leaves swing on a pivot at the jamb, sliders travel along the wall. In walk mode a door opens when you come
+   within about 2 m and closes behind you; a click toggles it held open in any mode. */
+const doors = [], doorMeshes = [];
+function updateDoors(dt) { const k = 1 - Math.exp(-dt / 0.085);
+  for (const d of doors) { let tg = d.held ? 1 : 0; if (!tg && mode === 'walk' && (walk.lvl || 0) === d.lv) { const dx = persp.position.x - d.c.x, dz = persp.position.z - d.c.z; if (dx * dx + dz * dz < 4.6) tg = 1; }
+    if (d.open === tg) continue; d.open += (tg - d.open) * k; if (Math.abs(tg - d.open) < 0.002) d.open = tg;
+    const e = d.open * d.open * (3 - 2 * d.open); if (d.slide) d.p.position.x = d.x0 + d.slide * e; else d.p.rotation.y = d.a * e; } }
 function glazing(lv, cx, cy, rotY, w, b, tp, kind, o = {}) {
-  const g = new THREE.Group(), W = M(w), Hh = M(tp - b), dp = 0.12, fm = o.white ? whiteFrameMat : frameMat, t = kind === 'x' ? 0.085 : 0.055;
-  const bar = (bw, bh, x, y, d = dp, m = fm) => { const k = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, d), m); k.position.set(x, y, 0); g.add(k); return k; };
-  if (kind !== 'e' && kind !== 'p') g.add(new THREE.Mesh(new THREE.BoxGeometry(W, Hh, 0.02), glassMat));
-  bar(W, t, 0, Hh / 2 - t / 2); bar(W, t, 0, -Hh / 2 + t / 2); bar(t, Hh, -W / 2 + t / 2, 0); bar(t, Hh, W / 2 - t / 2, 0);
-  if (kind === 'p') bar(W - 2 * t, Hh - t, 0, -t / 2, 0.06);
-  else if (kind === 'e') { // black door with three stained lites, a stained-glass sidelight each side
-    const dw = M(3), sw = (W - dw) / 2 - t - 0.07;
-    bar(dw, Hh - t, 0, -t / 2, 0.07);
-    for (const s of [-1, 1]) { const sx = s * (dw / 2 + 0.07 + sw / 2); bar(0.07, Hh, s * (dw / 2 + 0.035), 0); const p = new THREE.Mesh(new THREE.BoxGeometry(sw, Hh - 0.42, 0.03), stainedMat); p.position.set(sx, 0.13, 0); g.add(p); bar(sw, 0.3, sx, -Hh / 2 + 0.15 + t, 0.06); }
-    for (const i of [-1, 0, 1]) { const ph = i ? 0.62 : 0.9, p = new THREE.Mesh(new THREE.BoxGeometry(0.17, ph, 0.09), stainedMat); p.position.set(i * 0.25, Hh / 2 - 0.28 - ph / 2, 0); g.add(p); }
-    bar(0.04, 0.22, dw / 2 - 0.12, -0.12, 0.14, brassMat); bar(0.28, 0.06, 0, -0.32, 0.09, brassMat);
-    bar(W + 0.36, 0.2, 0, Hh / 2 + 0.1, 0.2, whiteFrameMat); for (const s of [-1, 1]) { bar(0.12, Hh, s * (W / 2 + 0.06), 0, 0.2, whiteFrameMat); for (const yy of [Hh / 2 - 0.09, -Hh / 2 + 0.12]) bar(0.13, 0.13, s * (W / 2 - t / 2 - 0.01), yy, 0.15); } // white reveal, corner blocks
+  const g = new THREE.Group(), W = M(w), Hh = M(tp - b), dp = 0.12, fm = o.white ? whiteFrameMat : frameMat, t = kind === 'x' ? 0.085 : 0.055, made = [], isDoor = 'pefs'.includes(kind);
+  const mk = (par, bw, bh, x, y, d = dp, m = fm, z = 0) => { const k = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, d), m); k.position.set(x, y, z); par.add(k); return k; };
+  const bar = (bw, bh, x, y, d, m) => mk(g, bw, bh, x, y, d, m);
+  const pane = (par, pw, ph, x, y = 0) => { const k = new THREE.Mesh(new THREE.BoxGeometry(pw, ph, 0.02), glassMat); k.position.set(x, y, 0); par.add(k); return k; };
+  // moving leaf: a pivot group at local x; opt.a = swing angle (radians, + swings to the outside face), opt.slide = travel along the wall; opt.mid = centre of the doorway
+  const leaf = (x, opt) => { const p = new THREE.Group(); p.position.x = x; g.add(p); const d = Object.assign({ p, lv, open: 0, held: false, x0: x, mid: x, c: new THREE.Vector3() }, opt); doors.push(d); made.push(d); return p; };
+  bar(W, t, 0, Hh / 2 - t / 2); if (!isDoor) bar(W, t, 0, -Hh / 2 + t / 2); bar(t, Hh, -W / 2 + t / 2, 0); bar(t, Hh, W / 2 - t / 2, 0);
+  if (kind === 'p') { // solid door: white panel door inside, black outside
+    const m = o.white ? doorWhite : frameMat, lw = W - 2 * t, lh = Hh - t - 0.01, p = leaf(-lw / 2, { a: -1.62, mid: 0 });
+    mk(p, lw, lh, lw / 2, -t / 2, 0.045, m); for (const yy of [lh * 0.22, -lh * 0.24]) for (const z of [0.024, -0.024]) mk(p, lw - 0.26, lh * 0.36, lw / 2, yy - t / 2, 0.006, m, z).scale.set(1, 1, 1);
+    for (const z of [0.05, -0.05]) { const kn = new THREE.Mesh(new THREE.SphereGeometry(0.032, 10, 8), brassMat); kn.position.set(lw - 0.07, -0.12, z); p.add(kn); }
+  } else if (kind === 'e') { // front entry: dark-wood door and casing, fluted pilasters with rosette blocks, leaded iris sidelights; only the centre leaf swings
+    const dw = M(3), pw = 0.1, sw = (W - dw) / 2 - t - pw, wd = doorWood;
+    for (const s of [-1, 1]) { const px = s * (dw / 2 + pw / 2), sx = s * (dw / 2 + pw + sw / 2);
+      for (const x of [px, s * (W / 2 - t / 2)]) { mk(g, pw, Hh, x, 0, 0.15, wd); for (const k of [-1, 0, 1]) mk(g, 0.012, Hh - 0.5, x + k * 0.026, 0.02, 0.158, fluteMat); mk(g, pw + 0.03, 0.2, x, -Hh / 2 + 0.1, 0.17, wd);
+        mk(g, pw + 0.035, pw + 0.035, x, Hh / 2 - pw / 2 - 0.01, 0.17, wd); for (const z of [0.09, -0.09]) { const r = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.036, 0.012, 14), fluteMat); r.rotation.x = Math.PI / 2; r.position.set(x, Hh / 2 - pw / 2 - 0.01, z); g.add(r); const r2 = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.02, 10), wd); r2.rotation.x = Math.PI / 2; r2.position.set(x, Hh / 2 - pw / 2 - 0.01, z); g.add(r2); } }
+      mk(g, sw, Hh - 0.36, sx, 0.09, 0.03, stainedMat); mk(g, sw + 0.02, 0.27, sx, -Hh / 2 + 0.135, 0.08, wd); mk(g, sw + 0.02, 0.07, sx, Hh / 2 - 0.055 - t, 0.08, wd); }
+    mk(g, W, 0.09, 0, Hh / 2 - 0.045, 0.15, wd); for (const k of [-1, 1]) mk(g, W - 0.3, 0.01, 0, Hh / 2 - 0.045 + k * 0.02, 0.158, fluteMat);
+    mk(g, dw + 0.1, 0.025, 0, -Hh / 2 + 0.012, 0.2, brassMat);                                                    // brass threshold
+    bar(W + 0.36, 0.2, 0, Hh / 2 + 0.1, 0.2, whiteFrameMat); for (const s of [-1, 1]) bar(0.12, Hh, s * (W / 2 + 0.06), 0, 0.2, whiteFrameMat); // white reveal
+    const lh = Hh - 0.12, p = leaf(-dw / 2 + 0.005, { a: -1.5, mid: 0 }), dx = dw / 2 - 0.005, dy = -0.05;
+    mk(p, dw - 0.01, lh, dx, dy, 0.055, wd);
+    for (const i of [-1, 0, 1]) { const ph = i ? 0.66 : 0.92, lx = dx + i * 0.25, ly = dy + lh / 2 - 0.2 - ph / 2; mk(p, 0.2, ph + 0.05, lx, ly, 0.062, fluteMat); mk(p, 0.155, ph, lx, ly, 0.07, liteMat); }
+    for (const z of [0.03, -0.03]) { mk(p, dw - 0.3, 0.5, dx, dy - lh / 2 + 0.42, 0.008, fluteMat, z); mk(p, dw - 0.36, 0.44, dx, dy - lh / 2 + 0.42, 0.012, wd, z); }
+    for (const z of [0.036, -0.036]) { mk(p, 0.055, 0.3, dx + dw / 2 - 0.13, dy - 0.2, 0.014, brassMat, z); mk(p, 0.02, 0.16, dx + dw / 2 - 0.13, dy - 0.2, 0.05, brassMat, z * 1.6);
+      const db = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.02, 12), brassMat); db.rotation.x = Math.PI / 2; db.position.set(dx + dw / 2 - 0.13, dy + 0.06, z); p.add(db); }
+    mk(p, 0.26, 0.05, dx, dy - 0.42, 0.064, brassMat);
   } else if (kind === 'x') { // double-hung: two white sashes with divided lites inside the black casing
-    const iw = W - 2 * t, ih = Hh - 2 * t, s = 0.045, d2 = 0.07, wm = whiteFrameMat;
+    pane(g, W, Hh, 0); const iw = W - 2 * t, ih = Hh - 2 * t, s = 0.045, d2 = 0.07, wm = whiteFrameMat;
     for (const sy of [-1, 1]) { const c0 = sy * ih / 4; bar(iw, s, 0, c0 + ih / 4 - s / 2, d2, wm); bar(iw, s, 0, c0 - ih / 4 + s / 2, d2, wm); bar(s, ih / 2, -iw / 2 + s / 2, c0, d2, wm); bar(s, ih / 2, iw / 2 - s / 2, c0, d2, wm);
       bar(0.018, ih / 2, -iw / 6, c0, 0.04, wm); bar(0.018, ih / 2, iw / 6, c0, 0.04, wm); bar(iw, 0.018, 0, c0, 0.04, wm); }
-  } else { const nV = o.n || Math.max(1, Math.round(w / (kind === 'f' ? 2.8 : 2.5)));
-    for (let i = 1; i < nV; i++) bar(kind === 's' ? t * 1.5 : t, Hh, -W / 2 + W * i / nV, 0);
-    if (kind === 'f') { const lw = W / nV; for (let i = 0; i < nV; i++) { const c0 = -W / 2 + lw * (i + 0.5); bar(0.022, Hh, c0, 0, 0.05); for (let k = 1; k < 5; k++) bar(lw, 0.022, c0, -Hh / 2 + 0.24 + (Hh - 0.3) * k / 5, 0.05); bar(lw, 0.2, c0, -Hh / 2 + 0.1 + t, 0.07); } } }
+  } else if (kind === 'f' || kind === 's') { // French doors (centre leaves swing out) and sliders (one panel slides over its neighbour)
+    const n = o.n || Math.max(1, Math.round(w / 2.8)), iw = W - 2 * t, lw = iw / n, lh = Hh - t, st = 0.05, c = (n - 1) >> 1;
+    const moving = kind === 's' ? [n === 2 ? 0 : c] : n === 1 ? [0] : n === 2 ? [0, 1] : n === 3 ? [1] : [c, c + 1];
+    for (let i = 0; i < n; i++) { const xl = -iw / 2 + lw * i, mv = moving.includes(i), right = kind === 'f' && mv && moving.length === 2 && i === moving[1];
+      const par = !mv ? g : kind === 's' ? leaf(xl + lw / 2, { slide: (i === n - 1 ? -1 : 1) * (lw - st), mid: xl + lw / 2 }) : leaf(right ? xl + lw : xl, { a: right ? -1.45 : 1.45, mid: moving.length === 2 ? -iw / 2 + lw * (moving[0] + 1) : xl + lw / 2 });
+      const ox = !mv ? xl + lw / 2 : kind === 's' ? 0 : right ? -lw / 2 : lw / 2, oy = -t / 2, z = kind === 's' && mv ? 0.045 : 0;
+      pane(par, lw - 0.02, lh, ox, oy).position.z = z; for (const s of [-1, 1]) mk(par, st, lh, ox + s * (lw / 2 - st / 2), oy, 0.06, fm, z); mk(par, lw, st, ox, oy + lh / 2 - st / 2, 0.06, fm, z); mk(par, lw, kind === 'f' ? 0.2 : st, ox, oy - lh / 2 + (kind === 'f' ? 0.1 : st / 2), 0.06, fm, z);
+      if (kind === 'f') { mk(par, 0.022, lh, ox, oy, 0.05, fm); for (let k = 1; k < 5; k++) mk(par, lw - st, 0.022, ox, oy - lh / 2 + 0.2 + (lh - 0.25) * k / 5, 0.05, fm); mk(par, 0.03, 0.12, ox + (right ? -1 : 1) * (lw / 2 - st / 2) * (mv ? 1 : 0), oy - 0.1, 0.11, mv ? brassMat : fm); } }
+  } else { pane(g, W, Hh, 0); const nV = o.n || Math.max(1, Math.round(w / 2.5)); for (let i = 1; i < nV; i++) bar(t, Hh, -W / 2 + W * i / nV, 0); }
   g.position.set(M(cx), M((b + tp) / 2), M(cy)); g.rotation.y = rotY; G.walls[lv].add(g);
+  for (const d of made) { d.c.set(g.position.x + Math.cos(rotY) * d.mid, 0, g.position.z - Math.sin(rotY) * d.mid); d.p.traverse(m => { if (m.isMesh) { m.userData.door = d; doorMeshes.push(m); } }); }
 }
 // wall = [x1, y1, x2, y2, kind, openings, height (default: level wall height), [noExtendStart, noExtendEnd]]
 function buildWall(w, lv) {
@@ -547,7 +594,7 @@ function buildWall(w, lv) {
   for (const o of ops.map(o => ({ s: o[0] - o[1] / 2, e: o[0] + o[1] / 2, type: o[2], sill: o[3], top: o[4], opt: o[5] || {} })).sort((a, b) => a.s - b.s)) {
     piece(cur, o.s, 0, H);
     const gaps = o.type === 'w' || o.type === 'x' ? [[o.sill ?? 3, o.top ?? 7]] : (o.type === 'f' || o.type === 's') && o.top ? [[0, o.top]] : GAPS[o.type]; let h = 0; const mid = (o.s + o.e) / 2;
-    gaps.forEach(([b, tp], i) => { piece(o.s, o.e, h, b); h = tp; const gk = o.type === 'c' ? (i ? 'w' : 'f') : o.type === 'h' ? 'w' : o.type === 'd' ? (kind === 'e' ? 'p' : null) : o.type === 'o' ? null : o.type; if (gk) glazing(lv, x1 + ux * mid, y1 + uy * mid, rot, o.e - o.s, b, tp, gk, o.opt); });
+    gaps.forEach(([b, tp], i) => { piece(o.s, o.e, h, b); h = tp; const gk = o.type === 'c' ? (i ? 'w' : 'f') : o.type === 'h' ? 'w' : o.type === 'd' ? 'p' : o.type === 'o' ? null : o.type; if (gk) glazing(lv, x1 + ux * mid, y1 + uy * mid, rot, o.e - o.s, b, tp, gk, o.type === 'd' && kind !== 'e' ? { white: 1 } : o.opt); });
     piece(o.s, o.e, h, H); cur = o.e;
   }
   piece(cur, L + (noExt[1] ? 0 : ext), 0, H);
@@ -756,7 +803,7 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
   const cordyline = (x, y, h, tx, ty) => { stem(x, y, h, 0.32, tx, ty, barkGrey); spiky(tx, ty, 2.5, h - 0.3, 0x55804C, 80, 0.05, 2.25, 0.13); };
   const yucca = (x, y, th, r = 2.6, flower = false) => { if (th > 0.4) stem(x, y, th, 0.45, x + 0.3, y + 0.2, barkGrey); spiky(x + (th > 0.4 ? 0.3 : 0), y + (th > 0.4 ? 0.2 : 0), r, th, 0x6F9A72, 64, 0.08, 1.95, 0.13);
     if (flower) { stem(x + 0.3, y + 0.2, th + r * 0.9, 0.13, x + 0.3, y + 0.2, pmat(0x8C9A6A), th); const m = new THREE.Mesh(new THREE.ConeGeometry(M(0.6), M(3.2), 7), pmat(0xEFE8C8)); m.position.set(M(x + 0.3), M(th + r * 0.9 + 1.5), M(y + 0.2)); m.castShadow = true; S.add(m); } };
-  const cloud = (x, y, h = 1) => { stem(x, y, h + 1.6, 0.14, x + 0.3, y, bark, h); stem(x, y, h + 1.2, 0.12, x - 0.7, y + 0.2, bark, h); ball(x + 0.3, y, 1.05, 0x4E7B3C, h + 2.1); ball(x - 0.8, y + 0.2, 0.85, 0x5A8742, h + 1.5); ball(x + 1.0, y + 0.3, 0.7, 0x4E7B3C, h + 1.2); };
+  const cloud = (x, y, h = 1) => { stem(x, y, h + 1.1, 0.2, x + 0.15, y, barkGrey, h); for (const [ox, oy, ph, r] of [[0.2, 0, 2.7, 1.25], [-1.1, 0.25, 2.0, 1.0], [1.35, 0.3, 1.9, 0.95], [-0.4, 0.7, 1.45, 0.8], [0.9, -0.2, 1.3, 0.7]]) { stem(x + 0.15, y, h + ph - 0.1, 0.09, x + ox, y + oy, barkGrey, h + 0.9); blob(x + ox, h + ph, y + oy, r, [0x6F9238, 0x7C9E3E, 0x658A36][(ph * 10 | 0) % 3], 0.42, sph); } };
   // back: redwoods and Italian cypress behind the north fence, queen palms and banana by the pool equipment, Canary palm next door, tall hedge beyond the east wall
   [[8, -60, 8, 62], [18, -54, 9, 70], [-3, -54, 6, 48], [28, -40, 5, 44], [-9, -63, 7, 54], [36, -52, 7, 58]].forEach(a => conifer(...a));
   cypress(10, -47, 34); cypress(13.5, -47.5, 30);
@@ -769,7 +816,7 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
   tree(72, 30, 9, 30, [0x6B963F, 0x86A543, 0x5E8A42]); tree(80, 55, 8, 26, [0x4F7C3C, 0x5E8A42]);
   for (let y = -38; y < 132; y += 5.5) bush(-14.6, y, 2.5, [0x486F3F, 0x4F7A45][(y | 0) & 1], 1.5);
   // front
-  tree(71.7, 103.7, 17, 38, [0x4F7A3C, 0x5B8340, 0x45703A, 0x668C45], { flat: 0.75, n: 13, tr: 1.6 });      // street oak
+  tree(73, 105, 14, 36, [0x4F7A3C, 0x5B8340, 0x45703A, 0x668C45], { flat: 0.8, n: 13, tr: 1.6 });      // street oak
   tree(-25, 108, 9, 26, [0xB5452F, 0xC96A34, 0x9E3A2C, 0xD08A3C], { flat: 1 });                              // red maple, just west of the driveway (photos 4, 9)
   tree(84, 78, 9, 28, [0xA7B84A, 0x8FAE46]); tree(-22, 60, 8, 26, [0x4F7A3C, 0x86A543]);
   tree(60.5, 90.5, 2.6, 11, [0x7FA650, 0x94B45A], { n: 6, tr: 0.2 });                                        // young tree in the living-room bed
@@ -970,6 +1017,7 @@ function onUp(e) {
   if (marking) { setPtr(e); addNoteAt(); return; }
   setPtr(e);
   if (placing) { const lv = activeLevel(); const p = planeHit(M(LEVELS[lv].base)); if (p) { const it = makeItem(placing, p.x, p.z, lv); const n = state.items.filter(i => i.type === placing).length; if (n) it.name += ' ' + (n + 1); state.items.push(it); syncItem(it); const r = roomOfItem(it); toast(`${it.name} placed${r ? ' in ' + r.name : ''}`); if (!e.shiftKey) stopPlacing(); select(it); save(); renderRooms(); } return; }
+  if (!(typeof marking !== 'undefined' && marking)) { const dh = raycaster.intersectObjects(doorMeshes, false).find(h => visibleChain(h.object)); if (dh) { const d = dh.object.userData.door; d.held = !d.held; toast(d.held ? 'Door held open · click it again to release' : 'Door released'); return; } }
   const f = pickFloor();
   if (f) selectRoom(ROOM[f.object.userData.room]); else select(null);
 }
@@ -1223,6 +1271,7 @@ function tick() {
     persp.position.x += (fx * mv - fz * st) * sp; persp.position.z += (fz * mv + fx * st) * sp;
     persp.rotation.order = 'YXZ'; persp.rotation.set(walk.pitch, walk.yaw, 0);
   } else if (mode === 'orbit') orbitCtl.update(); else planCtl.update();
+  updateDoors(dt);
   renderer.render(scene, camera); updateLabels(); updatePins();
   requestAnimationFrame(tick);
 }
