@@ -467,10 +467,10 @@ function applySky() { scene.background = skyPlan ? skyFlat : skyTex; }
 function syncSky() {
   const css = getComputedStyle(document.documentElement).getPropertyValue('--sky').trim() || '#D9E4E6';
   skyFlat.set(css); const hsl = {}; skyFlat.getHSL(hsl); const dark = hsl.l < 0.4;
-  const stops = dark ? ['#0A121C', '#15212C', css, css] : ['#86B4DE', '#BAD4E8', css, css];
-  const g = skyCv.getContext('2d'), gr = g.createLinearGradient(0, 0, 0, 256); [0, 0.32, 0.6, 1].forEach((p, i) => gr.addColorStop(p, stops[i])); g.fillStyle = gr; g.fillRect(0, 0, 2, 256); skyTex.needsUpdate = true;
-  scene.fog = new THREE.Fog(skyFlat.getHex(), 120, 430);
-  renderer.toneMappingExposure = dark ? 0.82 : 1; hemi.intensity = dark ? 0.9 : 1.15; amb.intensity = dark ? 0.6 : 0.75; sun.intensity = dark ? 2.3 : 2.7;
+  const hz = dark ? '#C79482' : '#DCE9F2', stops = dark ? ['#1A2748', '#4B4A78', '#B98A8C', hz] : ['#6FA8DC', '#A9CDEB', hz, hz];
+  const g = skyCv.getContext('2d'), gr = g.createLinearGradient(0, 0, 0, 256); [0, 0.3, 0.5, 0.62].forEach((p, i) => gr.addColorStop(p, stops[i])); g.fillStyle = gr; g.fillRect(0, 0, 2, 256); skyTex.needsUpdate = true;
+  scene.fog = new THREE.Fog(new THREE.Color(hz).getHex(), 70, 330);
+  renderer.toneMappingExposure = dark ? 0.9 : 1; hemi.intensity = dark ? 1.0 : 1.15; amb.intensity = dark ? 0.66 : 0.75; sun.intensity = dark ? 2.2 : 2.7; sun.color.set(dark ? 0xFFD9B0 : 0xfff0d6);
   applySky();
 }
 syncSky(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change', syncSky);
@@ -1072,8 +1072,8 @@ function itemGroup(it, ghost) {
     case 'playpen': { const mesh = mk(0xD9DBE0, { transparent: true, opacity: ghost ? 0.3 : 0.55, side: THREE.DoubleSide }); for (const sx of [-1, 1]) { B(0.02, d, h - 0.1, sx * (w / 2 - 0.01), 0.04, 0, mesh); B(0.05, d, 0.07, sx * (w / 2 - 0.025), h - 0.07, 0, m1); } for (const sz of [-1, 1]) { B(w, 0.02, h - 0.1, 0, 0.04, sz * (d / 2 - 0.01), mesh); B(w, 0.05, 0.07, 0, h - 0.07, sz * (d / 2 - 0.025), m1); }
       for (const sx of [-1, 1]) for (const sz of [-1, 1]) B(0.06, 0.06, h, sx * (w / 2 - 0.03), 0, sz * (d / 2 - 0.03), m1); const pl = new THREE.Mesh(new THREE.PlaneGeometry(w - 0.06, d - 0.06), picMat('dino')); pl.rotation.x = -Math.PI / 2; pl.position.y = 0.04; g.add(pl); B(w - 0.04, d - 0.04, 0.035, 0, 0, 0, white); break; }
     case 'sandbox': { for (const sx of [-1, 1]) B(0.04, d, h, sx * (w / 2 - 0.02), 0, 0, m1); for (const sz of [-1, 1]) B(w, 0.04, h, 0, 0, sz * (d / 2 - 0.02), m1); B(w - 0.08, d - 0.08, h * 0.7, 0, 0, 0, mk(0xD9CBB0, { roughness: 1 })); for (const sx of [-1, 1]) { B(0.28, d, 0.03, sx * (w / 2 - 0.14), h, 0, m1); B(0.03, d, 0.3, sx * (w / 2 - 0.015), h + 0.03, 0, m1); } break; }
-    case 'porch_swing': { for (const sx of [-1, 1]) { for (const sz of [-1, 1]) { const l = B(0.09, 0.07, h * 1.08, sx * (w / 2 - 0.05), 0, sz * d * 0.36, m1); l.rotation.x = -sz * 0.36; } B(0.09, d * 0.9, 0.07, sx * (w / 2 - 0.05), 0.02, 0, m1); } B(w, 0.1, 0.09, 0, h - 0.1, 0, m1);
-      B(w * 0.78, 0.5, 0.05, 0, 0.5, 0, m3); const bk = B(w * 0.78, 0.05, 0.55, 0, 0.52, -0.26, m3); bk.rotation.x = -0.25; for (const sx of [-1, 1]) { B(0.012, 0.012, h - 0.7, sx * w * 0.36, 0.6, 0.15, dark); B(0.012, 0.012, h - 0.7, sx * w * 0.36, 0.6, -0.2, dark); } break; }
+    case 'porch_swing': { for (const sx of [-1, 1]) { for (const sz of [-1, 1]) { const l = B(0.09, 0.07, h * 1.01, sx * (w / 2 - 0.05), 0, sz * d * 0.18, m1); l.rotation.x = -sz * Math.atan(d * 0.36 / (h - 0.05)); } B(0.09, d * 0.9, 0.07, sx * (w / 2 - 0.05), 0.02, 0, m1); } B(w, 0.1, 0.09, 0, h - 0.1, 0, m1);
+      B(w * 0.78, 0.5, 0.05, 0, 0.5, 0, m3); const bk = B(w * 0.78, 0.05, 0.55, 0, 0.52, -0.26, m3); bk.rotation.x = -0.25; for (const sx of [-1, 1]) { B(0.012, 0.012, h - 0.66, sx * w * 0.36, 0.56, 0.03, dark); B(0.012, 0.012, h - 0.66, sx * w * 0.36, 0.56, -0.03, dark); } break; }
     case 'raised_bed': { for (const sx of [-1, 1]) B(0.04, d, h, sx * (w / 2 - 0.02), 0, 0, m1); for (const sz of [-1, 1]) B(w, 0.04, h, 0, 0, sz * (d / 2 - 0.02), m1); B(w - 0.08, d - 0.08, h * 0.85, 0, 0, 0, mk(0x3B2F26, { roughness: 1 })); const cage = mk(0xB9BDC1, { transparent: true, opacity: ghost ? 0.2 : 0.3, side: THREE.DoubleSide }); for (const sx of [-1, 1]) B(0.008, d, 0.5, sx * (w / 2 - 0.02), h, 0, cage); for (const sz of [-1, 1]) B(w, 0.008, 0.5, 0, h, sz * (d / 2 - 0.02), cage);
       for (let i = 0; i < 5; i++) { const lf = new THREE.Mesh(new THREE.IcosahedronGeometry(0.12, 0), mk(0x5E9A45, { flatShading: true })); lf.position.set(-w / 2 + 0.25 + i * (w - 0.5) / 4, h + 0.06, (i % 2 - 0.5) * d * 0.3); g.add(lf); } break; }
     case 'guitar_case': { const c = B(w, d, h * 0.42, 0, 0, 0, m1), n = B(w * 0.42, d, h * 0.58, 0, h * 0.42, 0, m1); const bd = new THREE.Mesh(new THREE.CylinderGeometry(w / 2, w / 2, d, 14), m1); bd.rotation.x = Math.PI / 2; bd.position.y = h * 0.3; g.add(bd); g.rotation.x = -0.14; break; }
@@ -1106,7 +1106,7 @@ function itemGroup(it, ghost) {
     case 'pilates': { for (const sz of [-1, 1]) B(w, 0.07, 0.14, 0, h - 0.14, sz * (d / 2 - 0.035), m1); B(0.07, d, 0.14, -w / 2 + 0.035, h - 0.14, 0, m1); B(0.07, d, 0.14, w / 2 - 0.035, h - 0.14, 0, m1); legs(h - 0.14, 0.06, 0.06, m3);
       B(w * 0.42, d * 0.78, 0.07, -w * 0.08, h - 0.04, 0, dark); B(0.16, d * 0.3, 0.08, -w * 0.33, h + 0.02, 0, dark); for (const sz of [-1, 1]) B(0.1, 0.1, 0.12, w * 0.1, h + 0.02, sz * d * 0.25, dark);
       for (const sz of [-1, 1]) { B(0.03, 0.03, 0.42, w / 2 - 0.12, h - 0.02, sz * (d / 2 - 0.05), mk(0xC4C9CD, { metalness: 0.5, roughness: 0.3 })); B(0.03, 0.03, 0.75, -w / 2 + 0.05, h - 0.02, sz * (d / 2 - 0.05), mk(0xC4C9CD, { metalness: 0.5, roughness: 0.3 })); }
-      B(0.03, d - 0.1, 0.03, w / 2 - 0.12, h + 0.38, 0, mk(0xC4C9CD, { metalness: 0.5, roughness: 0.3 })); for (let i = 0; i < 4; i++) B(w * 0.2, 0.012, 0.012, w * 0.3, h - 0.1, (i - 1.5) * 0.07, mk(0x9A9EA2)); break; }
+      B(0.03, d - 0.1, 0.03, w / 2 - 0.12, h + 0.38, 0, mk(0xC4C9CD, { metalness: 0.5, roughness: 0.3 })); for (let i = 0; i < 4; i++) B(w * 0.36, 0.012, 0.012, w * 0.31, h - 0.1, (i - 1.5) * 0.07, mk(0x9A9EA2)); break; }
     case 'office_chair': { const r = w / 2; for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2, leg = B(r * 0.95, 0.045, 0.035, Math.cos(a) * r * 0.48, 0.04, Math.sin(a) * r * 0.48, dark); leg.rotation.y = -a; } Cy(0.03, 0.03, h * 0.38, 0, 0.06, 0, dark); B(w * 0.78, d * 0.74, 0.07, 0, h * 0.44, 0.02, m1); const bk = B(w * 0.74, 0.05, h * 0.48, 0, h * 0.5, -d * 0.36, m1); bk.rotation.x = -0.12; for (const sx of [-1, 1]) B(0.05, d * 0.42, 0.03, sx * w * 0.42, h * 0.62, 0, dark); break; }
     case 'umbrella': { Cy(0.035, 0.035, h, w * 0.42, 0, 0, dark); B(0.75, 0.75, 0.12, w * 0.42, 0, 0, dark); B(w * 0.42, 0.05, 0.05, w * 0.21, h - 0.08, 0, dark); const cn = new THREE.Mesh(new THREE.ConeGeometry(w / 2, 0.55, 8, 1, true), mk(base, { side: THREE.DoubleSide })); cn.position.y = h - 0.3; cn.castShadow = !ghost; g.add(cn); break; }
     case 'standing_desk': { B(w, d, 0.035, 0, h - 0.035, 0, m1); for (const sx of [-1, 1]) { B(0.07, 0.05, h - 0.06, sx * (w / 2 - 0.22), 0.02, 0, dark); B(0.07, d * 0.9, 0.02, sx * (w / 2 - 0.22), 0, 0, dark); } B(w - 0.5, 0.04, 0.06, 0, h - 0.1, 0, dark); break; }
@@ -1114,7 +1114,7 @@ function itemGroup(it, ghost) {
       const sh = new THREE.Shape(); sh.moveTo(-w / 2, -d / 2); sh.lineTo(w / 2, -d / 2); sh.lineTo(w / 2, 0.02 * d); sh.bezierCurveTo(w / 2, d * 0.26, w * 0.12, d * 0.14, -w * 0.04, d * 0.36); sh.quadraticCurveTo(-w * 0.14, d / 2, -w / 2 + 0.12, d / 2); sh.quadraticCurveTo(-w / 2, d / 2, -w / 2, d / 2 - 0.12); sh.closePath();
       const body = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: h * 0.3, bevelEnabled: false, curveSegments: 16 }), mk(base, { roughness: 0.25 })); body.rotation.x = -Math.PI / 2; body.position.y = h * 0.62; body.castShadow = !ghost; g.add(body);
       const lid = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: 0.03, bevelEnabled: false, curveSegments: 16 }), mk(base, { roughness: 0.2 })); lid.rotation.x = -Math.PI / 2; lid.position.y = h * 0.93; g.add(lid);
-      B(w * 0.92, 0.17, 0.03, 0, h * 0.62, d / 2 + 0.085, white); B(w, 0.2, 0.05, 0, h * 0.56, d / 2 + 0.09, m1); B(w * 0.5, 0.02, 0.22, 0, h * 0.93, d / 2 - 0.14, m1);
+      B(w * 0.92, 0.17, 0.03, 0, h * 0.62, d / 2 + 0.06, white); B(w, 0.24, 0.06, 0, h * 0.56, d / 2 + 0.04, m1); B(0.05, 0.05, h * 0.62 - 0.07, 0, 0.07, d / 2 - 0.1, m1); B(w * 0.5, 0.02, 0.22, 0, h * 0.93, d / 2 - 0.14, m1);
       for (const [lx, lz] of [[-w / 2 + 0.14, d / 2 - 0.12], [w / 2 - 0.14, d / 2 - 0.12], [-w * 0.12, -d / 2 + 0.3]]) Cy(0.045, 0.03, h * 0.62, lx, 0, lz, m1);
       B(0.25, 0.06, 0.02, 0, 0.06, d / 2 - 0.1, mk(0xB79A55, { metalness: 0.6, roughness: 0.4 })); break;
     }
@@ -1218,8 +1218,8 @@ function applyVis() {
   const roofOn = ui.roof && level === 'all' && mode !== 'plan';
   G.roof.visible = roofOn;
   for (let l = 0; l < 2; l++) {
-    G.levels[l].visible = showL(l);
-    G.ceilings[l].visible = ui.ceil && mode !== 'plan';
+    G.levels[l].visible = showL(l) || (l === 0 && mode !== 'plan');
+    G.ceilings[l].visible = (ui.ceil || (l === 0 && level === '1')) && mode !== 'plan';
     G.walls[l].scale.y = ui.cut && mode !== 'walk' ? 1.1 / M(LEVELS[l].wallH) : 1;
   }
   G.site.visible = ui.yard;
@@ -1313,7 +1313,7 @@ function updateLabels() {
   for (const L of labelEls) {
     let show = on;
     if (show && L.site) show = ui.yard && (level === 'all' || mode === 'plan');
-    else if (show) { const r = L.room; show = G.levels[r.level].visible && !G.roof.visible && !(level === 'all' && r.level === 0 && inUpper(...centroid(r))) && (!L.minor || (mode === 'plan' && ortho.zoom >= 1.7) || selRoom === r); }
+    else if (show) { const r = L.room; show = G.levels[r.level].visible && (level === 'all' || level === String(r.level)) && !G.roof.visible && !(level === 'all' && r.level === 0 && inUpper(...centroid(r))) && (!L.minor || (mode === 'plan' && ortho.zoom >= 1.7) || selRoom === r); }
     if (show) { tmpV.copy(L.pos).project(camera); show = tmpV.z < 1 && Math.abs(tmpV.x) < 1.05 && Math.abs(tmpV.y) < 1.05; }
     if (!show) { if (!L.el.hidden) L.el.hidden = true; continue; }
     L.el.hidden = false; L.el.style.left = ((tmpV.x + 1) / 2 * w) + 'px'; L.el.style.top = ((1 - tmpV.y) / 2 * h) + 'px';
@@ -1527,7 +1527,15 @@ setStatus(saved ? 'Loaded your saved layout' : null);
 $('viewhint').textContent = 'Drag to orbit · right-drag to pan · scroll to zoom · pick Main or Upper to look inside';
 applyVis(); renderInspector(); renderRooms();
 setMode('walk'); // open at the front door
-window.__planner = { eye: (px, pz, yawDeg, pitch = 0, h = 5.3) => { setMode('walk'); persp.position.set(M(px), M(h), M(pz)); walk.yaw = yawDeg * Math.PI / 180; walk.pitch = pitch; }, state: () => state, setMode, setLevel, select, startPlacing, scene, meshes, view: (px, py, pz, tx, ty, tz) => { persp.position.set(M(px), M(py), M(pz)); orbitCtl.target.set(M(tx), M(ty), M(tz)); orbitCtl.update(); } };
+function supportAudit() { scene.updateMatrixWorld(true); const boxes = [], skip = new Set([G.outlines, selBox]);
+  for (const root of [G.levels[0], G.levels[1], G.roof, G.site]) root.traverse(o => { if (!o.isMesh || !o.geometry) return; const b = new THREE.Box3().setFromObject(o); if (isFinite(b.min.y)) boxes.push({ b, o, where: root === G.site ? 'site' : root === G.roof ? 'roof' : root === G.levels[0] ? 'main' : 'upper' }); });
+  const tol = 0.05, bad = [];
+  for (const A of boxes) { const a = A.b; if (a.min.y <= tol) continue; let ok = false;
+    for (const B of boxes) { if (B === A) continue; const b = B.b; if (b.max.x < a.min.x - tol || b.min.x > a.max.x + tol || b.max.z < a.min.z - tol || b.min.z > a.max.z + tol) continue; if ((b.min.y <= a.min.y + tol && b.max.y >= a.min.y - tol) || (b.min.y <= a.max.y + tol && b.max.y >= a.max.y - tol)) { ok = true; break; } } // resting on, leaning against, or hanging from something
+    if (!ok) bad.push({ where: A.where, bottom_m: +a.min.y.toFixed(2), x_ft: +((a.min.x + a.max.x) / 2 / FT).toFixed(1), y_ft: +((a.min.z + a.max.z) / 2 / FT).toFixed(1), size_m: [a.max.x - a.min.x, a.max.y - a.min.y, a.max.z - a.min.z].map(v => +v.toFixed(2)), item: A.o.userData.itemId || '' }); }
+  if (bad.length) console.warn('Unsupported meshes: ' + bad.length, bad); return { checked: boxes.length, bad }; }
+window.__planner = { audit: supportAudit, eye: (px, pz, yawDeg, pitch = 0, h = 5.3) => { setMode('walk'); persp.position.set(M(px), M(h), M(pz)); walk.yaw = yawDeg * Math.PI / 180; walk.pitch = pitch; }, state: () => state, setMode, setLevel, select, startPlacing, scene, meshes, view: (px, py, pz, tx, ty, tz) => { persp.position.set(M(px), M(py), M(pz)); orbitCtl.target.set(M(tx), M(ty), M(tz)); orbitCtl.update(); } };
+if (location.hash === '#audit') setTimeout(supportAudit, 800);
 tick();
 </script>
 </body>
