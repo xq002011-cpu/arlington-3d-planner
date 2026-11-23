@@ -245,21 +245,21 @@ const R = (x0, y0, x1, y1) => [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
 const ROOMS = [
   // main level
   { id: 'rec', name: 'Rec Room', level: 0, poly: R(0, 0, 27, 23), dims: [26, 21], src: 'plan', floor: 'walnut', vaulted: true, note: 'Vaulted dark-wood ceiling, wet bar, French doors to terrace' },
-  { id: 'sitarea', name: 'Bedroom 5', level: 0, poly: R(0, 23, 11, 39.3), src: 'est', floor: 'oak', ceilH: 8.4, note: 'Your renovation: the bar and sitting area (plan: 10′ × 10′ + bar) enclosed as a bedroom. Wall and door position assumed.' },
-  { id: 'family', name: 'Family Room', level: 0, poly: [[11, 23], [27, 23], [29.6, 57.7], [12, 57.7], [12, 39.3], [11, 39.3]], dims: [15, 31], src: 'plan', floor: 'oak', ceilH: 9.85, woodCeil: true, note: 'Fieldstone fireplace, wood ceiling with beams, clerestory windows, French doors to pool deck' },
+  { id: 'sitarea', name: 'Bedroom 5', level: 0, poly: R(0, 23, 11, 39.3), src: 'est', floor: 'lvp', ceilH: 8.4, note: 'Your renovation: the bar and sitting area (plan: 10′ × 10′ + bar) enclosed as a bedroom. Wall and door position assumed.' },
+  { id: 'family', name: 'Family Room', level: 0, poly: [[11, 23], [27, 23], [29.6, 57.7], [12, 57.7], [12, 39.3], [11, 39.3]], dims: [15, 31], src: 'plan', floor: 'lvp', ceilH: 9.85, woodCeil: true, note: 'Fieldstone fireplace, wood ceiling with beams, clerestory windows, French doors to pool deck' },
   { id: 'bed4', name: 'Bedroom 4', level: 0, poly: R(0, 39.3, 12, 54.4), dims: [11, 14], src: 'plan', floor: 'oak', ceilH: 8.4 },
   { id: 'bath1', name: 'Bath', level: 0, poly: R(0, 56.6, 9.7, 62), src: 'est', floor: 'tile' },
-  { id: 'kitchen', name: 'Kitchen', level: 0, poly: [[0, 54.4], [12, 54.4], [12, 57.7], [27, 57.7], [27, 70.6], [0, 70.6], [0, 62], [9.7, 62], [9.7, 56.6], [0, 56.6]], dims: [26, 11], src: 'plan', floor: 'stone', note: 'Marble counters, gas range' },
+  { id: 'kitchen', name: 'Kitchen', level: 0, poly: [[0, 54.4], [12, 54.4], [12, 57.7], [27, 57.7], [27, 70.6], [0, 70.6], [0, 62], [9.7, 62], [9.7, 56.6], [0, 56.6]], dims: [26, 11], src: 'plan', floor: 'lvp', note: 'White shaker cabinets, navy backsplash, navy island with granite top (your photos)' },
   { id: 'mech', name: 'Mech Room', level: 0, poly: R(0, 70.6, 7.7, 76.2), src: 'est', floor: 'concrete' },
   { id: 'laundry', name: 'Laundry', level: 0, poly: R(7.7, 70.6, 10.2, 76.2), src: 'est', floor: 'tile' },
   { id: 'pantry', name: 'Pantry', level: 0, poly: R(13.9, 70.6, 17.9, 76.2), src: 'est', floor: 'stone' },
   { id: 'stairs', name: 'Stairs', level: 0, poly: R(18.4, 70.6, 26.8, 76.5), src: 'est', floor: 'oak', noCeil: true },
-  { id: 'dining', name: 'Dining Room', level: 0, poly: R(27, 57.7, 39, 70.4), dims: [11, 13], src: 'plan', floor: 'oak', note: 'Your renovation: wall to the kitchen removed, one open space' },
-  { id: 'closet1', name: 'Closet', level: 0, poly: R(27, 70.4, 31, 75.5), src: 'est', floor: 'oak' },
-  { id: 'wic1', name: 'Walk-in Closet', level: 0, poly: R(35, 70.4, 39, 75.5), src: 'est', floor: 'oak' },
-  { id: 'foyer', name: 'Foyer', level: 0, poly: [[10.2, 70.6], [13.9, 70.6], [13.9, 76.2], [17.9, 76.2], [17.9, 76.5], [27, 76.5], [27, 75.5], [31, 75.5], [31, 70.4], [35, 70.4], [35, 75.5], [39, 75.5], [39, 81.9], [12.8, 81.9], [12.8, 76.2], [10.2, 76.2]], src: 'est', floor: 'marble' },
-  { id: 'sitroom', name: 'Office (sunroom)', level: 0, poly: [[39, 57.7], [60.7, 57.7], [61.5, 66], [39, 66]], dims: [21, 8], src: 'plan', floor: 'terracotta', plankCeil: true, note: 'Terracotta tile, wall of windows to the pool' },
-  { id: 'living', name: 'Living Room', level: 0, poly: R(39, 66, 63, 83.7), dims: [23, 16], src: 'plan', floor: 'oak', note: 'Fireplace on east wall' },
+  { id: 'dining', name: 'Dining Room', level: 0, poly: R(27, 57.7, 39, 70.4), dims: [11, 13], src: 'plan', floor: 'lvp', note: 'Your renovation: wall to the kitchen removed, one open space' },
+  { id: 'closet1', name: 'Closet', level: 0, poly: R(27, 70.4, 31, 75.5), src: 'est', floor: 'lvp' },
+  { id: 'wic1', name: 'Walk-in Closet', level: 0, poly: R(35, 70.4, 39, 75.5), src: 'est', floor: 'lvp' },
+  { id: 'foyer', name: 'Foyer', level: 0, poly: [[10.2, 70.6], [13.9, 70.6], [13.9, 76.2], [17.9, 76.2], [17.9, 76.5], [27, 76.5], [27, 75.5], [31, 75.5], [31, 70.4], [35, 70.4], [35, 75.5], [39, 75.5], [39, 81.9], [12.8, 81.9], [12.8, 76.2], [10.2, 76.2]], src: 'est', floor: 'marble_diag' },
+  { id: 'sitroom', name: 'Office (sunroom)', level: 0, poly: [[39, 57.7], [60.7, 57.7], [61.5, 66], [39, 66]], dims: [21, 8], src: 'plan', floor: 'saltillo', plankCeil: true, note: 'Terracotta tile, wall of windows to the pool' },
+  { id: 'living', name: 'Living Room', level: 0, poly: R(39, 66, 63, 83.7), dims: [23, 16], src: 'plan', floor: 'lvp', note: 'Fireplace with black marble surround on the east wall; long window band to the street; grand piano in the corner by the office' },
   { id: 'bed3', name: 'Office 2', level: 0, poly: R(0, 76.2, 12.8, 93.2), dims: [11, 16], src: 'plan', floor: 'oak' },
   // upper level
   { id: 'wic', name: 'Primary WIC', level: 1, poly: R(0, 53.7, 13.4, 59.6), src: 'est', floor: 'oak' },
@@ -365,18 +365,30 @@ const CAT = {
   art: { label: 'Art frame', w: 1.0, d: 0.04, h: 0.7, color: '#C46A4A', elev: 1.15 },
   pool_table: { label: 'Pool table', w: 2.6, d: 1.45, h: 0.8, color: '#2F6B4F' },
   bar_stool: { label: 'Bar stool', w: 0.42, d: 0.42, h: 0.75, color: '#333333' },
+  office_chair: { label: 'Office chair', w: 0.66, d: 0.66, h: 1.05, color: '#2A2C2F' },
+  umbrella: { label: 'Patio umbrella', w: 3.0, d: 3.0, h: 2.6, color: '#B8AE9F' },
   standing_desk: { label: 'Standing desk', w: 1.5, d: 0.75, h: 1.1, color: '#C9B08A' },
   grand_piano: { label: 'Grand piano', w: 1.5, d: 1.9, h: 1.0, color: '#17171A' },
   bench: { label: 'Bench', w: 1.4, d: 0.4, h: 0.45, color: '#A48463' },
 };
+const NAVY = '#1F2A44', OUT = '#8E9499', BLK = '#1E1F21';
+// Starter layout follows the owner's photos where they show a room (living room, office, kitchen stools, terrace); the rest is a plausible default.
+const KITCHEN_SET = [['bar_stool', 'kitchen', 15.4, 60, 0, { color: '#6B4A33' }], ['bar_stool', 'kitchen', 18, 60, 0, { color: '#6B4A33' }], ['bar_stool', 'kitchen', 20.6, 60, 0, { color: '#6B4A33' }]];
+const OFFICE_SET = [['office_chair', 'sitroom', 50, 64, 180], ['office_chair', 'sitroom', 57, 62.5, 270], ['desk', 'sitroom', 40.2, 62.2, 90, { w: 1.1, d: 0.4, h: 0.8, color: '#8A6544', name: 'Console table' }],
+  ['art', 'sitroom', 39.35, 62.2, 90, { w: 1.5, d: 0.04, h: 0.6, color: '#C9A27E', name: 'Landscape canvases' }], ['shelf', 'sitroom', 40, 58.9, 90, { w: 0.6, d: 0.35, h: 1.7, color: BLK, name: 'Ladder shelf' }], ['shelf', 'sitroom', 60.2, 61.5, 270, { color: '#2B2B2B' }], ['rug', 'sitroom', 54, 62, 0, { w: 2, d: 1.4, color: '#B9B2A6' }]];
+const TERRACE_SET = [['sofa', 'rec', 15, -35, 0, { color: OUT, name: 'Outdoor sofa' }], ['armchair', 'rec', 9.5, -31, 90, { color: OUT, name: 'Outdoor chair' }], ['armchair', 'rec', 20.5, -31, 270, { color: OUT, name: 'Outdoor chair 2' }], ['coffee_table', 'rec', 15, -31, 0, { color: '#5E6165', name: 'Outdoor table' }],
+  ['dining_table', 'rec', 24, -19, 0, { color: BLK, name: 'Outdoor dining table' }], ['chair', 'rec', 21.6, -21.2, 0, { color: BLK }], ['chair', 'rec', 24, -21.2, 0, { color: BLK }], ['chair', 'rec', 26.4, -21.2, 0, { color: BLK }], ['chair', 'rec', 21.6, -16.8, 180, { color: BLK }], ['chair', 'rec', 24, -16.8, 180, { color: BLK }], ['chair', 'rec', 26.4, -16.8, 180, { color: BLK }], ['umbrella', 'rec', 24, -19, 0]];
 const STARTER = [
-  ['rug', 'living', 50.5, 74.5, 0, { w: 3.0, d: 2.2 }], ['sofa', 'living', 50.5, 79.8, 180], ['coffee_table', 'living', 50.5, 74.8, 0],
-  ['armchair', 'living', 44.5, 72, 270], ['armchair', 'living', 56.5, 72, 90], ['floor_lamp', 'living', 41, 81.5, 0], ['plant', 'living', 61, 81.5, 0],
+  ['sofa', 'living', 49, 81.9, 180, { color: NAVY, w: 2.3 }], ['sofa', 'living', 48, 72.2, 0, { color: NAVY, w: 2.9, d: 1.05, name: 'Sectional' }], ['bench', 'living', 44.2, 75.6, 0, { color: NAVY, w: 1.05, d: 1.5, h: 0.44, name: 'Sectional chaise' }],
+  ['coffee_table', 'living', 50.5, 77, 0, { color: NAVY, w: 1.1, d: 0.8, name: 'Ottoman' }], ['armchair', 'living', 59.3, 80.2, 270, { color: BLK, w: 0.75, d: 0.75 }], ['plant', 'living', 61, 82.3, 0],
+  ['grand_piano', 'living', 57.3, 69.3, 90], ['bench', 'living', 57.3, 73.2, 0, { color: BLK, w: 1.0, d: 0.38, h: 0.5, name: 'Piano bench' }], ['art', 'living', 62.9, 74.8, 270, { color: '#D98A6A', h: 0.5 }],
   ['dining_table', 'dining', 33, 64, 90], ['chair', 'dining', 30.6, 61.5, 270], ['chair', 'dining', 30.6, 64, 270], ['chair', 'dining', 30.6, 66.5, 270],
   ['chair', 'dining', 35.4, 61.5, 90], ['chair', 'dining', 35.4, 64, 90], ['chair', 'dining', 35.4, 66.5, 90],
   ['pool_table', 'rec', 13.5, 9.5, 0], ['sofa', 'family', 19.5, 45, 180], ['tv', 'family', 19.5, 35, 0], ['rug', 'family', 19.5, 40, 0],
   ['bed_king', 'primary', 9.7, 70, 90], ['nightstand', 'primary', 12.6, 65.6, 90], ['nightstand', 'primary', 12.6, 74.4, 90],
-  ['bed_queen', 'bed2', 29.8, 65, 270], ['desk', 'bed2', 36.3, 66, 90], ['desk', 'bed3', 6.4, 78.2, 0], ['chair', 'bed3', 6.4, 80.6, 180], ['shelf', 'bed3', 1, 86, 90], ['standing_desk', 'sitroom', 45, 60, 0], ['grand_piano', 'living', 44, 69.4, 90], ['bed_queen', 'bed4', 6, 43, 0], ['bed_queen', 'sitarea', 5.5, 27, 0],
+  ['bed_queen', 'bed2', 29.8, 65, 270], ['desk', 'bed2', 36.3, 66, 90], ['desk', 'bed3', 6.4, 78.2, 0], ['chair', 'bed3', 6.4, 80.6, 180], ['shelf', 'bed3', 1, 86, 90],
+  ['standing_desk', 'sitroom', 50, 61.5, 0, { color: '#7A5234' }], ['bed_queen', 'bed4', 6, 43, 0], ['bed_queen', 'sitarea', 5.5, 27, 0],
+  ...KITCHEN_SET, ...OFFICE_SET, ...TERRACE_SET,
 ];
 const PAINTS = [['Warm white', '#F2EEE6'], ['Linen', '#E9E0D0'], ['Greige', '#D6CFC2'], ['Sage', '#B9C4B0'], ['Mist blue', '#BFCED6'], ['Clay', '#D9B9A3'], ['Charcoal', '#4A4F52'], ['Navy', '#2F3D55']];
 const SWATCH_ITEM = ['#F1EEE7', '#D8CBB5', '#B27F5C', '#7A5A3E', '#3F3F3D', '#8C9388', '#4F6E8C', '#2F6B4F', '#C46A4A', '#D9A441'];
@@ -443,6 +455,13 @@ const FLOORS = {
   carpet: { label: 'Carpet', tex: canvasTex(noise('#CBBDA6', 0.12, 30000)), tile: 1 },
   concrete: { label: 'Concrete', tex: canvasTex(noise('#B5B3AD', 0.1, 14000)), tile: 2 },
   terracotta: { label: 'Terracotta tile', tex: canvasTex(grid('#B9714F', 'rgba(80,45,30,.55)', 3)), tile: 1 },
+  lvp: { label: 'Light oak plank (LVP)', tex: canvasTex(planks('#B59D82', 0.13)), tile: 1.7 },
+  saltillo: { label: 'Saltillo tile, blue inlay', tex: canvasTex((g, s) => { const n = 3, k = s / n; for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { const c = new THREE.Color('#C9A57C'); c.offsetHSL((rnd() - .5) * .02, (rnd() - .5) * .08, (rnd() - .5) * .1); g.fillStyle = '#' + c.getHexString(); g.fillRect(i * k + 3, j * k + 3, k - 6, k - 6); const gr = g.createRadialGradient(i * k + k / 2, j * k + k / 2, k * .1, i * k + k / 2, j * k + k / 2, k * .7); gr.addColorStop(0, 'rgba(255,240,215,.22)'); gr.addColorStop(1, 'rgba(90,55,30,.2)'); g.fillStyle = gr; g.fillRect(i * k + 3, j * k + 3, k - 6, k - 6); }
+    g.globalCompositeOperation = 'destination-over'; g.fillStyle = '#8E7A66'; g.fillRect(0, 0, s, s); g.globalCompositeOperation = 'source-over';
+    for (let i = 0; i <= n; i++) for (let j = 0; j <= n; j++) { g.save(); g.translate(i * k, j * k); g.rotate(Math.PI / 4); const q = k * .16; g.fillStyle = '#F2F0EA'; g.fillRect(-q, -q, 2 * q, 2 * q); g.fillStyle = '#2F5C9E'; g.fillRect(-q * .62, -q * .62, q * 1.24, q * 1.24); g.fillStyle = '#F2F0EA'; g.fillRect(-q * .22, -q * .22, q * .44, q * .44); g.restore(); } }), tile: 1.25 },
+  marble_diag: { label: 'Rose marble, diagonal', tex: canvasTex((g, s) => { g.fillStyle = '#B7A4A4'; g.fillRect(0, 0, s, s); for (let i = 0; i < 60; i++) { g.strokeStyle = `rgba(${rnd() > .5 ? '250,244,242' : '96,72,80'},${0.12 + rnd() * 0.3})`; g.lineWidth = 0.6 + rnd() * 3; g.beginPath(); let x = rnd() * s, y = rnd() * s; g.moveTo(x, y); for (let k = 0; k < 5; k++) { x += (rnd() - .5) * 90; y += (rnd() - .5) * 90; g.lineTo(x, y); } g.stroke(); }
+    g.strokeStyle = 'rgba(70,58,60,.55)'; g.lineWidth = 2; for (let i = -2; i <= 2; i++) { g.beginPath(); g.moveTo(i * s / 2, 0); g.lineTo(i * s / 2 + s, s); g.stroke(); g.beginPath(); g.moveTo(i * s / 2 + s, 0); g.lineTo(i * s / 2, s); g.stroke(); }
+    g.strokeStyle = 'rgba(240,240,236,.95)'; g.lineWidth = 16; g.strokeRect(0, 0, s, s); }), tile: 1.7 },
   deck: { label: 'Deck boards', tex: canvasTex(planks('#9C8C78', 0.08)), tile: 2 },
 };
 const floorMats = {};
@@ -634,17 +653,23 @@ fix(0, 61.6, 71.5, 63, 78, 0, 9, fixMat); fix(0, 61.4, 72.6, 61.7, 76.9, 0, 4, m
 fix(0, 17.6, 23.2, 26.4, 25.2, 0, 9.85, stoneMat); fix(0, 17.2, 25.2, 26.8, 26.8, 0, 1.3, stoneMat); fix(0, 19.8, 25.1, 24.2, 25.3, 1.4, 3.6, fireMat);
 // primary suite fireplace (photo 34)
 fix(1, 0, 69.8, 1.4, 74.7, 0, 4.4, fixMat); fix(1, 1.3, 70.9, 1.5, 73.6, 0.2, 3, marbleDark); fix(1, 1.4, 71.5, 1.6, 73, 0.3, 2.4, fireMat);
-// kitchen: range wall and sink run, cream cabinets with uppers (photos 21-24)
-fix(0, 13.9, 68.5, 27, 70.6, 0, 3, counterMat); fix(0, 13.9, 69.5, 27, 70.6, 4.6, 7.4, counterMat); fix(0, 18.4, 68.4, 22.2, 70.5, 0, 3.05, fixMat); fix(0, 18.2, 69.2, 22.4, 70.6, 5.4, 6.4, new THREE.MeshStandardMaterial({ color: 0xC2A45C, roughness: 0.4, metalness: 0.15 }));
-fix(0, 0.3, 62.2, 9.7, 64.3, 0, 3, counterMat); fix(0, 0.3, 62.2, 9.7, 63.3, 4.6, 7.4, counterMat);
-fix(0, 9.9, 58, 12.7, 61, 0, 5.9, new THREE.MeshStandardMaterial({ color: 0x9A9EA2, roughness: 0.35, metalness: 0.2 })); // fridge
-fix(0, 26.85, 57.9, 27.15, 70.4, 0, 0.04, woodMat).castShadow = false; // threshold strip where kitchen tile meets dining oak
+// kitchen as it is today (owner's photos): white shaker cabinets and a stainless chimney hood on the south wall, navy herringbone backsplash,
+// stainless French-door fridge at the east end, navy island with a grey granite top facing the family room, two white columns at the family-room edge
+{ const shaker = new THREE.MeshStandardMaterial({ color: 0xF4F3EF, roughness: 0.55 }), granite = new THREE.MeshStandardMaterial({ map: (() => { const t = canvasTex(noise('#B9B7B2', 0.28, 26000)); t.repeat.set(2, 1); return t; })(), roughness: 0.35 });
+  const navy = new THREE.MeshStandardMaterial({ color: 0x1F2B45, roughness: 0.6 }), steel = new THREE.MeshStandardMaterial({ color: 0xB4B8BC, roughness: 0.3, metalness: 0.55 });
+  const splash = new THREE.MeshStandardMaterial({ map: canvasTex((g, s) => { g.fillStyle = '#22324F'; g.fillRect(0, 0, s, s); g.strokeStyle = 'rgba(190,205,225,.55)'; g.lineWidth = 2; const k = s / 8; for (let i = -8; i < 16; i++) for (let j = 0; j < 8; j++) { g.beginPath(); if ((i + j) % 2) { g.moveTo(i * k, j * k); g.lineTo(i * k + k, j * k + k); } else { g.moveTo(i * k + k, j * k); g.lineTo(i * k, j * k + k); } g.stroke(); } }), roughness: 0.35 });
+  fix(0, 13.9, 68.5, 24.1, 70.6, 0, 2.95, shaker); fix(0, 13.8, 68.35, 24.1, 70.6, 2.95, 3.1, granite); fix(0, 13.9, 70.42, 24.1, 70.56, 3.1, 4.6, splash);
+  fix(0, 13.9, 69.5, 17.6, 70.6, 4.6, 7.8, shaker); fix(0, 21.2, 69.5, 24.1, 70.6, 4.6, 7.8, shaker);
+  fix(0, 17.9, 68.4, 20.9, 70.5, 0, 3.05, steel); fix(0, 17.8, 69.2, 21, 70.6, 5.5, 6.1, steel); fix(0, 18.9, 69.8, 19.9, 70.6, 6.1, 9, steel);
+  fix(0, 24.2, 67.9, 26.95, 70.6, 0, 5.9, steel); fix(0, 24.2, 68.4, 26.95, 70.6, 5.9, 7.8, shaker);
+  fix(0, 0.3, 62.2, 9.7, 64.3, 0, 2.95, shaker); fix(0, 0.3, 62.1, 9.75, 64.4, 2.95, 3.1, granite); fix(0, 0.3, 62.2, 9.7, 63.3, 4.6, 7.8, shaker);
+  fix(0, 13.6, 61.6, 22.4, 64.2, 0, 2.95, navy); fix(0, 13.2, 60.8, 22.8, 64.4, 2.95, 3.1, granite);
+  for (const x of [13.4, 22.6]) fix(0, x - 0.4, 57.5, x + 0.4, 58.3, 0, 9, shaker); }
 // rec room wet bar (photo 31)
 fix(0, 0.5, 17.6, 8, 20.2, 0, 3.5, new THREE.MeshStandardMaterial({ color: 0x8C8F8C, roughness: 0.7 }));
 // baths
 fix(1, 13.6, 63.5, 16.5, 68.3, 0, 1.9, fixMat); fix(1, 20.5, 57.7, 25.8, 59.6, 0, 3, darkWoodMat); fix(1, 20.5, 57.7, 25.8, 59.6, 3, 3.15, fixMat);
 // kitchen island (photo 21); bath fixtures placed from the plan symbols (photos 35-37, 42)
-fix(0, 15.5, 60.6, 19.5, 62.6, 0, 3, fixMat); fix(0, 15.3, 60.4, 19.7, 62.8, 3, 3.15, darkWoodMat);
 { const toilet = (lv, x, y, bx, by) => { fix(lv, x - 0.65, y - 0.65, x + 0.65, y + 0.65, 0, 1.35, fixMat); fix(lv, x + bx * 0.9 - (by ? 0.8 : 0.3), y + by * 0.9 - (bx ? 0.8 : 0.3), x + bx * 0.9 + (by ? 0.8 : 0.3), y + by * 0.9 + (bx ? 0.8 : 0.3), 0, 2.5, fixMat); };
   const shower = (lv, x0, y0, x1, y1) => { fix(lv, x0, y0, x1, y1, 0, 0.3, fixMat); fix(lv, x0, y0, x1, y1, 0.3, 6.6, glassMat).castShadow = false; };
   shower(0, 0.4, 58.7, 3.4, 61.8); toilet(0, 6.6, 60.7, 0, 1); fix(0, 8.1, 57.1, 9.5, 59.9, 0, 2.8, fixMat);
@@ -753,7 +778,7 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
   // brick planters either side of the front door (photo 15)
   for (const x0 of [14.6, 26.8]) { const p = box(M(3.8), M(1), M(3.2), brickMat); p.position.set(M(x0 + 1.9), M(0.5), M(83.75)); add(p); add(flat(R(x0 + 0.35, 82.5, x0 + 3.45, 85), M(1) + 0.004, mulch)); }
   // pool: outline traced from the site plan, brick coping, diving board at the north end (photos 43-44)
-  const POOL = [[37.5, 10.8], [40.6, 14.5], [43, 20], [45.1, 25], [48.3, 32], [50.5, 39], [50.3, 43.5], [48.4, 46.5], [44, 48], [39, 47.8], [36, 45.5], [34.3, 40], [33.8, 32], [33.7, 25], [33.9, 17], [35, 12.2]];
+  const POOL = (() => { const c = [42, 30], r = 7.6, hl = 9.4, a = 0.2, P = []; for (let i = 0; i < 28; i++) { const t = i / 28 * Math.PI * 2, x = Math.cos(t) * r, y = Math.sin(t) * r + (Math.sin(t) >= 0 ? hl : -hl); P.push([c[0] + x * Math.cos(a) + y * Math.sin(a), c[1] - x * Math.sin(a) + y * Math.cos(a)]); } return P; })(); // rounded stadium, as in the owner's photo
   const poolShape = k => { const cx = 41.5, cy = 30.5, pts = POOL.map(([x, y]) => new THREE.Vector2(M(cx + (x - cx) * k), -M(cy + (y - cy) * k))); const s = new THREE.Shape(); s.moveTo(pts[0].x, pts[0].y); s.splineThru(pts.slice(1).concat([pts[0]])); return s; };
   const pm = (k, y, mat) => { const g = new THREE.ShapeGeometry(poolShape(k), 20); g.rotateX(-Math.PI / 2); const m = new THREE.Mesh(g, mat); m.position.y = y; m.receiveShadow = true; S.add(m); };
   // brick bands across the aggregate deck and a brick border against the house (photos 43-44)
@@ -832,6 +857,9 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
   for (let x = 37; x < 65; x += 2.6) spiky(x, 92.4 + Math.sin(x) * 0.8, 1.5, 0.1, 0x5E9148, 18, 0.45, 1.45, 0.16);
   for (let i = 0; i < 7; i++) spiky(33.6 + i * 0.75, 99 + i * 4, 1.4, 0.1, 0x5E9148, 16, 0.45, 1.45, 0.16);
   for (const [x, y] of [[24.4, 100.4], [27.2, 108.8], [17.2, 106.2]]) { const m = new THREE.Mesh(ico, pmat(0x8B5A4A)); m.scale.set(M(1), M(0.6), M(0.8)); m.position.set(M(x), M(0.4), M(y)); m.rotation.y = rnd() * 3; m.castShadow = true; S.add(m); } // red lava boulders
+  { const mesh = std({ color: 0x15171A, transparent: true, opacity: 0.5, side: THREE.DoubleSide }), post = std({ color: 0x15171A }); // black mesh pool safety fence (owner's photo)
+    const run = [[30.4, 3], [31, 20], [31.6, 38], [32.4, 56.6]]; for (let i = 0; i < run.length - 1; i++) { const [x1, y1] = run[i], [x2, y2] = run[i + 1], L = Math.hypot(x2 - x1, y2 - y1), m = new THREE.Mesh(new THREE.PlaneGeometry(M(L), M(4)), mesh); m.position.set(M((x1 + x2) / 2), M(2), M((y1 + y2) / 2)); m.rotation.y = -Math.atan2(y2 - y1, x2 - x1); S.add(m);
+      for (let k = 0; k <= 5; k++) { const pm2 = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, M(4.1), 6), post); pm2.position.set(M(x1 + (x2 - x1) * k / 5), M(2.05), M(y1 + (y2 - y1) * k / 5)); S.add(pm2); } } }
   // lot outline
   const lp = LOT.concat([LOT[0]]).map(([x, y]) => new THREE.Vector3(M(x), 0.06, M(y)));
   const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints(lp), new THREE.LineDashedMaterial({ color: 0x2F6B57, dashSize: 0.6, gapSize: 0.35 })); ln.computeLineDistances(); S.add(ln);
@@ -890,6 +918,8 @@ function itemGroup(it, ghost) {
     case 'plant': { Cy(w * 0.3, w * 0.24, h * 0.28, 0, 0, 0, mk(0xB0694A)); const f = new THREE.Mesh(new THREE.IcosahedronGeometry(w * 0.5, 1), mk(it.color, { flatShading: true })); f.position.y = h * 0.28 + (h * 0.72) / 2; f.scale.y = (h * 0.72) / w; f.castShadow = !ghost; g.add(f); break; }
     case 'art': { B(w, d, h, 0, -h / 2, 0, dark); B(w * 0.86, 0.01, h * 0.8, 0, -h * 0.4, d / 2, m1); break; }
     case 'pool_table': { B(w, d, 0.16, 0, h - 0.2, 0, wood); B(w * 0.88, d * 0.8, 0.02, 0, h - 0.04, 0, m1); for (const s of [-1, 1]) { B(w, 0.07, 0.06, 0, h - 0.06, s * (d / 2 - 0.035), wood); B(0.07, d, 0.06, s * (w / 2 - 0.035), h - 0.06, 0, wood); } legs(h - 0.2, 0.12, 0.12, wood); break; }
+    case 'office_chair': { const r = w / 2; for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2, leg = B(r * 0.95, 0.045, 0.035, Math.cos(a) * r * 0.48, 0.04, Math.sin(a) * r * 0.48, dark); leg.rotation.y = -a; } Cy(0.03, 0.03, h * 0.38, 0, 0.06, 0, dark); B(w * 0.78, d * 0.74, 0.07, 0, h * 0.44, 0.02, m1); const bk = B(w * 0.74, 0.05, h * 0.48, 0, h * 0.5, -d * 0.36, m1); bk.rotation.x = -0.12; for (const sx of [-1, 1]) B(0.05, d * 0.42, 0.03, sx * w * 0.42, h * 0.62, 0, dark); break; }
+    case 'umbrella': { Cy(0.035, 0.035, h, w * 0.42, 0, 0, dark); B(0.75, 0.75, 0.12, w * 0.42, 0, 0, dark); B(w * 0.42, 0.05, 0.05, w * 0.21, h - 0.08, 0, dark); const cn = new THREE.Mesh(new THREE.ConeGeometry(w / 2, 0.55, 8, 1, true), mk(base, { side: THREE.DoubleSide })); cn.position.y = h - 0.3; cn.castShadow = !ghost; g.add(cn); break; }
     case 'standing_desk': { B(w, d, 0.04, 0, h - 0.04, 0, m1); for (const sx of [-1, 1]) { B(0.07, 0.07, h - 0.06, sx * (w / 2 - 0.2), 0.02, 0, dark); B(0.08, d * 0.85, 0.02, sx * (w / 2 - 0.2), 0, 0, dark); } B(w - 0.5, 0.03, 0.06, 0, h - 0.1, 0, dark); B(0.5, 0.2, 0.32, 0, h, -d / 4, dark); B(0.06, 0.06, 0.1, 0, h, -d / 4, dark).scale.y = 1; break; }
     case 'grand_piano': {
       const sh = new THREE.Shape(); sh.moveTo(-w / 2, -d / 2); sh.lineTo(w / 2, -d / 2); sh.lineTo(w / 2, 0.02 * d); sh.bezierCurveTo(w / 2, d * 0.26, w * 0.12, d * 0.14, -w * 0.04, d * 0.36); sh.quadraticCurveTo(-w * 0.14, d / 2, -w / 2 + 0.12, d / 2); sh.quadraticCurveTo(-w / 2, d / 2, -w / 2, d / 2 - 0.12); sh.closePath();
@@ -909,7 +939,13 @@ const KEY = 'arlington736.layout.v1';
 let state = { v: 1, items: [], rooms: {}, notes: [], m: 2 }, nextId = 1, starter = false;
 const meshes = new Map();
 function makeItem(type, x, z, level, rot = 0, over = {}) { const c = CAT[type]; return Object.assign({ id: 'i' + (nextId++), type, name: c.label, x, z, level, rot, w: c.w, d: c.d, h: c.h, color: c.color, elev: c.elev || 0 }, over); }
-function starterItems() { const counts = {}; return STARTER.map(([t, room, x, y, rot, over]) => { counts[t] = (counts[t] || 0) + 1; return makeItem(t, M(x), M(y), ROOM[room].level, rot, Object.assign({ name: CAT[t].label + (counts[t] > 1 ? ' ' + counts[t] : '') }, over || {})); }); }
+const tupleItem = ([t, room, x, y, rot, over], n) => makeItem(t, M(x), M(y), ROOM[room].level, rot, Object.assign({ name: CAT[t].label + (n > 1 ? ' ' + n : '') }, over || {}));
+function starterItems() { const counts = {}; return STARTER.map(tp => tupleItem(tp, counts[tp[0]] = (counts[tp[0]] || 0) + 1)); }
+// layouts saved before the owner's photos arrived: move the piano and desk if they are still where the first guess put them, add the pieces the photos show
+function migrate3() { const has = t => state.items.some(i => i.type === t), at = (i, x, y) => i && Math.abs(i.x - M(x)) < 0.05 && Math.abs(i.z - M(y)) < 0.05, addSet = set => set.forEach((tp, k) => state.items.push(tupleItem(tp, k + 1)));
+  const p = state.items.find(i => i.type === 'grand_piano'); if (at(p, 44, 69.4)) { p.x = M(57.3); p.z = M(69.3); }
+  const d = state.items.find(i => i.type === 'standing_desk'); if (at(d, 45, 60)) { d.x = M(50); d.z = M(61.5); d.color = '#7A5234'; }
+  if (!has('office_chair')) addSet(OFFICE_SET); if (!has('bar_stool')) addSet(KITCHEN_SET); if (!has('umbrella')) addSet(TERRACE_SET); }
 function syncItem(it) {
   let g = meshes.get(it.id); if (g) { G.furn[g.userData.level].remove(g); g.traverse(o => o.geometry && o.geometry.dispose()); }
   g = itemGroup(it); g.userData = { itemId: it.id, level: it.level };
@@ -922,9 +958,10 @@ function removeItemMesh(id) { const g = meshes.get(id); if (g) { G.furn[g.userDa
 function applyRoomStyles() { for (const r of ROOMS) { const s = state.rooms[r.id] || {}; roomWallMat(r.id).color.set(s.wall || '#F2EEE6'); r.floorMesh.material = floorMats[s.floor || r.floor]; } }
 function loadState(obj, msg) {
   for (const id of [...meshes.keys()]) removeItemMesh(id);
-  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 2 };
+  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 3 };
   nextId = 1 + Math.max(0, ...state.items.map(i => parseInt(String(i.id).slice(1)) || 0));
   if ((obj.m | 0) < 2) migrate2();
+  if ((obj.m | 0) < 3) migrate3();
   state.items.forEach(syncItem); syncPins(); applyRoomStyles(); select(null); renderRooms(); if (msg) toast(msg); setStatus();
 }
 let saveT;
@@ -1178,6 +1215,7 @@ $('pane-info').innerHTML = `
 <p><span class="tag">real</span> 4 bd / 3 ba, built 1946, 2 stories, composition roof, crawl space, 0 garage spaces (motor court, tandem parking), heated in-ground pool, 3 fireplaces, vaulted ceiling, wet bar, hardwood/marble/tile floors, APN 052-052-300, sold $3.55M Dec 2021: <a href="https://www.compass.com/listing/736-arlington-road-redwood-city-ca-94062/859590691799040889/" target="_blank" rel="noopener">Compass / MLS ML81865290</a>.</p>
 <p><span class="tag">real</span> Lot shape, house position, pool outline, terrace, motor court, shed (7′×5′), driveway: measured off the listing's site plan at the house's scale. That drawing is approximate: the traced lot comes to about 12,700 sq ft, against 11,623 in public records and 10,500 in the MLS.</p>
 <p><span class="tag">real</span> Look of the house from the 47 listing photos: red brick on the street side, white lap siding elsewhere, black window frames, the long upper window band, flat gravel roof over the family room, fieldstone fireplace, wood-beamed ceilings, brick walk, and the planting (cordylines, yuccas, boxwood, palms, the street oak).</p>
+<p><span class="tag">yours</span> From the photos you sent of the house today: light oak plank floors in the living areas, rose marble laid on the diagonal in the foyer, Saltillo tile with blue inlay in the sunroom office, the white-and-navy kitchen with its island and columns, the piano and navy sofas in the living room, the office furniture, the pool's even rounded shape with its safety fence, and the terrace furniture. None of the photos are stored here.</p>
 <p><span class="tag">yours</span> Two changes you told me about: the wall between the kitchen and the dining room is removed (one open space), and the bar/sitting area is now Bedroom 5. I assumed where the new bedroom's wall and door are.</p>
 <p><span class="tag est">estimate</span> Halls, closets, baths, pantry and mech rooms (scaled off the plan drawing), wall thickness, door and window sizes and positions, ceiling heights (9′ main, 8.5′ upper), roof pitches, exact plant positions and sizes, stair shape, how the upper floor sits over the main floor (matched by chimney and south wall), tree sizes, colors.</p>
 <p>Public records list 3,480 sq ft; the plan-measured 4,205 sq ft is used here. Treat all dimensions as ±1 ft and measure on site before buying furniture.</p>
@@ -1194,7 +1232,7 @@ $('openRight').onclick = () => { $('left').classList.remove('open'); $('right').
 $('closeLeft').onclick = $('closeRight').onclick = closeSheets;
 $('bSave').onclick = () => save(true);
 let resetArm = 0;
-$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 2 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
+$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 3 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
 const dlg = $('dlg');
 function openDlg(kind) {
   const exp = kind === 'export'; $('dlgTitle').textContent = exp ? 'Export layout' : 'Import layout';
@@ -1278,7 +1316,7 @@ function tick() {
 
 /* ================= BOOT ================= */
 let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { saved = null; }
-if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 2 }); }
+if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 3 }); }
 setStatus(saved ? 'Loaded your saved layout' : null);
 $('viewhint').textContent = 'Drag to orbit · right-drag to pan · scroll to zoom · pick Main or Upper to look inside';
 applyVis(); renderInspector(); renderRooms();
