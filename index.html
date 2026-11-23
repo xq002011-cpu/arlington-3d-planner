@@ -345,9 +345,9 @@ const WALLS = [[
 ], [
   [0, 53.7, 16.5, 53.7, 'e', [[8, 10, 'w', 4, 7, { n: 4 }]]],                                                     // closet block north: black four-lite band (photo 8)
   [16.5, 53.7, 16.5, 57.5, 'e'],
-  [16.5, 57.5, 37.6, 57.5, 'e', [[4, 3, 'w', 4], [15, 8.4, 'f', 0, 6.8, { n: 3 }]]],                                // bath window (plan, photo 35); bedroom 2 doors to the balcony (photos 38, 39)
-  [37.6, 57.5, 37.6, 81.9, 'e', [[7.5, 4, 'w'], [19.5, 2.5, 'w', 4]]],
-  [37.6, 81.9, 0, 81.9, 'e', [[17.6, 25.6, 'w', 5.3, 8.1, { n: 12, pair: 1 }]]],                                            // upper street band (photos 9, 10, 12, 13)
+  [16.5, 57.5, 37.6, 57.5, 'e', [[4, 3, 'w', 4], [15, 8.4, 'f', 0, 6.8, { n: 3 }]], 9.79],                                // bath window (plan, photo 35); bedroom 2 doors to the balcony (photos 38, 39)
+  [37.6, 57.5, 37.6, 81.9, 'e'], // plain siding: photo 12 shows no window on this end, photo 38 none in Bedroom 2's east wall
+  [37.6, 81.9, 0, 81.9, 'e', [[17.6, 25.6, 'w', 5.6, 9.7, { n: 12, pair: 1 }]], 10.5],  // the band is about 4 ft tall, right under the eave (photos 9, 12, 13)                                            // upper street band (photos 9, 10, 12, 13)
   [0, 81.9, 0, 53.7, 'e', [[4, 3, 'w'], [17.5, 3.5, 'w']]],
   [0, 59.6, 13.4, 59.6, 'i', [[9.5, 3, 'd']]],
   [13.4, 53.7, 13.4, 81.9, 'i', [[8.8, 2.8, 'd'], [25.8, 3, 'd']]],
@@ -581,12 +581,20 @@ woodCeilMat.emissive.set(0xffffff); woodCeilMat.emissiveMap = woodCeilMat.map; w
 const plankCeilMat = new THREE.MeshStandardMaterial({ map: (() => { const t = canvasTex(planks('#F4F3EE', 0.03)); t.repeat.set(0.7, 0.7); return t; })(), side: THREE.DoubleSide, roughness: 0.9 });
 plankCeilMat.emissive.set(0xffffff); plankCeilMat.emissiveMap = plankCeilMat.map; plankCeilMat.emissiveIntensity = 0.22;
 /* floors + ceilings */
+/* upper roof (site plan + aerials 4 and 8 + street photos 9, 12, 13): an east-west gable whose ridge is off-centre, 17.7 ft from the north wall and
+   10.5 ft from the street wall, both slopes about 2.5:12. The street wall is taller (the clerestory band sits right under its eave), so from the street
+   the roof is hidden and from the air both slopes show. Upstairs ceilings follow the roof (photos 33-35). Heights are level-relative feet. */
+const UPR = { yN: 53.7, yS: 81.9, yR: 71.4, hN: 9, hS: 10.5, k: 2.5 / 12 }; UPR.hR = UPR.hN + (UPR.yR - UPR.yN) * UPR.k;
+const upRoof = y => y <= UPR.yR ? UPR.hN + (y - UPR.yN) * UPR.k : UPR.hS + (UPR.yS - y) * UPR.k, upCeil = y => upRoof(y) - 0.75;
+function clipHalf(poly, yc, north) { const out = [], ins = q => north ? q[1] <= yc + 1e-9 : q[1] >= yc - 1e-9; for (let i = 0; i < poly.length; i++) { const a = poly[i], b = poly[(i + 1) % poly.length], ia = ins(a), ib = ins(b); if (ia) out.push(a); if (ia !== ib) { const t = (yc - a[1]) / (b[1] - a[1]); out.push([a[0] + t * (b[0] - a[0]), yc]); } } return out; }
+function slopedCeil(poly, base, mat, group) { for (const part of [clipHalf(poly, UPR.yR, true), clipHalf(poly, UPR.yR, false)]) { if (part.length < 3 || area(part) < 0.01) continue; const g = new THREE.ShapeGeometry(shapeOf(part)); g.rotateX(-Math.PI / 2); const ps = g.attributes.position; for (let i = 0; i < ps.count; i++) ps.setY(i, M(base + upCeil(ps.getZ(i) / FT))); g.computeVertexNormals(); group.add(new THREE.Mesh(g, mat)); } }
 const floorMeshes = [];
 for (const r of ROOMS) {
   const L = LEVELS[r.level];
   const f = flat(r.poly, M(L.base) + 0.004, floorMats[r.floor], r.holes); f.receiveShadow = true; f.userData = { kind: 'floor', room: r.id }; r.floorMesh = f;
   G.floors[r.level].add(f); floorMeshes.push(f);
-  if (!r.outdoor && !r.vaulted && !r.noCeil) { const c = flat(r.poly, M(L.base + (r.ceilH || L.ceil)), r.woodCeil ? woodCeilMat : r.plankCeil ? plankCeilMat : ceilMat); G.ceilings[r.level].add(c); }
+  if (!r.outdoor && !r.vaulted && !r.noCeil && r.level === 1) slopedCeil(r.poly, L.base, ceilMat, G.ceilings[1]);
+  else if (!r.outdoor && !r.vaulted && !r.noCeil) { const c = flat(r.poly, M(L.base + (r.ceilH || L.ceil)), r.woodCeil ? woodCeilMat : r.plankCeil ? plankCeilMat : ceilMat); G.ceilings[r.level].add(c); }
 }
 // upper slab edge so the upper floor reads as a solid floor from below
 { const s = flat([[0, 53.7], [37.6, 53.7], [37.6, 81.9], [0, 81.9]], M(9.6), ceilMat, [[[13.9, 70.6], [26, 70.6], [26, 73.5], [16.7, 73.5], [16.7, 76.2], [13.9, 76.2]]]); G.ceilings[0].add(s); }
@@ -751,7 +759,7 @@ fix(0, 16.65, 73.5, 16.75, 76.2, 6.05, 9.6, roomWallMat('pantry'));             
 fix(1, 16.7, 73.45, 22.4, 73.6, 0, 3, fixMat); fix(1, 16.62, 73.5, 16.78, 76.2, 0, 3, fixMat); fix(1, 13.85, 70.6, 14, 76.2, 0, 3, fixMat);
 // covered balcony: solid siding half-wall and posts (photo 39)
 fix(1, 16.5, 53.6, 37.6, 53.9, 0, 3.2, sidingMat); fix(1, 37.3, 53.7, 37.6, 57.5, 0, 3.2, sidingMat);
-for (const x of [16.7, 21.9, 27.1, 32.3, 37.4]) fix(1, x - 0.2, 53.6, x + 0.2, 53.95, 3.2, 8.4, fixMat); fix(1, 37.25, 55.4, 37.6, 55.75, 3.2, 8.4, fixMat); fix(1, 16.5, 53.55, 37.6, 54, 8.4, 9, fixMat); fix(1, 37.2, 53.7, 37.65, 57.5, 8.4, 9, fixMat);
+for (const x of [16.7, 21.9, 27.1, 32.3, 37.4]) fix(1, x - 0.2, 53.6, x + 0.2, 53.95, 3.2, 8.4, fixMat); fix(1, 37.25, 55.4, 37.6, 55.75, 3.2, 8.4, fixMat); fix(1, 16.5, 53.55, 37.6, 54, 8.3, 8.9, fixMat); fix(1, 37.2, 53.7, 37.65, 57.5, 8.4, 9, fixMat);
 // living room fireplace: white surround, dark marble face (photos 17-18)
 fix(0, 61.6, 71.5, 63, 78, 0, 9, fixMat); fix(0, 61.4, 72.6, 61.7, 76.9, 0, 4, marbleDark); fix(0, 61.3, 73.6, 61.5, 75.9, 0.2, 2.8, fireMat); fix(0, 60.9, 72.2, 61.7, 77.3, 4, 4.3, fixMat);
 // family room fireplace: floor-to-ceiling fieldstone wall with a raised hearth (photos 26-29)
@@ -875,7 +883,7 @@ fix(0, 39.18, 57.88, 39.215, 65.86, 0, 9, new THREE.MeshStandardMaterial({ color
 // beamed wood ceilings: family room (light planks, white beams) and the vaulted rec room (dark wood)
 for (let y = 28; y < 57; y += 5.6) { const b = fix(0, 11.3, y - 0.3, 27.2 + (y - 23) * 0.075, y + 0.3, 9.05, 9.85, fixMat); G.ceilings[0].add(b); }
 
-/* roofs — forms read from the aerials (photos 4, 5, 8) and the street and pool photos: low gable over the upper level; one east-west gable over the
+/* roofs — forms read from the site plan, the aerials (photos 4, 5, 8) and the street and pool photos: off-centre gable over the upper level; one off-centre east-west gable over the
    living room and sitting room; brick gable on the bedroom wing; entry skirt roof sharing the living wing's eave line; hip over the rec room;
    flat gravel roof over the tall family room, with a shingle shed falling west over bedroom 4 and bedroom 5. Pitches and heights are estimates. */
 // the flat roof is finished as a simple Japanese stone garden (owner's note): pale raked gravel in straight lines, rings raked round three moss-edged stones
@@ -909,11 +917,39 @@ function slab(poly, h0, h1, mat, group = G.roof) { const g = new THREE.ExtrudeGe
 const gableSiding = sidingMat.clone(); gableSiding.side = THREE.DoubleSide;
 const gableBrick = brickMat.clone(); gableBrick.side = THREE.DoubleSide;
 const PU = 3.5 / 12;
-gableRoof(0, 53.7, 37.6, 81.9, 19, PU, 'x', 2, gableSiding);                                // upper level
-{ const pv = new THREE.Mesh(new THREE.BoxGeometry(M(21), 0.05, M(9.6)), new THREE.MeshStandardMaterial({ color: 0x121A2C, roughness: 0.25, metalness: 0.4 })); pv.rotation.x = Math.atan(PU); pv.position.set(M(18.8), M(19 + (81.9 - 74.6) * PU + 0.45), M(74.6)); G.roof.add(pv); } // solar array
-gableRoof(37.6, 57.7, 63, 83.7, 10, PU, 'x', 2, gableSiding, [false, true]);                // living room + sitting room wing
+// off-centre east-west gable (ridge, eave and wall heights are world feet); end walls are filled up to the roof by upCap below
+function asymRoof(x0, x1, yN, yS, yR, hN, hR, hS, oh, ends = [true, true]) {
+  const kN = (hR - hN) / (yR - yN), kS = (hR - hS) / (yS - yR), s0 = x0 - (ends[0] ? oh : 0), s1 = x1 + (ends[1] ? oh : 0), t0 = yN - oh, t1 = yS + oh, lN = hN - oh * kN, lS = hS - oh * kS, q = (...p) => p.map(v => V3(...v));
+  roofMesh(q([s0, lN, t0], [s1, lN, t0], [s1, hR, yR], [s0, lN, t0], [s1, hR, yR], [s0, hR, yR], [s1, lS, t1], [s0, lS, t1], [s0, hR, yR], [s1, lS, t1], [s0, hR, yR], [s1, hR, yR]));
+  strut([s0, lN - 0.3, t0], [s1, lN - 0.3, t0], ...FAS, fixMat); strut([s0, lS - 0.3, t1], [s1, lS - 0.3, t1], ...FAS, fixMat);
+  [s0, s1].forEach((s, i) => { if (!ends[i]) return; strut([s, lN - 0.3, t0], [s, hR - 0.3, yR], ...FAS, fixMat); strut([s, lS - 0.3, t1], [s, hR - 0.3, yR], ...FAS, fixMat); });
+}
+// vertical infill along a wall line between a bottom height and a top that follows the upper roof or ceiling; split at the ridge so it stays planar
+function upCap(x1, y1, x2, y2, h0, top, mat, off = 0) {
+  const L = Math.hypot(x2 - x1, y2 - y1), nx = -(y2 - y1) / L * off, ny = (x2 - x1) / L * off, ts = [0, 1];
+  if ((y1 - UPR.yR) * (y2 - UPR.yR) < 0) ts.splice(1, 0, (UPR.yR - y1) / (y2 - y1));
+  const pt = t => [x1 + (x2 - x1) * t + nx, y1 + (y2 - y1) * t + ny], P = [];
+  for (let i = 0; i + 1 < ts.length; i++) { const [ax, ay] = pt(ts[i]), [bx, by] = pt(ts[i + 1]), ha = Math.max(h0, top(ay)), hb = Math.max(h0, top(by)); if (ha - h0 < 0.02 && hb - h0 < 0.02) continue;
+    P.push(V3(ax, h0, ay), V3(bx, h0, by), V3(bx, hb, by), V3(ax, h0, ay), V3(bx, hb, by), V3(ax, ha, ay)); } // the level group already sits at the upper floor
+  if (P.length) triMesh(P, mat, G.walls[1]).castShadow = mat !== capWhite;
+}
+const capWhite = new THREE.MeshStandardMaterial({ color: 0xF2EEE6, roughness: 0.9, side: THREE.DoubleSide });
+asymRoof(0, 37.6, UPR.yN, UPR.yS, UPR.yR, 10.2 + UPR.hN, 10.2 + UPR.hR, 10.2 + UPR.hS, 2);           // roof deck 0.2 ft above the wall plates so no wall top shows through           // upper level
+WALLS[1].forEach(w => { const [x1, y1, x2, y2, kind, , Hov] = w, H = Hov ?? LEVELS[1].wallH;
+  if (kind === 'i') { for (const o of [0.17, -0.17]) upCap(x1, y1, x2, y2, H, upCeil, capWhite, o); return; }
+  upCap(x1, y1, x2, y2, H, y => upRoof(y) + 0.12, gableSiding, 0);
+  const L = Math.hypot(x2 - x1, y2 - y1), mx = (x1 + x2) / 2, my = (y1 + y2) / 2, nx = -(y2 - y1) / L, ny = (x2 - x1) / L, r = roomAt(1, mx + nx * 0.8, my + ny * 0.8), sg = r && !r.outdoor ? 1 : -1;
+  upCap(x1, y1, x2, y2, H, upCeil, capWhite, sg * 0.27); });
+upCap(37.6, 53.7, 37.6, 57.5, 9, y => upRoof(y) + 0.12, gableSiding);                                                   // over the balcony's east beam
+{ const pv = new THREE.Mesh(new THREE.BoxGeometry(M(21), 0.05, M(9.6)), new THREE.MeshStandardMaterial({ color: 0x121A2C, roughness: 0.25, metalness: 0.4 })); pv.rotation.x = Math.atan(UPR.k); pv.position.set(M(18.8), M(10.2 + upRoof(76.6) + 0.12), M(76.6)); G.roof.add(pv); } // solar array
+// living room + sitting room wing: off-centre ridge over the chimney (site plan: ridge 16.9 ft from the north wall, 9.1 ft from the street wall)
+{ const hR = 10 + 16.9 * PU, kN = PU, h66 = 10 + (66 - 57.7) * kN, q = (...p) => p.map(v => V3(...v));
+  asymRoof(37.6, 63, 57.7, 83.7, 74.6, 10, hR, 10, 2, [false, true]);
+  triMesh(q([63, 10, 66], [63, 10, 83.7], [63, hR, 74.6], [63, 10, 66], [63, hR, 74.6], [63, h66, 66]), gableSiding);          // east gable over the living-room wall
+  triMesh(q([60.7, 10, 57.7], [61.5, 10, 66], [61.5, h66, 66]), gableSiding);                                                   // over the sitting room's angled wall
+  triMesh(q([61.5, 10, 66], [63, 10, 66], [63, h66, 66], [61.5, 10, 66], [63, h66, 66], [61.5, h66, 66]), gableSiding); }
 gableRoof(0, 81.9, 14, 93.2, 10, 4 / 12, 'y', 1.5, gableBrick, [false, true]);            // bedroom 3 wing, brick gable to the street
-roofMesh([V3(12.8, 10.9, 81.9), V3(37.6, 10.9, 81.9), V3(37.6, 9.42, 85.7), V3(12.8, 10.9, 81.9), V3(37.6, 9.42, 85.7), V3(12.8, 9.42, 85.7)]); // entry skirt roof
+roofMesh([V3(14, 10.9, 81.9), V3(37.6, 10.9, 81.9), V3(37.6, 9.42, 85.7), V3(14, 10.9, 81.9), V3(37.6, 9.42, 85.7), V3(14, 9.42, 85.7)]); // entry skirt roof
 strut([14.3, 9.12, 85.7], [37.6, 9.12, 85.7], ...FAS, fixMat);
 { const lo = 9 - 2 / 3, hr = lo + 13.5 / 3, a = [-2, lo, -2], b = [29, lo, -2], ec = [29, lo, 23], wc = [-2, lo, 23], s0 = [0, 9, 23], s1 = [27, 9, 23], r0 = [11.5, hr, 11.5], r1 = [15.5, hr, 11.5]; // rec room hip; the south slope stops at the family room wall
   roofMesh([a, b, r1, a, r1, r0, s1, s0, r0, s1, r0, r1, a, r0, s0, a, s0, wc, b, ec, s1, b, s1, r1].map(p => V3(...p)));
@@ -932,9 +968,9 @@ const chimney = (x0, y0, x1, y1, h0, h1, mat) => { const m = box(M(x1 - x0), M(h
 chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6, 26.4, 10.4, 13.3, brickMat); chimney(-2, 70.2, 0.3, 74.4, 0, 25.5, whiteBrick);
 // skylights on the north slope of the upper roof (photos 4 and 8; plan: over the primary suite and primary bath), gable vent, downspouts
 { const dome = new THREE.MeshStandardMaterial({ color: 0xC2B099, roughness: 0.25, metalness: 0.15 });
-  for (const [x, y, sx, sy] of [[4.6, 61.4, 3.6, 2.6], [9.8, 61.4, 3.6, 2.6], [18.2, 61.8, 2.2, 2.2], [22.8, 61.8, 2.2, 2.2]]) { const h = 19 + (y - 53.7) * PU, c = box(M(sx + 0.5), M(0.4), M(sy + 0.5), frameMat), d = box(M(sx), M(0.4), M(sy), dome); c.position.set(M(x), M(h + 0.15), M(y)); d.position.set(M(x), M(h + 0.4), M(y)); c.rotation.x = d.rotation.x = -Math.atan(PU); G.roof.add(c, d); }
-  const vent = box(0.04, M(1.5), M(0.9), frameMat); vent.position.set(M(37.6) + 0.14, M(21), M(67.8)); G.roof.add(vent);
-  for (const [x, y, h0, h1] of [[14.35, 82.3, 0, 9.3], [39.4, 84.1, 0, 9.3], [37.95, 82.3, 9.6, 18.3], [27.4, -0.4, 0, 8.2], [-0.35, 82.3, 0, 9.4]]) { const d = box(M(0.28), M(h1 - h0), M(0.22), fixMat); d.position.set(M(x), M((h0 + h1) / 2), M(y)); G.roof.add(d); } }
+  for (const [x, y, sx, sy] of [[4.6, 61.4, 3.6, 2.6], [9.8, 61.4, 3.6, 2.6], [18.2, 61.8, 2.2, 2.2], [22.8, 61.8, 2.2, 2.2]]) { const h = 10.2 + upRoof(y), c = box(M(sx + 0.5), M(0.4), M(sy + 0.5), frameMat), d = box(M(sx), M(0.4), M(sy), dome); c.position.set(M(x), M(h + 0.15), M(y)); d.position.set(M(x), M(h + 0.4), M(y)); c.rotation.x = d.rotation.x = -Math.atan(UPR.k); G.roof.add(c, d); }
+  const vent = box(0.04, M(1.5), M(0.9), frameMat); vent.position.set(M(37.6) + 0.14, M(21), M(UPR.yR)); G.roof.add(vent);
+  for (const [x, y, h0, h1] of [[14.35, 82.3, 0, 9.3], [39.4, 84.1, 0, 9.3], [37.95, 82.3, 10.9, 20], [27.4, -0.4, 0, 8.2], [-0.35, 82.3, 0, 9.4]]) { const d = box(M(0.28), M(h1 - h0), M(0.22), fixMat); d.position.set(M(x), M((h0 + h1) / 2), M(y)); G.roof.add(d); } }
 // vaulted dark-wood ceiling inside the rec room with whitewashed tie beams (photos 31-32)
 { const vt = canvasTex(planks('#5B3A29', 0.12)); vt.repeat.set(0.45, 2.2); const m = triMesh(hipPts(0.3, 0.3, 26.8, 22.7, 8.95, 4 / 12, 0), new THREE.MeshStandardMaterial({ map: vt, roughness: 0.75, side: THREE.DoubleSide }), G.ceilings[0]); m.castShadow = false;
   const bm = new THREE.MeshStandardMaterial({ color: 0xC7A08C, roughness: 0.8 });
@@ -1957,7 +1993,7 @@ function physicsAudit() { scene.updateMatrixWorld(true); const out = { doors: []
     if (inHouse(...c)) out.plants.push({ at_ft: c.map(v => +v.toFixed(1)), size_m: [b.max.x - b.min.x, b.max.y - b.min.y, b.max.z - b.min.z].map(v => +v.toFixed(2)), bottom: +b.min.y.toFixed(2) });
     else for (const w of walls[0]) if (pen(b, w.b, 0.05)) { out.plants.push({ through_wall_at_ft: c.map(v => +v.toFixed(1)), size_m: [b.max.x - b.min.x, b.max.y - b.min.y, b.max.z - b.min.z].map(v => +v.toFixed(2)) }); break; } });
   return out; }
-window.__planner = { save, openPlan, plans: () => plans, audit: supportAudit, physics: physicsAudit, walkTo: (x, z, yawDeg, sec = 3, h = 5.3) => new Promise(res => { setMode('walk'); document.getElementById('tSolid').checked = true; walk.yaw = yawDeg * Math.PI / 180; walk.pitch = 0; walk.keys.w = true; setTimeout(() => { walk.keys.w = false; res([+(persp.position.x / FT).toFixed(2), +(persp.position.z / FT).toFixed(2), +(persp.position.y / FT).toFixed(2)]); }, sec * 1000); }), eye: (px, pz, yawDeg, pitch = 0, h = 5.3) => { setMode('walk'); persp.position.set(M(px), M(h), M(pz)); walk.yaw = yawDeg * Math.PI / 180; walk.pitch = pitch; }, state: () => state, setMode, setLevel, select, startPlacing, scene, meshes, planView: (x, y, zoom = 1) => { planCtl.target.set(M(x), 0, M(y)); ortho.position.set(M(x), 80, M(y)); ortho.zoom = zoom; ortho.updateProjectionMatrix(); planCtl.update(); }, view: (px, py, pz, tx, ty, tz) => { persp.position.set(M(px), M(py), M(pz)); orbitCtl.target.set(M(tx), M(ty), M(tz)); orbitCtl.update(); } };
+window.__planner = { shot: (px, py, pz, tx, ty, tz, fov = 50) => { setMode('orbit'); persp.fov = fov; persp.updateProjectionMatrix(); persp.position.set(M(px), M(py), M(pz)); orbitCtl.target.set(M(tx), M(ty), M(tz)); orbitCtl.update(); }, save, openPlan, plans: () => plans, audit: supportAudit, physics: physicsAudit, walkTo: (x, z, yawDeg, sec = 3, h = 5.3) => new Promise(res => { setMode('walk'); document.getElementById('tSolid').checked = true; walk.yaw = yawDeg * Math.PI / 180; walk.pitch = 0; walk.keys.w = true; setTimeout(() => { walk.keys.w = false; res([+(persp.position.x / FT).toFixed(2), +(persp.position.z / FT).toFixed(2), +(persp.position.y / FT).toFixed(2)]); }, sec * 1000); }), eye: (px, pz, yawDeg, pitch = 0, h = 5.3) => { setMode('walk'); persp.position.set(M(px), M(h), M(pz)); walk.yaw = yawDeg * Math.PI / 180; walk.pitch = pitch; }, state: () => state, setMode, setLevel, select, startPlacing, scene, meshes, planView: (x, y, zoom = 1) => { planCtl.target.set(M(x), 0, M(y)); ortho.position.set(M(x), 80, M(y)); ortho.zoom = zoom; ortho.updateProjectionMatrix(); planCtl.update(); }, view: (px, py, pz, tx, ty, tz) => { persp.position.set(M(px), M(py), M(pz)); orbitCtl.target.set(M(tx), M(ty), M(tz)); orbitCtl.update(); } };
 if (location.hash === '#audit') setTimeout(supportAudit, 800);
 if (optOf(location.hash.slice(1))) { setMode('orbit'); window.__planner.view(48, 62, 12, 6, 4, -40); }
 tick();
