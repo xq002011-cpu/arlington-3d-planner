@@ -1444,7 +1444,8 @@ const ADU_LABELS = {
   const inside = (x, y, d, Q) => { if (inPoly(x, y, Q)) return true; for (let i = 0; i < Q.length; i++) { const a = Q[i], b = Q[(i + 1) % Q.length], vx = b[0] - a[0], vy = b[1] - a[1], t = Math.max(0, Math.min(1, ((x - a[0]) * vx + (y - a[1]) * vy) / (vx * vx + vy * vy))); if (Math.hypot(a[0] + vx * t - x, a[1] + vy * t - y) < d) return true; } return false; };
   const REACH = { tree: 4, conifer: 8.5, cypress: 3, palm: 3, banana: 2, citrus: 3, bush: 1, ball: 1 };
   for (const [V, Q] of Object.entries(ADU_FOOT)) { aduHide[V] = []; G.site.traverse(o => { if (!o.isMesh || o.userData.adu) return; const at = o.userData.at;
-    if (at ? inside(at[0], at[1], REACH[at[2]] ?? 2, Q) : (o.position.y < M(12) && inside(o.position.x / FT, o.position.z / FT, 0.5, Q))) aduHide[V].push(o); }); }
+    const shed = !at && o.position.y < M(9) && Math.abs(o.position.x / FT + 4.4) < 4.2 && Math.abs(o.position.z / FT + 40.4) < 3.2; // the 8 × 5.6 ft shed goes in every option (the owner: any ADU replaces it)
+    if (shed || (at ? inside(at[0], at[1], REACH[at[2]] ?? 2, Q) : (o.position.y < M(12) && inside(o.position.x / FT, o.position.z / FT, 0.5, Q)))) aduHide[V].push(o); }); }
   seed = keep;
 }
 function applyStruct(s) { aduOn = ADU_VAR[s] ? s : ''; ADU.visible = !!aduOn; for (const [k, g] of Object.entries(ADU_VAR)) g.visible = k === aduOn;
