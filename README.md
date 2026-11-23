@@ -2,7 +2,7 @@
 
 A 1:1 scale 3D model of the house at 736 Arlington Rd, Redwood City, for planning decoration: walk through it, place furniture, repaint walls, change floors.
 
-One static page (`index.html`), no build step. It loads three.js 0.160.0 from jsDelivr and fonts from Google Fonts. The page is marked `noindex`; keep this repository private, since it shows the layout of a real home.
+One static page (`index.html`), no build step. It loads three.js 0.160.0 from jsDelivr and fonts from Google Fonts. The page is marked `noindex`. This repository is public by the owner's choice. It holds only the page and this README: never commit the owner's photos or video, or anything personal.
 
 ## Using it
 
