@@ -249,7 +249,7 @@ const ROOMS = [
   { id: 'family', name: 'Family Room', level: 0, poly: [[11, 23], [27, 23], [29.6, 57.7], [12, 57.7], [12, 39.3], [11, 39.3]], dims: [15, 31], src: 'plan', floor: 'lvp', ceilH: 9.85, woodCeil: true, note: 'Fieldstone fireplace, wood ceiling with beams, clerestory windows, French doors to pool deck' },
   { id: 'bed4', name: 'Bedroom 4', level: 0, poly: R(0, 39.3, 12, 54.4), dims: [11, 14], src: 'plan', floor: 'oak', ceilH: 8.4 },
   { id: 'bath1', name: 'Bath', level: 0, poly: R(0, 56.6, 9.7, 62), src: 'est', floor: 'tile' },
-  { id: 'kitchen', name: 'Kitchen', level: 0, poly: [[0, 54.4], [12, 54.4], [12, 57.7], [27, 57.7], [27, 70.6], [0, 70.6], [0, 62], [9.7, 62], [9.7, 56.6], [0, 56.6]], dims: [26, 11], src: 'plan', floor: 'lvp', note: 'White shaker cabinets, navy backsplash, navy island with granite top (your photos)' },
+  { id: 'kitchen', name: 'Kitchen', level: 0, poly: [[0, 54.4], [12, 54.4], [12, 57.7], [27, 57.7], [27, 70.6], [0, 70.6], [0, 62], [9.7, 62], [9.7, 56.6], [0, 56.6]], dims: [26, 11], src: 'plan', floor: 'lvp', note: 'White shaker cabinets, navy backsplash, navy island with granite top, snack pantry shelves by the bathroom (your photos)' },
   { id: 'mech', name: 'Mech Room', level: 0, poly: R(0, 70.6, 7.7, 76.2), src: 'est', floor: 'concrete' },
   { id: 'laundry', name: 'Laundry', level: 0, poly: R(7.7, 70.6, 10.2, 76.2), src: 'est', floor: 'tile' },
   { id: 'pantry', name: 'Pantry', level: 0, poly: R(13.9, 70.6, 17.9, 76.2), src: 'est', floor: 'stone' },
@@ -266,7 +266,7 @@ const ROOMS = [
   { id: 'primary', name: 'Primary Suite', level: 1, poly: R(0, 59.6, 13.4, 81.9), dims: [13, 22], src: 'plan', floor: 'oak', note: 'Fireplace, skylights' },
   { id: 'mech2', name: 'Mech', level: 1, poly: R(13.4, 53.7, 16.5, 57.5), src: 'est', floor: 'concrete' },
   { id: 'pbath', name: 'Primary Bath', level: 1, poly: R(13.4, 57.5, 26, 68.5), src: 'est', floor: 'marble', note: 'Oversized tub, stall shower, double sinks' },
-  { id: 'bed2', name: 'Bedroom 2', level: 1, poly: R(26, 57.5, 37.6, 72.7), dims: [11, 13], src: 'plan', floor: 'oak' },
+  { id: 'bed2', name: 'Bedroom 2', level: 1, poly: R(26, 57.5, 37.6, 72.7), dims: [11, 13], src: 'plan', floor: 'carpet', wall: '#E3DCCB', note: 'Carpet, beige walls, built-in drawers and shelves (your video). I placed it in Bedroom 2.' },
   { id: 'bath2', name: 'Bath', level: 1, poly: R(29.9, 72.7, 37.6, 81.9), src: 'est', floor: 'tile' },
   { id: 'hall2', name: 'Upper Hall', level: 1, poly: [[13.4, 68.5], [26, 68.5], [26, 72.7], [29.9, 72.7], [29.9, 81.9], [13.4, 81.9]], src: 'est', floor: 'oak', holes: [R(18.4, 70.6, 26.8, 76.5)] },
   { id: 'balcony', name: 'Covered Balcony', level: 1, poly: R(16.5, 53.7, 37.6, 57.5), src: 'est', floor: 'terracotta', outdoor: true },
@@ -425,6 +425,7 @@ const STARTER = [
   ['nightstand', 'kitchen', 23.4, 62.9, 270, { color: BLK, w: 0.5, d: 0.26, h: 0.62, name: 'Air purifier' }], ['desk', 'dining', 37.6, 62.5, 270, { w: 0.7, d: 0.4, h: 0.6, color: '#B58E62', name: 'Small wood table' }],
   // primary suite upstairs: the bed (the fireplace, bathtub and walk-in closet are built in)
   ['bed_king', 'primary', 9.7, 70, 90],
+  ['bed_queen', 'bed2', 30.4, 62.6, 270, { color: '#5B6FA8', name: 'Bed, blue bedding' }],
   // rec room and Bedroom 5, from her photo taken in the rec room: charcoal sofa on the west wall, grey leaf-pattern rug with the dinosaur quilt on it; through the doorway, a bed on an oak base and a wall-mounted TV
   ['sofa', 'rec', 1.9, 13.6, 270, { color: '#2A2D33', w: 2.0, name: 'Charcoal sofa' }], ['rug', 'rec', 8.6, 15.4, 0, { w: 2.8, d: 2.2, color: '#CFCDC8', name: 'Grey leaf rug' }], ['rug', 'rec', 8.2, 15.2, 0, { w: 1.7, d: 1.3, h: 0.02, pic: 'dino', color: '#2F6B5E', name: 'Dinosaur quilt' }],
   ['bed_queen', 'sitarea', 3.4, 30.6, 0, { color: '#F1EEE7', name: 'Bed on oak base' }], ['art', 'sitarea', 6.6, 39.05, 180, { w: 1.05, d: 0.04, h: 0.6, elev: 1.4, color: '#111214', name: 'Wall TV' }],
@@ -716,6 +717,16 @@ fix(0, 39.18, 57.88, 39.215, 65.86, 0, 9, new THREE.MeshStandardMaterial({ color
 { const tal = new THREE.MeshStandardMaterial({ map: canvasTex((g, s) => { g.fillStyle = '#EDEBE4'; g.fillRect(0, 0, s, s); g.strokeStyle = '#2F5C9E'; g.fillStyle = '#2F5C9E'; g.lineWidth = s * 0.05; g.strokeRect(s * 0.08, s * 0.08, s * 0.84, s * 0.84); g.beginPath(); g.ellipse(s / 2, s / 2, s * 0.26, s * 0.14, 0, 0, 7); g.stroke(); for (const [x, y] of [[.25, .25], [.75, .25], [.25, .75], [.75, .75]]) { g.beginPath(); g.arc(x * s, y * s, s * 0.06, 0, 7); g.fill(); } g.beginPath(); g.arc(s / 2, s / 2, s * 0.07, 0, 7); g.fill(); }, 128), roughness: 0.6 });
   const strip = (x0, y0, x1, y1) => { const m = fix(0, x0, y0, x1, y1, 0, 0.03, tal.clone()); const L = Math.max(x1 - x0, y1 - y0); m.material.map = tal.map.clone(); m.material.map.repeat.set(x1 - x0 > y1 - y0 ? Math.round(L / 0.85) : 1, x1 - x0 > y1 - y0 ? 1 : Math.round(L / 0.85)); m.material.map.needsUpdate = true; m.castShadow = false; };
   for (const [a, b, c, d] of [[41.6, 59.4, 51.6, 64.7], [52.9, 59.4, 59.6, 64.7]]) { strip(a, c - 0.8, b, c); strip(a, d, a + 0.8, c - 0.8); strip(b - 0.8, d, b, c - 0.8); strip(a, d - 0.8, b, d); } }
+// snack pantry: open white shelving on the kitchen wall beside the bathroom (owner's words and kitchen photo)
+{ const wh = new THREE.MeshStandardMaterial({ color: 0xF4F3EF, roughness: 0.6 }), cols = [0xE0564F, 0xF2A93B, 0x4AA3D8, 0x57B56A, 0xEE7FB0, 0xF2D94A, 0x9A6AD0, 0xD9D5CC];
+  fix(0, 9.88, 57.0, 9.96, 61.7, 0, 8, wh); fix(0, 9.9, 57.0, 11.3, 57.1, 0, 8, wh); fix(0, 9.9, 61.6, 11.3, 61.7, 0, 8, wh);
+  for (let i = 0; i < 7; i++) { const h = 0.3 + i * 1.2; fix(0, 9.9, 57.1, 11.3, 61.6, h, h + 0.08, wh); if (i < 6) for (let k = 0; k < 8; k++) { const y0 = 57.25 + k * 0.54, bh = 0.45 + ((i * 3 + k * 5) % 5) * 0.12; fix(0, 10.1, y0, 10.1 + 0.6 + ((i + k) % 3) * 0.15, y0 + 0.42, h + 0.08, h + 0.08 + bh, new THREE.MeshStandardMaterial({ color: cols[(i * 3 + k) % 8], roughness: 0.8 })).castShadow = false; } } }
+// upstairs bedroom built-in (owner's video): white drawers below, open wood-lined shelves above with a white door standing open. She said it is an upstairs bedroom; Bedroom 2 and the south wall are my placement.
+{ const wh = new THREE.MeshStandardMaterial({ color: 0xF4F3EF, roughness: 0.6 }), wood = new THREE.MeshStandardMaterial({ color: 0xD9C7A6, roughness: 0.7 }), L = 1, y1 = 72.5, y0 = 70.7;
+  fix(L, 31, y0, 35.6, y1, 0, 3.2, wh); for (let i = 0; i < 4; i++) for (const x of [31.2, 33.4]) { fix(L, x, y0 - 0.06, x + 2.05, y0, 0.15 + i * 0.76, 0.82 + i * 0.76, wh); fix(L, x + 0.9, y0 - 0.12, x + 1.15, y0 - 0.06, 0.42 + i * 0.76, 0.5 + i * 0.76, wh); }
+  fix(L, 31, y1 - 0.1, 35.6, y1, 3.2, 8, wood); fix(L, 31, y0 + 0.1, 31.1, y1, 3.2, 8, wh); fix(L, 35.5, y0 + 0.1, 35.6, y1, 3.2, 8, wh); for (let i = 0; i < 5; i++) { const h = 3.2 + i * 1.15; fix(L, 31.1, y0 + 0.2, 35.5, y1 - 0.1, h, h + 0.07, wood);
+    for (let k = 0; k < 5; k++) fix(L, 31.3 + k * 0.84, y0 + 0.5, 31.95 + k * 0.84, y1 - 0.3, h + 0.07, h + 0.45 + ((i + k) % 3) * 0.15, new THREE.MeshStandardMaterial({ color: [0xE0564F, 0xF4F2EE, 0x23344E, 0xEE7FB0, 0x6B4630][(i * 2 + k) % 5], roughness: 0.8 })).castShadow = false; }
+  fix(L, 29.1, y0 + 0.02, 31.1, y0 + 0.1, 3.2, 8, wh); }
 // the rec room's wet bar is gone (owner: the bar was removed when Bedroom 5 was built)
 // baths
 fix(1, 13.6, 63.5, 16.5, 68.3, 0, 1.9, fixMat); fix(1, 20.5, 57.7, 25.8, 59.6, 0, 3, darkWoodMat); fix(1, 20.5, 57.7, 25.8, 59.6, 3, 3.15, fixMat);
@@ -1141,16 +1152,16 @@ function syncItem(it) {
   if (sel && sel.id === it.id) updateSelBox();
 }
 function removeItemMesh(id) { const g = meshes.get(id); if (g) { G.furn[g.userData.level].remove(g); meshes.delete(id); } }
-function applyRoomStyles() { for (const r of ROOMS) { const s = state.rooms[r.id] || {}; roomWallMat(r.id).color.set(s.wall || '#F2EEE6'); r.floorMesh.material = floorMats[s.floor || r.floor]; } }
+function applyRoomStyles() { for (const r of ROOMS) { const s = state.rooms[r.id] || {}; roomWallMat(r.id).color.set(s.wall || r.wall || '#F2EEE6'); r.floorMesh.material = floorMats[s.floor || r.floor]; } }
 function loadState(obj, msg) {
   for (const id of [...meshes.keys()]) removeItemMesh(id);
-  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 10 };
+  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 11 };
   nextId = 1 + Math.max(0, ...state.items.map(i => parseInt(String(i.id).slice(1)) || 0));
   if ((obj.m | 0) < 2) migrate2();
   if ((obj.m | 0) < 3) migrate3();
   if ((obj.m | 0) < 4) migrate4();
   if ((obj.m | 0) < 5) migrate5();
-  if ((obj.m | 0) < 10) migrate6();
+  if ((obj.m | 0) < 11) migrate6();
   state.items.forEach(syncItem); syncPins(); applyRoomStyles(); select(null); renderRooms(); if (msg) toast(msg); setStatus();
 }
 let saveT;
@@ -1379,7 +1390,7 @@ function renderInspector() {
     if (!r.outdoor) {
       const t = document.createElement('h3'); t.textContent = 'Wall paint'; el.append(t);
       const row = document.createElement('div'); row.className = 'row';
-      const ci = document.createElement('input'); ci.type = 'color'; ci.id = 'r-wall'; ci.value = s.wall || '#F2EEE6'; ci.oninput = () => { s.wall = ci.value; applyRoomStyles(); }; ci.onchange = () => save();
+      const ci = document.createElement('input'); ci.type = 'color'; ci.id = 'r-wall'; ci.value = s.wall || r.wall || '#F2EEE6'; ci.oninput = () => { s.wall = ci.value; applyRoomStyles(); }; ci.onchange = () => save();
       const sw = document.createElement('div'); sw.className = 'swatches'; for (const [n, c] of PAINTS) { const b = document.createElement('button'); b.style.background = c; b.title = n; b.setAttribute('aria-label', n); b.onclick = () => { s.wall = c; ci.value = c; applyRoomStyles(); save(); }; sw.append(b); }
       row.append(ci, sw); el.append(row);
     }
@@ -1421,7 +1432,7 @@ $('openRight').onclick = () => { $('left').classList.remove('open'); $('right').
 $('closeLeft').onclick = $('closeRight').onclick = closeSheets;
 $('bSave').onclick = () => save(true);
 let resetArm = 0;
-$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 10 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
+$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 11 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
 const dlg = $('dlg');
 function openDlg(kind) {
   const exp = kind === 'export'; $('dlgTitle').textContent = exp ? 'Export layout' : 'Import layout';
@@ -1511,7 +1522,7 @@ function tick() {
 
 /* ================= BOOT ================= */
 let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { saved = null; }
-if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 10 }); }
+if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 11 }); }
 setStatus(saved ? 'Loaded your saved layout' : null);
 $('viewhint').textContent = 'Drag to orbit · right-drag to pan · scroll to zoom · pick Main or Upper to look inside';
 applyVis(); renderInspector(); renderRooms();
