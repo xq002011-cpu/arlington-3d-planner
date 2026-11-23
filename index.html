@@ -252,9 +252,10 @@ const R = (x0, y0, x1, y1) => [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
 const ROOMS = [
   // main level
   { id: 'rec', name: 'Rec Room', level: 0, poly: R(0, 0, 27, 23), dims: [26, 21], src: 'plan', floor: 'lvp', vaulted: true, note: 'Vaulted dark-wood ceiling, French doors to terrace, wet bar in the south-west corner (plan). Now ping-pong, a basketball arcade machine and Pilates.' },
-  { id: 'sitarea', name: "Child's Bedroom", level: 0, poly: R(0, 23, 11, 39.3), src: 'est', floor: 'lvp', ceilH: 8.4, note: 'Your renovation: the bar and sitting area (plan: 10′ × 10′ + bar) enclosed as a bedroom. Wall and door position assumed.' },
+  { id: 'sitarea', name: "Bedroom 5 (child's room)", level: 0, poly: R(0, 23, 11, 39.3), src: 'est', floor: 'lvp', ceilH: 8.4, note: 'Your renovation: the bar and sitting area (plan: 10′ × 10′ + bar) enclosed as a bedroom. Wall and door position assumed.' },
   { id: 'family', name: 'Family Room', level: 0, poly: [[11, 23], [27, 23], [29.6, 57.7], [12, 57.7], [12, 39.3], [11, 39.3]], dims: [15, 31], src: 'plan', floor: 'lvp', ceilH: 9.85, woodCeil: true, note: 'Fieldstone fireplace, wood ceiling with beams, clerestory windows, French doors to pool deck' },
-  { id: 'bed4', name: 'Nursery', level: 0, poly: R(0, 39.3, 12, 54.4), dims: [11, 14], src: 'plan', floor: 'oak', ceilH: 8.4, wall: '#EEF0E8', note: "Owner's note: the newborn's room next to the bath, with the SNOO, a changing table and a shelf (plan: Bedroom 4)" },
+  { id: 'cl4', name: 'Closet', level: 0, poly: R(0, 52.4, 6.6, 54.4), src: 'plan', floor: 'oak', ceilH: 8, note: 'Nursery closet with sliding doors (plan)' },
+  { id: 'bed4', name: 'Nursery', level: 0, poly: [[0, 39.3], [12, 39.3], [12, 54.4], [6.6, 54.4], [6.6, 52.4], [0, 52.4]], dims: [11, 14], src: 'plan', floor: 'oak', ceilH: 8.4, wall: '#EEF0E8', note: "Owner's note: the newborn's room next to the bath, with the SNOO, a changing table and a shelf (plan: Bedroom 4)" },
   { id: 'bath1', name: 'Bath', level: 0, poly: R(0, 54.4, 7.2, 62), src: 'plan', floor: 'tile', note: 'As on the plan: beside Bedroom 4, its door on the little hall off the kitchen; the snack pantry stands in the old fridge alcove on the other side of its east wall' },
   { id: 'kitchen', name: 'Kitchen', level: 0, poly: [[7.2, 54.4], [12, 54.4], [12, 57.7], [27, 57.7], [27, 70.6], [0, 70.6], [0, 62], [7.2, 62]], dims: [26, 11], src: 'plan', floor: 'lvp', note: 'White shaker cabinets, navy backsplash, navy island with granite top, snack pantry shelves by the bathroom (your photos)' },
   { id: 'mech', name: 'Mech Room', level: 0, poly: R(0, 70.6, 7.7, 76.2), src: 'est', floor: 'concrete' },
@@ -264,10 +265,12 @@ const ROOMS = [
   { id: 'dining', name: 'Dining Room', level: 0, poly: R(27, 57.7, 39, 70.4), dims: [11, 13], src: 'plan', floor: 'lvp', note: 'Your renovation: wall to the kitchen removed, one open space' },
   { id: 'closet1', name: 'Closet', level: 0, poly: R(27, 70.4, 31, 75.5), src: 'est', floor: 'lvp' },
   { id: 'wic1', name: 'Walk-in Closet', level: 0, poly: R(35, 70.4, 39, 75.5), src: 'est', floor: 'lvp' },
-  { id: 'foyer', name: 'Foyer', level: 0, poly: [[10.2, 70.6], [13.9, 70.6], [13.9, 76.2], [17.9, 76.2], [17.9, 76.5], [27, 76.5], [27, 75.5], [31, 75.5], [31, 70.4], [35, 70.4], [35, 75.5], [39, 75.5], [39, 81.9], [12.8, 81.9], [12.8, 76.2], [10.2, 76.2]], src: 'est', floor: 'marble_diag' },
+  { id: 'foyer', name: 'Foyer', level: 0, poly: [[10.2, 70.6], [13.9, 70.6], [13.9, 76.2], [17.9, 76.2], [17.9, 76.5], [27, 76.5], [27, 75.5], [31, 75.5], [31, 70.4], [35, 70.4], [35, 75.5], [39, 75.5], [39, 81.9], [11.3, 81.9], [11.3, 76.2], [10.2, 76.2]], src: 'est', floor: 'marble_diag' },
   { id: 'sitroom', name: 'Office (sunroom)', level: 0, poly: [[39, 57.7], [60.7, 57.7], [61.5, 66], [39, 66]], dims: [21, 8], src: 'plan', floor: 'saltillo', plankCeil: true, note: 'Terracotta tile, wall of windows to the pool' },
   { id: 'living', name: 'Living Room', level: 0, poly: R(39, 66, 63, 83.7), dims: [23, 16], src: 'plan', floor: 'lvp', note: 'Fireplace with black marble surround on the east wall; long window band to the street; grand piano in the corner by the office' },
-  { id: 'bed3', name: "Adam's Office", level: 0, poly: R(0, 76.2, 12.8, 93.2), dims: [11, 16], src: 'plan', floor: 'oak', note: "Owner's note: Adam's office, with a standing desk facing the street window, a closet, and the children's toy area" },
+  { id: 'cl3a', name: 'Closet', level: 0, poly: R(11.3, 81.9, 14, 89.3), src: 'plan', floor: 'oak', ceilH: 8, note: "Adam's office closet, sliding doors (plan)" },
+  { id: 'cl3b', name: 'Closet', level: 0, poly: R(11.3, 89.3, 14, 93.2), src: 'plan', floor: 'oak', ceilH: 8, note: "Adam's office second closet (plan)" },
+  { id: 'bed3', name: "Adam's Office", level: 0, poly: R(0, 76.2, 11.3, 93.2), dims: [11, 16], src: 'plan', floor: 'oak', note: "Owner's note: Adam's office, with a standing desk facing the street window, a closet, and the children's toy area" },
   // upper level
   { id: 'wic', name: 'Primary WIC', level: 1, poly: R(0, 53.7, 13.4, 59.6), src: 'est', floor: 'oak' },
   { id: 'primary', name: 'Primary Suite', level: 1, poly: R(0, 59.6, 13.4, 81.9), dims: [13, 22], src: 'plan', floor: 'oak', note: 'Fireplace, skylights' },
@@ -295,11 +298,11 @@ const WALLS = [[
   [63, 83.7, 39, 83.7, 'e', [[11.3, 18, 'w', 4, 7.8, { n: 9 }]]],                                                 // living room street band (photos 9, 12)
   [39, 83.7, 39, 81.9, 'e'],
   [39, 75.5, 39, 81.9, 'i', [[3.2, 5.2, 'f', 0, 6.8, { n: 2, white: 1 }]]],                                         // foyer ↔ living room: white French doors (owner's mark and photo)
-  [39, 81.9, 12.8, 81.9, 'e', [[16.4, 7.4, 'e']]],                                                                // entry (photos 13, 15)
-  [12.8, 81.9, 12.8, 93.2, 'e'],
-  [12.8, 93.2, 0, 93.2, 'e', [[6.4, 7.5, 'w', 1.3, 7.2, { n: 3 }]]],                                              // bedroom 3 street window (photos 13, 40)
+  [39, 81.9, 14, 81.9, 'e', [[16.4, 7.4, 'e']]],                                                                // entry (photos 13, 15)
+  [14, 81.9, 14, 93.2, 'e'],                                                                                     // office wing east wall: 14 ft wide outside (plan; site plan 14.3)
+  [14, 93.2, 0, 93.2, 'e', [[7.6, 7.5, 'w', 1.3, 7.2, { n: 3 }]]],                                              // bedroom 3 street window (photos 13, 40)
   [0, 93.2, 0, 76.2, 'e', [[1.6, 1.7, 'w', 3, 6.6, { n: 1 }], [11, 4.5, 'w', 2, 7, { n: 2 }]]],                   // bedroom 3 west (photo 40)
-  [0, 76.2, 0, 53.7, 'e', [[9.9, 3, 'd'], [17.5, 2.5, 'w', 4.2]], undefined, [false, true]],                      // west wall: kitchen door (just south of the counter run, so the counter no longer blocks it), bath window (plan)
+  [0, 76.2, 0, 53.7, 'e', [[9.2, 2.8, 'd'], [17.5, 2.5, 'w', 4.2]], undefined, [false, true]],                      // west wall: kitchen door (just south of the counter run, so the counter no longer blocks it), bath window (plan)
   [0, 53.7, 0, 23, 'e', [[6.7, 4, 'w'], [22.7, 4, 'w']], 8.6, [true, true]],                                      // west wall under the low shed roof: bedroom 4, bedroom 5 (plan)
   [0, 23, 0, 0, 'e', [[7, 3.5, 'w', 3.6, 6.8], [15, 3.5, 'w', 3.6, 6.8]], 9, [true, false]],                      // rec room west (plan; photo 45 shows the northern one)
   // interior
@@ -307,6 +310,8 @@ const WALLS = [[
   [11, 23, 27, 23, 'i', [[4.3, 3, 'd']]],
   [0, 39.3, 12, 39.3, 'i', [], 8.6],
   [12, 39.3, 12, 54.4, 'i'],
+  [0, 52.4, 6.6, 52.4, 'i', [[3.3, 5.6, 'o']]], // nursery closet front (plan)
+  [6.6, 52.4, 6.6, 54.4, 'i'],
   [0, 54.4, 12, 54.4, 'i', [[9.7, 2.6, 'd', 0, 0, { inv: 1 }]]], // nursery door on the little hall, swinging into the room (plan)
   [12, 54.4, 12, 57.7, 'i', [[1.6, 2.8, 'o']]],
   [7.2, 54.4, 7.2, 62, 'i', [[1.75, 2.4, 'd']]], // bath east wall: its door opens off the little hall (plan); the pantry alcove backs onto the rest of it
@@ -314,11 +319,12 @@ const WALLS = [[
   [0, 62, 9.7, 62, 'i'],
   [27, 57.7, 29.6, 57.7, 'i'],
   // kitchen ↔ dining wall on x = 27 removed (owner's renovation): the two rooms are one open space
-  [0, 70.6, 10.2, 70.6, 'i', [[4.5, 2.6, 'd'], [9, 2.2, 'o']]],
+  [0, 70.6, 10.2, 70.6, 'i', [[6, 2.6, 'd'], [9, 2.2, 'o']]], // mech-room door at its east end (plan)
   [7.7, 70.6, 7.7, 76.2, 'i'],
   [10.2, 70.6, 10.2, 76.2, 'i'],
-  [0, 76.2, 12.8, 76.2, 'i'],
-  [12.8, 76.2, 12.8, 81.9, 'i', [[2.8, 2.8, 'd']]],
+  [0, 76.2, 11.3, 76.2, 'i'],
+  [11.3, 76.2, 11.3, 93.2, 'i', [[2.4, 2.8, 'd'], [9.4, 5.6, 'o'], [15, 2.8, 'o']]], // office door off the foyer hall, then its two closets (plan)
+  [11.3, 89.3, 14, 89.3, 'i'],
   [13.9, 70.6, 18.4, 70.6, 'i'],
   [13.9, 70.6, 13.9, 76.2, 'i', [[3, 2.4, 'd']], 7.4], // carries the stair landing at 7.5 ft
   [17.9, 70.6, 17.9, 76.2, 'i', [], 6.2], // pantry east wall stops under the stair's middle flight
@@ -329,10 +335,10 @@ const WALLS = [[
   [27, 70.4, 31, 70.4, 'i'],
   [35, 70.4, 39, 70.4, 'i'],
   [27, 70.4, 27, 75.5, 'i'],
-  [31, 70.4, 31, 75.5, 'i'],
-  [35, 70.4, 35, 75.5, 'i'],
-  [27, 75.5, 31, 75.5, 'i', [[2, 2.4, 'd']]],
-  [35, 75.5, 39, 75.5, 'i', [[2, 2.4, 'd']]],
+  [31, 70.4, 31, 75.5, 'i', [[2.9, 2.2, 'd']]], // closet and walk-in open into the passage between dining room and foyer (plan)
+  [35, 70.4, 35, 75.5, 'i', [[2.9, 2.2, 'd']]],
+  [27, 75.5, 31, 75.5, 'i'],
+  [35, 75.5, 39, 75.5, 'i'],
   [39, 57.7, 39, 75.5, 'i'], // dining east wall: as on the plan (still standing)
   [11, 23, 11, 39.3, 'i', [[13.6, 2.8, 'd']]], // the family room's old bar and sitting area, enclosed as the child's bedroom (owner); its door is on the family-room side, as in her photo
   [39, 66, 61.5, 66, 'i', [[11.3, 20.4, 's', 0, 7, { n: 5, white: 1 }]]], // living ↔ sitting room: five white sliding glass panels (photos 17, 19, 20)
@@ -431,7 +437,7 @@ const OFFICE_SET = [
 const ADAM_SET = [['standing_desk', 'bed3', 6.4, 91.5, 0, { color: '#B58E62', name: "Adam's standing desk" }], ['laptop', 'bed3', 6.4, 91.2, 0, { elev: 1.1, name: "Adam's laptop" }],
   ['rug', 'bed3', 4.3, 85.2, 0, { w: 1.8, d: 1.5, pic: 'playmat', color: '#57B56A', name: 'Toy-area play mat' }], ['toy_shelf', 'bed3', 0.95, 87.6, 90], ['basket', 'bed3', 1.3, 84.0, 0, { w: 0.45, d: 0.45, h: 0.35, color: '#C9A46A', name: 'Toy basket' }]];
 const NURSERY_SET = [['snoo', 'bed4', 2.2, 43.4, 90], ['changing_table', 'bed4', 6.4, 40.4, 0], ['shelf', 'bed4', 11.1, 44.6, 270, { color: '#F1EEE7', w: 0.9, d: 0.32, h: 1.5, name: 'Nursery shelf' }],
-  ['rug', 'bed4', 5.6, 46.6, 0, { w: 2.0, d: 1.5, color: '#DCE5DC', name: 'Nursery rug' }], ['armchair', 'bed4', 2.3, 51.6, 135, { color: '#CFC8BC', w: 0.8, d: 0.8, h: 0.95, name: 'Glider chair' }]];
+  ['rug', 'bed4', 5.6, 46.6, 0, { w: 2.0, d: 1.5, color: '#DCE5DC', name: 'Nursery rug' }], ['armchair', 'bed4', 2.3, 50.6, 135, { color: '#CFC8BC', w: 0.8, d: 0.8, h: 0.95, name: 'Glider chair' }]];
 const KID_SET = [['nightstand', 'sitarea', 7.3, 28.0, 0, { color: '#C8A97E', name: 'Oak nightstand' }], ['dresser', 'sitarea', 10.0, 30.6, 270, { color: '#F1EEE7', w: 1.1, name: 'White dresser' }], ['rug', 'sitarea', 5.4, 35.6, 0, { w: 1.7, d: 1.3, pic: 'dino', color: '#2F6B5E', name: 'Dinosaur rug' }], ['toy_shelf', 'sitarea', 2.6, 38.4, 180, { name: 'Toy shelf (bedroom)' }]];
 const DINING_SET = [['dining_table', 'dining', 32.6, 64.2, 90, { w: 2.5, d: 1.05, color: '#8A6544', name: 'Long dining table' }], ...[61.3, 64.2, 67.1].flatMap(z => [['chair', 'dining', 30.2, z, 90, { color: '#3A2E26', name: 'Dining chair' }], ['chair', 'dining', 35.0, z, 270, { color: '#3A2E26', name: 'Dining chair' }]]), ['chair', 'dining', 32.6, 59.3, 0, { color: '#3A2E26', name: 'Dining chair' }], ['chair', 'dining', 32.6, 69.1, 180, { color: '#3A2E26', name: 'Dining chair' }]];
 const TERRACE_OLD = [[15, -35], [9.5, -31], [20.5, -31], [15, -31], [24, -19], [21.6, -21.2], [24, -21.2], [26.4, -21.2], [21.6, -16.8], [24, -16.8], [26.4, -16.8], [24, -19]];
@@ -798,9 +804,11 @@ fix(0, 42.7, 82.75, 60.7, 83.5, 3.9, 4.0, new THREE.MeshStandardMaterial({ color
   fix(L, 2.35, 53.9, 11.05, 55.5, 0, 3.1, wh); fix(L, 2.3, 53.85, 11.1, 55.55, 3.1, 3.2, oak); for (let i = 0; i < 4; i++) for (const x of [2.5, 6.8]) { fix(L, x, 55.5, x + 4.1, 55.55, 0.2 + i * 0.72, 0.85 + i * 0.72, wh); fix(L, x + 1.8, 55.55, x + 2.3, 55.6, 0.5 + i * 0.72, 0.56 + i * 0.72, chromeMat); }
   fix(L, 2.35, 57.5, 7.9, 59.4, 0, 0.15, wh); hang(2.35, 57.5, 7.9, 59.4, 7.3, 3.1); hang(2.35, 57.5, 7.9, 59.4, 3.6, 3.0); fix(L, 2.35, 57.5, 7.9, 59.4, 7.8, 7.9, oak);
   fix(L, 4.5, 56.3, 9.0, 56.7, 8.45, 8.5, glowMat); }
-// Adam's office closet (owner's note): reach-in closet along the north wall, two white sliding doors, clear of the room door's swing
+{ const wh = new THREE.MeshStandardMaterial({ color: 0xF4F3EF, roughness: 0.6 }); fix(0, 0.5, 52.25, 3.5, 52.3, 0.1, 7.6, wh); fix(0, 3.1, 52.32, 6.1, 52.37, 0.1, 7.6, wh); } // nursery closet sliding doors
+// Adam's office closets (owner: a closet; plan: two closets on the east side): white sliding doors, hanging rod and shelf inside
 { const wh = new THREE.MeshStandardMaterial({ color: 0xF4F3EF, roughness: 0.6 }), ln = new THREE.MeshStandardMaterial({ color: 0xC9C6BE, roughness: 0.6 });
-  fix(0, 0.2, 76.38, 9.4, 78.4, 0, 8, wh); fix(0, 0.25, 78.4, 9.35, 78.45, 0.15, 7.85, ln); for (const x of [0.3, 4.85]) fix(0, x, 78.45, x + 4.2, 78.5, 0.2, 7.8, wh); for (const x of [4.2, 5.2]) fix(0, x, 78.5, x + 0.06, 78.56, 3.2, 4.2, ln); }
+  for (const [y0, y1] of [[82.8, 88.4], [89.8, 92.6]]) { const h = (y1 - y0) / 2 + 0.15; fix(0, 11.12, y0, 11.17, y0 + h, 0.1, 7.6, wh); fix(0, 11.04, y1 - h, 11.09, y1, 0.1, 7.6, wh); fix(0, 11.0, y0 + h - 0.6, 11.03, y0 + h - 0.5, 3.4, 4.2, ln); }
+  for (const [y0, y1] of [[82.1, 89.1], [89.5, 93.0]]) { fix(0, 12.6, y0, 12.7, y1, 5.6, 5.7, ln); fix(0, 11.5, y0, 13.9, y1, 6.3, 6.35, wh); } }
 // family room ceiling fan (owner's video): five dark-wood blades on a short downrod from the plank ceiling, over the play area
 { const bz = new THREE.MeshStandardMaterial({ color: 0x3A3430, roughness: 0.5, metalness: 0.3 }), bw = new THREE.MeshStandardMaterial({ color: 0x4A3424, roughness: 0.7 }), cx = 19.8, cz = 38.5, top = ROOM.family.ceilH;
   fix(0, cx - 0.07, cz - 0.07, cx + 0.07, cz + 0.07, top - 1.25, top, bz).castShadow = false; const hub = new THREE.Mesh(new THREE.CylinderGeometry(M(0.42), M(0.36), M(0.5), 16), bz); hub.position.set(M(cx), M(top - 1.5), M(cz)); G.levels[0].add(hub);
@@ -904,7 +912,7 @@ const PU = 3.5 / 12;
 gableRoof(0, 53.7, 37.6, 81.9, 19, PU, 'x', 2, gableSiding);                                // upper level
 { const pv = new THREE.Mesh(new THREE.BoxGeometry(M(21), 0.05, M(9.6)), new THREE.MeshStandardMaterial({ color: 0x121A2C, roughness: 0.25, metalness: 0.4 })); pv.rotation.x = Math.atan(PU); pv.position.set(M(18.8), M(19 + (81.9 - 74.6) * PU + 0.45), M(74.6)); G.roof.add(pv); } // solar array
 gableRoof(37.6, 57.7, 63, 83.7, 10, PU, 'x', 2, gableSiding, [false, true]);                // living room + sitting room wing
-gableRoof(0, 81.9, 12.8, 93.2, 10, 4 / 12, 'y', 1.5, gableBrick, [false, true]);            // bedroom 3 wing, brick gable to the street
+gableRoof(0, 81.9, 14, 93.2, 10, 4 / 12, 'y', 1.5, gableBrick, [false, true]);            // bedroom 3 wing, brick gable to the street
 roofMesh([V3(12.8, 10.9, 81.9), V3(37.6, 10.9, 81.9), V3(37.6, 9.42, 85.7), V3(12.8, 10.9, 81.9), V3(37.6, 9.42, 85.7), V3(12.8, 9.42, 85.7)]); // entry skirt roof
 strut([14.3, 9.12, 85.7], [37.6, 9.12, 85.7], ...FAS, fixMat);
 { const lo = 9 - 2 / 3, hr = lo + 13.5 / 3, a = [-2, lo, -2], b = [29, lo, -2], ec = [29, lo, 23], wc = [-2, lo, 23], s0 = [0, 9, 23], s1 = [27, 9, 23], r0 = [11.5, hr, 11.5], r1 = [15.5, hr, 11.5]; // rec room hip; the south slope stops at the family room wall
@@ -926,7 +934,7 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
 { const dome = new THREE.MeshStandardMaterial({ color: 0xC2B099, roughness: 0.25, metalness: 0.15 });
   for (const [x, y, sx, sy] of [[4.6, 61.4, 3.6, 2.6], [9.8, 61.4, 3.6, 2.6], [18.2, 61.8, 2.2, 2.2], [22.8, 61.8, 2.2, 2.2]]) { const h = 19 + (y - 53.7) * PU, c = box(M(sx + 0.5), M(0.4), M(sy + 0.5), frameMat), d = box(M(sx), M(0.4), M(sy), dome); c.position.set(M(x), M(h + 0.15), M(y)); d.position.set(M(x), M(h + 0.4), M(y)); c.rotation.x = d.rotation.x = -Math.atan(PU); G.roof.add(c, d); }
   const vent = box(0.04, M(1.5), M(0.9), frameMat); vent.position.set(M(37.6) + 0.14, M(21), M(67.8)); G.roof.add(vent);
-  for (const [x, y, h0, h1] of [[13.15, 82.3, 0, 9.3], [39.4, 84.1, 0, 9.3], [37.95, 82.3, 9.6, 18.3], [27.4, -0.4, 0, 8.2], [-0.35, 82.3, 0, 9.4]]) { const d = box(M(0.28), M(h1 - h0), M(0.22), fixMat); d.position.set(M(x), M((h0 + h1) / 2), M(y)); G.roof.add(d); } }
+  for (const [x, y, h0, h1] of [[14.35, 82.3, 0, 9.3], [39.4, 84.1, 0, 9.3], [37.95, 82.3, 9.6, 18.3], [27.4, -0.4, 0, 8.2], [-0.35, 82.3, 0, 9.4]]) { const d = box(M(0.28), M(h1 - h0), M(0.22), fixMat); d.position.set(M(x), M((h0 + h1) / 2), M(y)); G.roof.add(d); } }
 // vaulted dark-wood ceiling inside the rec room with whitewashed tie beams (photos 31-32)
 { const vt = canvasTex(planks('#5B3A29', 0.12)); vt.repeat.set(0.45, 2.2); const m = triMesh(hipPts(0.3, 0.3, 26.8, 22.7, 8.95, 4 / 12, 0), new THREE.MeshStandardMaterial({ map: vt, roughness: 0.75, side: THREE.DoubleSide }), G.ceilings[0]); m.castShadow = false;
   const bm = new THREE.MeshStandardMaterial({ color: 0xC7A08C, roughness: 0.8 });
@@ -968,7 +976,7 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
   add(flat([[27, 1], [lotX(1) - 1, 1], [lotX(57.7) - 1, 57.7], [61.5, 57.7], [29.6, 57.7], [27, 23]], -0.012, aggregate)); // exposed-aggregate pool deck
   // front: mulch beds, lawn shows between; brick porch, brick walk to the street and a brick path across to the driveway
   add(flat([[26.8, 83.7], [64, 83.7], [66, 92.5], [42, 94], [33, 104], [37.5, 125.9], [30.3, 127.6], [27.8, 114], [25.6, 104], [26.8, 95.6]], -0.022, mulch));
-  add(flat([[-0.9, 93.2], [12.8, 93.2], [12.8, 84], [18.4, 84], [18.4, 95.6], [20.6, 95.6], [21, 104], [23, 114], [25.5, 129], [18, 131], [14.5, 108], [2, 106.5], [-0.9, 106.5]], -0.022, mulch));
+  add(flat([[-0.9, 93.2], [14, 93.2], [14, 84], [18.4, 84], [18.4, 95.6], [20.6, 95.6], [21, 104], [23, 114], [25.5, 129], [18, 131], [14.5, 108], [2, 106.5], [-0.9, 106.5]], -0.022, mulch));
   { const p = box(M(8.4), M(0.3), M(13.4), brickMat); p.position.set(M(22.6), M(-0.03), M(88.9)); p.castShadow = false; add(p); add(flat(R(18.4, 82.2, 26.8, 95.6), M(0.12) + 0.004, brickPave));
     const mat = box(M(3), M(0.06), M(1.8), std({ color: 0xB59B6A })); mat.position.set(M(22.6), M(0.16), M(83.5)); mat.castShadow = false; add(mat); const mb = box(M(2.6), M(0.065), M(1.4), std({ color: 0xC9B484 })); mb.position.set(M(22.6), M(0.16), M(83.5)); mb.castShadow = false; add(mb); }
   add(flat([[20.6, 95.6], [25, 95.6], [25.6, 104], [27.8, 114], [30.3, 127.6], [25.5, 129], [23, 114], [21, 104]], -0.012, brickPave));
@@ -1373,6 +1381,7 @@ function loadState(obj, msg) {
   if ((obj.m | 0) < 14) migrate14();
   if ((obj.m | 0) < 15) migrate15();
   if ((obj.m | 0) < 16) migrate16();
+  { const g = state.items.find(i => i.name === 'Glider chair' && Math.abs(i.z - M(51.6)) < 0.05); if (g) g.z = M(50.6); } // clear of the nursery closet
   state.items.forEach(syncItem); syncPins(); applyRoomStyles(); select(null); renderRooms(); if (msg) toast(msg); setStatus();
 }
 let saveT;
