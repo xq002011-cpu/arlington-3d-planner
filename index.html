@@ -378,8 +378,9 @@ const NAVY = '#1F2A44', OUT = '#8E9499', BLK = '#1E1F21';
 const KITCHEN_SET = [['bar_stool', 'kitchen', 15.4, 60, 0, { color: '#6B4A33' }], ['bar_stool', 'kitchen', 18, 60, 0, { color: '#6B4A33' }], ['bar_stool', 'kitchen', 20.6, 60, 0, { color: '#6B4A33' }]];
 const OFFICE_SET = [['office_chair', 'sitroom', 50, 64, 180], ['office_chair', 'sitroom', 57, 62.5, 270], ['desk', 'sitroom', 40.2, 62.2, 90, { w: 1.1, d: 0.4, h: 0.8, color: '#8A6544', name: 'Console table' }],
   ['art', 'sitroom', 39.35, 62.2, 90, { w: 1.5, d: 0.04, h: 0.6, color: '#C9A27E', name: 'Landscape canvases' }], ['shelf', 'sitroom', 40, 58.9, 90, { w: 0.6, d: 0.35, h: 1.7, color: BLK, name: 'Ladder shelf' }], ['shelf', 'sitroom', 60.2, 61.5, 270, { color: '#2B2B2B' }], ['rug', 'sitroom', 54, 62, 0, { w: 2, d: 1.4, color: '#B9B2A6' }]];
-const TERRACE_SET = [['sofa', 'rec', 15, -35, 0, { color: OUT, name: 'Outdoor sofa' }], ['armchair', 'rec', 9.5, -31, 90, { color: OUT, name: 'Outdoor chair' }], ['armchair', 'rec', 20.5, -31, 270, { color: OUT, name: 'Outdoor chair 2' }], ['coffee_table', 'rec', 15, -31, 0, { color: '#5E6165', name: 'Outdoor table' }],
-  ['dining_table', 'rec', 24, -19, 0, { color: BLK, name: 'Outdoor dining table' }], ['chair', 'rec', 21.6, -21.2, 0, { color: BLK }], ['chair', 'rec', 24, -21.2, 0, { color: BLK }], ['chair', 'rec', 26.4, -21.2, 0, { color: BLK }], ['chair', 'rec', 21.6, -16.8, 180, { color: BLK }], ['chair', 'rec', 24, -16.8, 180, { color: BLK }], ['chair', 'rec', 26.4, -16.8, 180, { color: BLK }], ['umbrella', 'rec', 24, -19, 0]];
+const TERRACE_OLD = [[15, -35], [9.5, -31], [20.5, -31], [15, -31], [24, -19], [21.6, -21.2], [24, -21.2], [26.4, -21.2], [21.6, -16.8], [24, -16.8], [26.4, -16.8], [24, -19]];
+const TERRACE_SET = [['sofa', 'rec', 6, -36.4, 0, { color: OUT, name: 'Outdoor sofa' }], ['armchair', 'rec', 1.9, -32.4, 90, { color: OUT, name: 'Outdoor chair' }], ['armchair', 'rec', 10.4, -32.4, 270, { color: OUT, name: 'Outdoor chair 2' }], ['coffee_table', 'rec', 6, -32.6, 0, { color: '#5E6165', name: 'Outdoor table' }],
+  ['dining_table', 'rec', 18.6, -29, 0, { color: BLK, name: 'Outdoor dining table' }], ['chair', 'rec', 16.2, -31.2, 0, { color: BLK }], ['chair', 'rec', 18.6, -31.2, 0, { color: BLK }], ['chair', 'rec', 21, -31.2, 0, { color: BLK }], ['chair', 'rec', 16.2, -26.8, 180, { color: BLK }], ['chair', 'rec', 18.6, -26.8, 180, { color: BLK }], ['chair', 'rec', 21, -26.8, 180, { color: BLK }], ['umbrella', 'rec', 18.6, -29, 180]];
 const STARTER = [
   ['sofa', 'living', 49, 81.9, 180, { color: NAVY, w: 2.3 }], ['sofa', 'living', 48, 72.2, 0, { color: NAVY, w: 2.9, d: 1.05, name: 'Sectional' }], ['bench', 'living', 44.2, 75.6, 0, { color: NAVY, w: 1.05, d: 1.5, h: 0.44, name: 'Sectional chaise' }],
   ['coffee_table', 'living', 50.5, 77, 0, { color: NAVY, w: 1.1, d: 0.8, name: 'Ottoman' }], ['armchair', 'living', 59.3, 80.2, 270, { color: BLK, w: 0.75, d: 0.75 }], ['plant', 'living', 61, 82.3, 0],
@@ -657,7 +658,7 @@ fix(0, 17.6, 23.2, 26.4, 25.2, 0, 9.85, stoneMat); fix(0, 17.2, 25.2, 26.8, 26.8
 fix(1, 0, 69.8, 1.4, 74.7, 0, 4.4, fixMat); fix(1, 1.3, 70.9, 1.5, 73.6, 0.2, 3, marbleDark); fix(1, 1.4, 71.5, 1.6, 73, 0.3, 2.4, fireMat);
 // kitchen as it is today (owner's photos): white shaker cabinets and a stainless chimney hood on the south wall, navy herringbone backsplash,
 // stainless French-door fridge at the east end, navy island with a grey granite top facing the family room, two white columns at the family-room edge
-{ const shaker = new THREE.MeshStandardMaterial({ color: 0xF4F3EF, roughness: 0.55 }), granite = new THREE.MeshStandardMaterial({ map: (() => { const t = canvasTex(noise('#B9B7B2', 0.28, 26000)); t.repeat.set(2, 1); return t; })(), roughness: 0.35 });
+{ const shaker = new THREE.MeshStandardMaterial({ color: 0xF4F3EF, roughness: 0.55 }), granite = new THREE.MeshStandardMaterial({ map: canvasTex(marble), color: 0xC6CACE, roughness: 0.3 });
   const navy = new THREE.MeshStandardMaterial({ color: 0x1F2B45, roughness: 0.6 }), steel = new THREE.MeshStandardMaterial({ color: 0xB4B8BC, roughness: 0.3, metalness: 0.55 });
   const splash = new THREE.MeshStandardMaterial({ map: canvasTex((g, s) => { g.fillStyle = '#22324F'; g.fillRect(0, 0, s, s); g.strokeStyle = 'rgba(190,205,225,.55)'; g.lineWidth = 2; const k = s / 8; for (let i = -8; i < 16; i++) for (let j = 0; j < 8; j++) { g.beginPath(); if ((i + j) % 2) { g.moveTo(i * k, j * k); g.lineTo(i * k + k, j * k + k); } else { g.moveTo(i * k + k, j * k); g.lineTo(i * k, j * k + k); } g.stroke(); } }), roughness: 0.35 });
   fix(0, 13.9, 68.5, 24.1, 70.6, 0, 2.95, shaker); fix(0, 13.8, 68.35, 24.1, 70.6, 2.95, 3.1, granite); fix(0, 13.9, 70.42, 24.1, 70.56, 3.1, 4.6, splash);
@@ -666,7 +667,10 @@ fix(1, 0, 69.8, 1.4, 74.7, 0, 4.4, fixMat); fix(1, 1.3, 70.9, 1.5, 73.6, 0.2, 3,
   fix(0, 24.2, 67.9, 26.95, 70.6, 0, 5.9, steel); fix(0, 24.2, 68.4, 26.95, 70.6, 5.9, 7.8, shaker);
   fix(0, 0.3, 62.2, 9.7, 64.3, 0, 2.95, shaker); fix(0, 0.3, 62.1, 9.75, 64.4, 2.95, 3.1, granite); fix(0, 0.3, 62.2, 9.7, 63.3, 4.6, 7.8, shaker);
   fix(0, 13.6, 61.6, 22.4, 64.2, 0, 2.95, navy); fix(0, 13.2, 60.8, 22.8, 64.4, 2.95, 3.1, granite);
-  for (const x of [13.4, 22.6]) fix(0, x - 0.4, 57.5, x + 0.4, 58.3, 0, 9, shaker); }
+  for (const x of [13.4, 22.6, 27]) fix(0, x - 0.4, 57.5, x + 0.4, 58.3, 0, 9, shaker);
+  fix(0, 16.9, 62.5, 19.3, 63.9, 3.1, 3.13, steel); fix(0, 18, 63.95, 18.2, 64.15, 3.1, 4.5, steel); fix(0, 18, 63.3, 18.2, 64.15, 4.4, 4.55, steel);
+  const glow = new THREE.MeshStandardMaterial({ color: 0xF6F8FA, emissive: 0xCFE6F5, emissiveIntensity: 0.7, roughness: 0.4 });
+  for (const x of [15.4, 18, 20.6]) { const d = new THREE.Mesh(new THREE.CylinderGeometry(M(0.75), M(0.75), M(0.14), 20), glow); d.position.set(M(x), M(6.5), M(62.9)); G.levels[0].add(d); fix(0, x - 0.02, 62.88, x + 0.02, 62.92, 6.57, 9, navy).castShadow = false; } }
 // rec room wet bar (photo 31)
 fix(0, 0.5, 17.6, 8, 20.2, 0, 3.5, new THREE.MeshStandardMaterial({ color: 0x8C8F8C, roughness: 0.7 }));
 // baths
@@ -714,6 +718,7 @@ const gableSiding = sidingMat.clone(); gableSiding.side = THREE.DoubleSide;
 const gableBrick = brickMat.clone(); gableBrick.side = THREE.DoubleSide;
 const PU = 3.5 / 12;
 gableRoof(0, 53.7, 37.6, 81.9, 19, PU, 'x', 2, gableSiding);                                // upper level
+{ const pv = new THREE.Mesh(new THREE.BoxGeometry(M(21), 0.05, M(9.6)), new THREE.MeshStandardMaterial({ color: 0x121A2C, roughness: 0.25, metalness: 0.4 })); pv.rotation.x = Math.atan(PU); pv.position.set(M(18.8), M(19 + (81.9 - 74.6) * PU + 0.45), M(74.6)); G.roof.add(pv); } // solar array
 gableRoof(37.6, 57.7, 63, 83.7, 10, PU, 'x', 2, gableSiding, [false, true]);                // living room + sitting room wing
 gableRoof(0, 81.9, 12.8, 93.2, 10, 4 / 12, 'y', 1.5, gableBrick, [false, true]);            // bedroom 3 wing, brick gable to the street
 roofMesh([V3(12.8, 10.9, 81.9), V3(37.6, 10.9, 81.9), V3(37.6, 9.42, 85.7), V3(12.8, 10.9, 81.9), V3(37.6, 9.42, 85.7), V3(12.8, 9.42, 85.7)]); // entry skirt roof
@@ -747,7 +752,7 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
   // back terrace: white concrete with a swirl-trowel finish and saw-cut joints (photos 45-47)
   const terraceM = std({ map: tex((g, s) => { noise('#E9E6DF', 0.05, 5000)(g, s); g.strokeStyle = 'rgba(150,145,135,.22)'; g.lineWidth = 1.5; const k = s / 8; for (let r = 0; r < 9; r++) for (let c = -1; c < 9; c++) { g.beginPath(); g.arc(c * k + (r % 2 ? k / 2 : 0), r * k, k * 0.62, Math.PI * 1.15, Math.PI * 1.85); g.stroke(); g.beginPath(); g.arc(c * k + (r % 2 ? k / 2 : 0), r * k, k * 0.36, Math.PI * 1.15, Math.PI * 1.85); g.stroke(); } g.strokeStyle = 'rgba(120,115,105,.45)'; g.lineWidth = 2; g.strokeRect(0, 0, s, s); }, 3.4) });
   const aggregate = std({ map: tex((g, s) => { noise('#A99A86', 0.2, 12000)(g, s); for (let i = 0; i < 5200; i++) { const v = 95 + rnd() * 120 | 0; g.fillStyle = `rgba(${v},${v * 0.93 | 0},${v * 0.82 | 0},.75)`; g.beginPath(); g.arc(rnd() * s, rnd() * s, 1 + rnd() * 2.2, 0, 7); g.fill(); } }, 2) });
-  const drive = std({ map: tex(grid('#B9B6AE', 'rgba(90,90,85,.22)', 2, 6000), 3.6) });
+  const drive = std({ map: tex(grid('#A0736E', 'rgba(70,45,45,.3)', 2, 9000), 3.6) }); // red-tinted concrete, as on the west side today
   const asphalt = std({ map: tex(noise('#4B4E50', 0.1, 16000), 4) }), walkC = std({ color: 0xC9C5BC });
   const mulch = std({ map: tex(noise('#33291F', 0.34, 26000), 2) });
   // brick paving laid herringbone at 45° (photos 11, 13, 15)
@@ -862,6 +867,28 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
   { const mesh = std({ color: 0x15171A, transparent: true, opacity: 0.5, side: THREE.DoubleSide }), post = std({ color: 0x15171A }); // black mesh pool safety fence (owner's photo)
     const run = [[30.4, 3], [31, 20], [31.6, 38], [32.4, 56.6]]; for (let i = 0; i < run.length - 1; i++) { const [x1, y1] = run[i], [x2, y2] = run[i + 1], L = Math.hypot(x2 - x1, y2 - y1), m = new THREE.Mesh(new THREE.PlaneGeometry(M(L), M(4)), mesh); m.position.set(M((x1 + x2) / 2), M(2), M((y1 + y2) / 2)); m.rotation.y = -Math.atan2(y2 - y1, x2 - x1); S.add(m);
       for (let k = 0; k <= 5; k++) { const pm2 = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, M(4.1), 6), post); pm2.position.set(M(x1 + (x2 - x1) * k / 5), M(2.05), M(y1 + (y2 - y1) * k / 5)); S.add(pm2); } } }
+  // ---- details from the owner's own photos ----
+  { // black metal fence along the street, open at the front walk
+    const pk = canvasTex((g, s) => { g.clearRect(0, 0, s, s); g.fillStyle = '#101214'; for (let i = 0; i < 16; i++) g.fillRect(i * s / 16 + s / 40, 0, s / 60, s); g.fillRect(0, s * 0.06, s, s * 0.04); g.fillRect(0, s * 0.85, s, s * 0.04); }, 256), pmt = std({ color: 0x101214 });
+    const span = (a0, a1) => { const p0 = off(C, a0, -0.6), p1 = off(C, a1, -0.6), L2 = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]), t = pk.clone(); t.repeat.set(Math.max(1, Math.round(L2 / 6)), 1); t.needsUpdate = true;
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(M(L2), M(3.6)), std({ map: t, transparent: true, alphaTest: 0.4, side: THREE.DoubleSide })); m.position.set(M((p0[0] + p1[0]) / 2), M(1.8), M((p0[1] + p1[1]) / 2)); m.rotation.y = -Math.atan2(p1[1] - p0[1], p1[0] - p0[0]); S.add(m);
+      for (const q of [p0, p1]) { const b = box(M(0.25), M(4), M(0.25), pmt); b.position.set(M(q[0]), M(2), M(q[1])); S.add(b); } };
+    span(0, 13); span(13, 39.6); span(46, L); }
+  { // flowers: blue hydrangea by the walk, agapanthus in bloom under the living-room windows, roses in that bed
+    const hyd = (x, y, r) => { bush(x, y, r, 0x4E8A46, 0.8); for (let i = 0; i < 10; i++) { const a = i * 0.66, d = r * (0.25 + rnd() * 0.6); blob(x + Math.cos(a) * d, r * 0.95 + rnd() * r * 0.45, y + Math.sin(a) * d, 0.58, [0x6F8FD8, 0x8FA8E6, 0x7B7FD0][i % 3], 0.8, sph); } };
+    hyd(30.4, 116.2, 2.1); hyd(47, 96.5, 1.8);
+    for (let x = 37; x < 65; x += 2.6) { const y = 92.4 + Math.sin(x) * 0.8; stem(x, y, 3.3, 0.05, x + 0.2, y, pmat(0x6E9150)); blob(x + 0.2, 3.5, y, 0.55, [0x8E9FE0, 0xA7B3EA][(x | 0) & 1], 0.85, sph); }
+    for (const [x, y, c] of [[44, 88.6, 0xF07FA8], [50, 89.4, 0xB81E2D], [56, 88.8, 0xF2A9BE], [27.4, 107.2, 0xF6C9D2], [21.5, 111, 0xF6C9D2]]) { bush(x, y, 1.2, 0x3F7A45, 1.3); for (let i = 0; i < 3; i++) blob(x + (rnd() - .5) * 1.2, 2.6 + rnd() * 1.2, y + (rnd() - .5) * 1.2, 0.3, c, 0.9, sph); } }
+  { // north-east garden bed beside the terrace: round stepping stones, young trees in green pots, a log pile, a patio heater
+    const disc = (x, y, r, h, c, y0 = 0) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(M(r), M(r), M(h), 16), std({ color: c })); m.position.set(M(x), M(y0 + h / 2), M(y)); m.castShadow = true; m.receiveShadow = true; S.add(m); return m; };
+    for (const [x, y] of [[31, -24], [32.6, -20.6], [29.6, -27.6], [28, -31], [26.6, -34.4], [25, -38], [33.6, -17.2]]) disc(x, y, 0.85, 0.12, 0xDAD6CC);
+    for (const [x, y] of [[31.2, -29.6], [27.6, -37], [33.4, -22.4]]) { disc(x, y, 0.8, 1.2, 0x8FC08C); stem(x, y, 6, 0.09, x + 0.2, y, bark, 1.1); blob(x + 0.2, 5.6, y, 1.3, 0x79A84A, 0.9); }
+    for (let i = 0; i < 7; i++) { const m = new THREE.Mesh(new THREE.CylinderGeometry(M(0.65), M(0.7), M(1.6), 9), std({ color: [0x8A7458, 0x9B8463, 0x75624A][i % 3] })); m.rotation.z = Math.PI / 2; m.rotation.y = 0.5 + (i % 2) * 0.3; m.position.set(M(22.6 + (i % 4) * 1.3), M(0.65 + (i > 3 ? 1.2 : 0)), M(-41 + (i > 3 ? 0.3 : 0))); m.castShadow = true; S.add(m); }
+    disc(25.2, -29.4, 0.75, 2.6, 0x1B1C1E); disc(25.2, -29.4, 0.1, 4, 0x1B1C1E, 2.6); disc(25.2, -29.4, 1.4, 0.15, 0xB9BDC1, 7.1); disc(25.2, -29.4, 0.45, 0.7, 0x8E9296, 6.4); }
+  { // pool: round entry step at the south end, raised planter boxes by the east wall, white lattice screens at the north end
+    const st = new THREE.Mesh(new THREE.CircleGeometry(M(4.3), 24), new THREE.MeshStandardMaterial({ color: 0xBFE6DC, transparent: true, opacity: 0.55, roughness: 0.2 })); st.rotation.x = -Math.PI / 2; st.position.set(M(45), 0.018, M(44.2)); S.add(st);
+    for (const y of [17, 23.4]) { const b = box(M(2), M(1.3), M(5.6), fenceWood); b.position.set(M(lotX(y) - 2.2), M(0.65), M(y)); b.rotation.y = -0.36; S.add(b); }
+    for (const x of [34.4, 39, 43.6]) { const b = box(M(3.8), M(5), M(0.15), std({ color: 0xF2F1EC, transparent: true, opacity: 0.8 })); b.position.set(M(x), M(2.5), M(2.4)); S.add(b); } }
   // lot outline
   const lp = LOT.concat([LOT[0]]).map(([x, y]) => new THREE.Vector3(M(x), 0.06, M(y)));
   const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints(lp), new THREE.LineDashedMaterial({ color: 0x2F6B57, dashSize: 0.6, gapSize: 0.35 })); ln.computeLineDistances(); S.add(ln);
@@ -950,6 +977,8 @@ const meshes = new Map();
 function makeItem(type, x, z, level, rot = 0, over = {}) { const c = CAT[type]; return Object.assign({ id: 'i' + (nextId++), type, name: c.label, x, z, level, rot, w: c.w, d: c.d, h: c.h, color: c.color, elev: c.elev || 0 }, over); }
 const tupleItem = ([t, room, x, y, rot, over], n) => makeItem(t, M(x), M(y), ROOM[room].level, rot, Object.assign({ name: CAT[t].label + (n > 1 ? ' ' + n : '') }, over || {}));
 function starterItems() { const counts = {}; return STARTER.map(tp => tupleItem(tp, counts[tp[0]] = (counts[tp[0]] || 0) + 1)); }
+// terrace furniture moved to where the owner's photo shows it; only pieces still at the first guess are moved
+function migrate5() { TERRACE_OLD.forEach(([ox, oy], k) => { const tp = TERRACE_SET[k], it = state.items.find(i => i.type === tp[0] && Math.abs(i.x - M(ox)) < 0.05 && Math.abs(i.z - M(oy)) < 0.05); if (it) { it.x = M(tp[2]); it.z = M(tp[3]); it.rot = tp[4]; } }); }
 // layouts saved while the rec room still had the listing's pool table: swap it for the ping-pong table and add the Pilates reformer
 function migrate4() { const pt = state.items.filter(i => i.type === 'pool_table'); if (!pt.length && state.items.some(i => i.type === 'ping_pong')) return; state.items = state.items.filter(i => i.type !== 'pool_table');
   const t = pt[0]; if (!state.items.some(i => i.type === 'ping_pong')) state.items.push(makeItem('ping_pong', t ? t.x : M(13.5), t ? t.z : M(9), 0, t ? t.rot : 0));
@@ -971,11 +1000,12 @@ function removeItemMesh(id) { const g = meshes.get(id); if (g) { G.furn[g.userDa
 function applyRoomStyles() { for (const r of ROOMS) { const s = state.rooms[r.id] || {}; roomWallMat(r.id).color.set(s.wall || '#F2EEE6'); r.floorMesh.material = floorMats[s.floor || r.floor]; } }
 function loadState(obj, msg) {
   for (const id of [...meshes.keys()]) removeItemMesh(id);
-  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 4 };
+  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 5 };
   nextId = 1 + Math.max(0, ...state.items.map(i => parseInt(String(i.id).slice(1)) || 0));
   if ((obj.m | 0) < 2) migrate2();
   if ((obj.m | 0) < 3) migrate3();
   if ((obj.m | 0) < 4) migrate4();
+  if ((obj.m | 0) < 5) migrate5();
   state.items.forEach(syncItem); syncPins(); applyRoomStyles(); select(null); renderRooms(); if (msg) toast(msg); setStatus();
 }
 let saveT;
@@ -1246,7 +1276,7 @@ $('openRight').onclick = () => { $('left').classList.remove('open'); $('right').
 $('closeLeft').onclick = $('closeRight').onclick = closeSheets;
 $('bSave').onclick = () => save(true);
 let resetArm = 0;
-$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 4 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
+$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 5 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
 const dlg = $('dlg');
 function openDlg(kind) {
   const exp = kind === 'export'; $('dlgTitle').textContent = exp ? 'Export layout' : 'Import layout';
@@ -1330,7 +1360,7 @@ function tick() {
 
 /* ================= BOOT ================= */
 let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { saved = null; }
-if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 4 }); }
+if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 5 }); }
 setStatus(saved ? 'Loaded your saved layout' : null);
 $('viewhint').textContent = 'Drag to orbit · right-drag to pan · scroll to zoom · pick Main or Upper to look inside';
 applyVis(); renderInspector(); renderRooms();
