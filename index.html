@@ -439,7 +439,7 @@ const ADAM_SET = [['standing_desk', 'bed3', 6.4, 91.5, 0, { color: '#B58E62', na
 const NURSERY_SET = [['snoo', 'bed4', 2.2, 43.4, 90], ['changing_table', 'bed4', 6.4, 40.4, 0], ['shelf', 'bed4', 11.1, 44.6, 270, { color: '#F1EEE7', w: 0.9, d: 0.32, h: 1.5, name: 'Nursery shelf' }],
   ['rug', 'bed4', 5.6, 46.6, 0, { w: 2.0, d: 1.5, color: '#DCE5DC', name: 'Nursery rug' }], ['armchair', 'bed4', 2.3, 50.6, 135, { color: '#CFC8BC', w: 0.8, d: 0.8, h: 0.95, name: 'Glider chair' }]];
 const KID_SET = [['nightstand', 'sitarea', 7.3, 28.0, 0, { color: '#C8A97E', name: 'Oak nightstand' }], ['dresser', 'sitarea', 10.0, 30.6, 270, { color: '#F1EEE7', w: 1.1, name: 'White dresser' }], ['rug', 'sitarea', 5.4, 35.6, 0, { w: 1.7, d: 1.3, pic: 'dino', color: '#2F6B5E', name: 'Dinosaur rug' }], ['toy_shelf', 'sitarea', 2.6, 38.4, 180, { name: 'Toy shelf (bedroom)' }]];
-const DINING_SET = [['dining_table', 'dining', 32.6, 64.2, 90, { w: 2.5, d: 1.05, color: '#8A6544', name: 'Long dining table' }], ...[61.3, 64.2, 67.1].flatMap(z => [['chair', 'dining', 30.2, z, 90, { color: '#3A2E26', name: 'Dining chair' }], ['chair', 'dining', 35.0, z, 270, { color: '#3A2E26', name: 'Dining chair' }]]), ['chair', 'dining', 32.6, 59.3, 0, { color: '#3A2E26', name: 'Dining chair' }], ['chair', 'dining', 32.6, 69.1, 180, { color: '#3A2E26', name: 'Dining chair' }]];
+const DINING_SET = [['dining_table', 'dining', 32.6, 64.2, 90, { w: 2.5, d: 1.05, color: '#8A6544', name: 'Long dining table' }], ...[61.3, 64.2, 67.1].flatMap(z => [['chair', 'dining', 30.2, z, 270, { color: '#3A2E26', name: 'Dining chair' }], ['chair', 'dining', 35.0, z, 90, { color: '#3A2E26', name: 'Dining chair' }]]), ['chair', 'dining', 32.6, 59.3, 0, { color: '#3A2E26', name: 'Dining chair' }], ['chair', 'dining', 32.6, 69.1, 180, { color: '#3A2E26', name: 'Dining chair' }]];
 const TERRACE_OLD = [[15, -35], [9.5, -31], [20.5, -31], [15, -31], [24, -19], [21.6, -21.2], [24, -21.2], [26.4, -21.2], [21.6, -16.8], [24, -16.8], [26.4, -16.8], [24, -19]];
 const TERRACE_SET = [['sofa', 'rec', -2.6, -27.6, 0, { color: OUT, name: 'Outdoor sofa' }], ['armchair', 'rec', -7.4, -23.8, 90, { color: OUT, name: 'Outdoor chair' }], ['armchair', 'rec', 2.4, -23.6, 270, { color: OUT, name: 'Outdoor chair 2' }], ['coffee_table', 'rec', -2.6, -23.8, 0, { color: '#8A8F94', name: 'Outdoor table' }],
   ['dining_table', 'rec', 10, -22.0, 0, { color: BLK, name: 'Outdoor dining table' }], ['chair', 'rec', 7.6, -24.2, 0, { color: BLK }], ['chair', 'rec', 10, -24.2, 0, { color: BLK }], ['chair', 'rec', 12.4, -24.2, 0, { color: BLK }], ['chair', 'rec', 7.6, -19.8, 180, { color: BLK }], ['chair', 'rec', 10, -19.8, 180, { color: BLK }], ['chair', 'rec', 12.4, -19.8, 180, { color: BLK }], ['umbrella', 'rec', 10, -22.0, 180]];
@@ -967,8 +967,8 @@ const whiteBrick = new THREE.MeshStandardMaterial({ color: 0xEDEBE6, roughness: 
 const chimney = (x0, y0, x1, y1, h0, h1, mat) => { const m = box(M(x1 - x0), M(h1 - h0), M(y1 - y0), mat); if (mat === brickMat) { const uv = m.geometry.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * M(i < 8 ? y1 - y0 : x1 - x0), uv.getY(i) * M(h1 - h0)); } m.position.set(M((x0 + x1) / 2), M((h0 + h1) / 2), M((y0 + y1) / 2)); G.roof.add(m); const cap = box(M(x1 - x0 + 0.5), M(0.45), M(y1 - y0 + 0.5), frameMat); cap.position.set(M((x0 + x1) / 2), M(h1 + 0.22), M((y0 + y1) / 2)); G.roof.add(cap); };
 chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6, 26.4, 10.4, 13.3, brickMat); chimney(-2, 70.2, 0.3, 74.4, 0, 25.5, whiteBrick);
 // skylights on the north slope of the upper roof (photos 4 and 8; plan: over the primary suite and primary bath), gable vent, downspouts
-{ const dome = new THREE.MeshStandardMaterial({ color: 0xC2B099, roughness: 0.25, metalness: 0.15 });
-  for (const [x, y, sx, sy] of [[4.6, 61.4, 3.6, 2.6], [9.8, 61.4, 3.6, 2.6], [18.2, 61.8, 2.2, 2.2], [22.8, 61.8, 2.2, 2.2]]) { const h = 10.2 + upRoof(y), c = box(M(sx + 0.5), M(0.4), M(sy + 0.5), frameMat), d = box(M(sx), M(0.4), M(sy), dome); c.position.set(M(x), M(h + 0.15), M(y)); d.position.set(M(x), M(h + 0.4), M(y)); c.rotation.x = d.rotation.x = -Math.atan(UPR.k); G.roof.add(c, d); }
+{ const dome = new THREE.MeshStandardMaterial({ color: 0x3E5361, roughness: 0.06, metalness: 0.55 });
+  for (const [x, y, sx, sy] of [[4.6, 61.4, 3.6, 2.6], [9.8, 61.4, 3.6, 2.6], [18.2, 61.8, 2.2, 2.2], [22.8, 61.8, 2.2, 2.2]]) { const h = 10.2 + upRoof(y), c = box(M(sx + 0.35), M(0.3), M(sy + 0.35), frameMat), d = box(M(sx), M(0.08), M(sy), dome); c.position.set(M(x), M(h + 0.1), M(y)); d.position.set(M(x), M(h + 0.27), M(y)); c.rotation.x = d.rotation.x = -Math.atan(UPR.k); G.roof.add(c, d); }
   const vent = box(0.04, M(1.5), M(0.9), frameMat); vent.position.set(M(37.6) + 0.14, M(21), M(UPR.yR)); G.roof.add(vent);
   for (const [x, y, h0, h1] of [[14.35, 82.3, 0, 9.3], [39.4, 84.1, 0, 9.3], [37.95, 82.3, 10.9, 20], [27.4, -0.4, 0, 8.2], [-0.35, 82.3, 0, 9.4]]) { const d = box(M(0.28), M(h1 - h0), M(0.22), fixMat); d.position.set(M(x), M((h0 + h1) / 2), M(y)); G.roof.add(d); } }
 // vaulted dark-wood ceiling inside the rec room with whitewashed tie beams (photos 31-32)
@@ -1223,21 +1223,23 @@ chimney(61.2, 72.4, 64.4, 77.1, 9.5, 19.2, whiteBrick); chimney(18.6, 23.4, 25.6
       const lm = new THREE.Mesh(new THREE.PlaneGeometry(M(40), M(1.3)), std({ map: lt, transparent: true, alphaTest: 0.35, side: THREE.DoubleSide })); lm.rotation.y = Math.PI / 2; lm.position.set(M(-13.2), M(6.65), M(-24)); S.add(lm);
       for (let z = -30; z < -4; z += 1.7) blob(-9.9, 0.4, z, 0.95, [0x8A3B2E, 0x9A4632, 0x7A3328][(z * 3 | 0) % 3 < 0 ? 0 : Math.abs(z * 3 | 0) % 3], 0.5); } }
 }
-/* ADU options (structural what-ifs, not furniture), all at the back of the lot behind the patio. Each has exactly one bath with two doors (inside + patio) so party guests never walk through the unit.
-   Custom, one footprint (the lot's back triangle less 4 ft from the side and rear lot lines, south wall 2 ft into today's patio, ≈620 sq ft):
-     A one bed, B two beds. Single storey under the 16 ft limit; the owner does not want a second storey.
+/* ADU options (structural what-ifs, not furniture), all at the back of the lot behind the patio. Built hidden; shown only when picked in the Plan menu. Original (the house as it is today) never changes.
+   ADU (id adu): the owner's own floor plan (2026-11-23): a 21′8⅞″ × 10′3½″ block whose north side is cut on the diagonal (27′11″) to a 27′10″ east wall, ≈414 sq ft.
+     Bath (shower, toilet, vanity) with a door to the patio, great room with a north-wall kitchen and a round table for four, a steep stair up to a low storage loft over the bath and great room,
+     bedroom (king bed, dresser on the diagonal wall), laundry (D) in the west corner and a walk-in closet in the north point. Set in the lot's back tip with its diagonal wall 4.5 ft off the west lot line
+     (rotated −9.9° to run parallel to it) and its north point 4.1 ft off the east lot line, so it takes none of today's patio; roof under the 16 ft limit.
    Prefab, three real products from the makers' published plans: P1 Studio Home Summit 308 (14 × 22 ft studio kit, no crane, no patio lost),
-     P2 Samara Backyard Studio (29 × 15 ft, crane-set, ~5.5 ft of patio), P3 Abodu One (14 × 37 ft one-bed, crane-set along the east lot line, ~13 ft of patio).
-   Built hidden; shown only when picked in the Plan menu. Original (the house as it is today) never changes. The lot drawing is approximate: survey first. */
-const ADU_POLY = [[-8.8, -29.3], [27.2, -29.3], [14, -52], [0, -52], [-8.8, -41.9]];
+     P2 Samara Backyard Studio (29 × 15 ft, crane-set, ~5.5 ft of patio), P3 Abodu One (14 × 37 ft one-bed, crane-set along the east lot line, ~13 ft of patio). The lot drawing is approximate: survey first. */
+const TRI = { c: [-7.978, -29.921], a: -9.885, W: 21.74, H1: 10.29, H: 27.83 };
 const PREFAB = { pf1: { c: [6, -39], L: 22, W: 14, a: 0 }, pf2: { c: [6, -33], L: 29, W: 15, a: 0 }, pf3: { c: [14, -37.5], L: 37, W: 14, a: 60 }, pf3b: { c: [14, -37.5], L: 37, W: 14, a: 60 } };
 const rectPoly = r => { const a = r.a * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a); return [[-1, 1], [1, 1], [1, -1], [-1, -1]].map(([u, v]) => [r.c[0] + ca * u * r.L / 2 - sa * v * r.W / 2, r.c[1] + sa * u * r.L / 2 + ca * v * r.W / 2]); };
-const ADU_FOOT = { adu: ADU_POLY, adu2: ADU_POLY, pf1: rectPoly(PREFAB.pf1), pf2: rectPoly(PREFAB.pf2), pf3: rectPoly(PREFAB.pf3), pf3b: rectPoly(PREFAB.pf3b) };
+// the owner's plan in its own feet: u east along the south wall from its west end, v south (so the plan's "up" is −v); triW turns a plan point into lot feet
+const TRI_LOCAL = [[0, 0], [TRI.W, 0], [TRI.W, -TRI.H], [0, -TRI.H1]], triW = ([u, v]) => { const a = TRI.a * Math.PI / 180; return [TRI.c[0] + Math.cos(a) * u - Math.sin(a) * v, TRI.c[1] + Math.sin(a) * u + Math.cos(a) * v]; };
+const ADU_FOOT = { adu: TRI_LOCAL.map(triW), pf1: rectPoly(PREFAB.pf1), pf2: rectPoly(PREFAB.pf2), pf3: rectPoly(PREFAB.pf3), pf3b: rectPoly(PREFAB.pf3b) };
 const ADU = new THREE.Group(), ADU_VAR = {}, ADU_ROOFS = []; ADU.visible = false; for (const k of Object.keys(ADU_FOOT)) { const g = new THREE.Group(); g.visible = false; ADU_VAR[k] = g; ADU.add(g); } G.site.add(ADU);
 let aduOn = ''; const aduHide = {}, aduFurnHid = [];
 const ADU_LABELS = {
-  adu: [['Option A · custom · 1 bed + 1 bath · ≈620 sq ft', 3.5, -27.4], ['Great room', 2, -35.5], ['Bedroom', 9, -47], ['Closet · storage', -3.2, -45.8], ['Bath · inside + patio doors', 19.8, -32], ['Laundry', 17.6, -38.4]],
-  adu2: [['Option B · custom · 2 beds + 1 bath · ≈620 sq ft', 3.5, -27.4], ['Great room', 1.5, -36.5], ['Bedroom 1', 9, -47], ['Bedroom 2', 19.6, -36.5], ['Bath · inside + patio doors', 11.2, -33], ['Laundry · storage', -3.2, -45.8]],
+  adu: [['ADU · owner\'s plan · 1 bed + 1 bath + loft · ≈414 sq ft', ...triW([10.9, -12])], ['Great room · kitchen', ...triW([15.5, -5.5])], ['Bath · patio door', ...triW([4.2, -5.6])], ['Stair to storage loft', ...triW([9.65, -1.6])], ['Bedroom', ...triW([12.5, -14.2])], ['Laundry', ...triW([3.6, -12.6])], ['Closet', ...triW([19.4, -24.2])]],
   pf1: [['Prefab P1 · Studio Home Summit 308 · 14 × 22 ft studio · 1 bath · no crane', 6, -30.4], ['Studio', 6, -37], ['Bath', 0.5, -43]],
   pf2: [['Prefab P2 · Samara Backyard Studio · 29 × 15 ft · 420 sq ft · 1 bath', 6, -24], ['Studio', 0, -31.5], ['Bath + laundry', 15, -36]],
   pf3b: [['Prefab P3+ · Abodu One, mirrored plan, house colours, entry deck to the patio', 7, -17], ['Living · dining', 19.5, -29.5], ['Kitchen · bath', 13.5, -39], ['Bedroom', 6.5, -50]],
@@ -1255,8 +1257,6 @@ const ADU_LABELS = {
   const centroid = Q => [Q.reduce((a, p) => a + p[0], 0) / Q.length, Q.reduce((a, p) => a + p[1], 0) / Q.length];
   const offsetPoly = (poly, d) => { const n = poly.length, cen = centroid(poly), ln = poly.map((p, i) => { const q = poly[(i + 1) % n], L = Math.hypot(q[0] - p[0], q[1] - p[1]), u = [(q[0] - p[0]) / L, (q[1] - p[1]) / L]; let nn = [u[1], -u[0]]; if (((p[0] + q[0]) / 2 - cen[0]) * nn[0] + ((p[1] + q[1]) / 2 - cen[1]) * nn[1] < 0) nn = [-nn[0], -nn[1]]; return { p: [p[0] + nn[0] * d, p[1] + nn[1] * d], u }; });
     return ln.map((l, i) => { const k = ln[(i - 1 + n) % n], den = k.u[0] * l.u[1] - k.u[1] * l.u[0], tt = ((l.p[0] - k.p[0]) * l.u[1] - (l.p[1] - k.p[1]) * l.u[0]) / den; return [k.p[0] + k.u[0] * tt, k.p[1] + k.u[1] * tt]; }); };
-  const P = ADU_POLY, IN = offsetPoly(P, -0.5);
-  const xOn = (y, i) => { const a = IN[i], b = IN[(i + 1) % IN.length]; return a[0] + (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]); };
 
   // drawing kit for one option; everything goes into group T (a prefab's own rotated group); K.base lifts furniture to an upper floor
   const kit = (V, T = ADU_VAR[V]) => { const TR = new THREE.Group(); T.add(TR); ADU_ROOFS.push(TR); const K = { T, TR, base: 0 };
@@ -1308,63 +1308,48 @@ const ADU_LABELS = {
       for (const [dx, dy, r] of [[0, 2.3, 0], [0, -2.3, Math.PI], [2.3, 0, -Math.PI / 2], [-2.3, 0, Math.PI / 2]]) { bx(1.5, 1.5, 0.15, oakM, x + dx, y + dy, FL + 1.5, r); bx(1.5, 0.15, 1.5, oakM, x + dx * 1.3, y + dy * 1.3, FL + 1.6, r); for (const [lx, ly] of [[-0.6, -0.6], [0.6, -0.6], [-0.6, 0.6], [0.6, 0.6]]) cyl(0.06, 1.5, dark, x + dx + lx, y + dy + ly); } };
     return K; };
 
-  // ---------------- custom cottage: A one bed, B two beds, C two storeys ----------------
-  const custom = V => { const K = kit(V), { bx, cyl, wall } = K, B = V === 'adu2', C = V === 'adu3', xe = y => xOn(y, 1);
-    // south wall along the patio, holes measured from its west end (x −8.55): kitchen window, slider, the bath's patio door, (B) bedroom 2 window
-    const south = B ? [[1.6, 3, 3.6, 7, 'win'], [7.55, 9, FL, 8, 'slider'], [18.15, 2.5, FL, 7, 'extdoor', -1, 1], [25, 4, 2.6, 7, 'win']]
-                    : [[1.6, 3, 3.6, 7, 'win'], [8.55, 12, FL, 8, 'slider'], [25.35, 2.8, FL, 7, 'extdoor', -1, 1]];
-    K.shell(P, 0, WT, [south, B ? [[2.8, 3.4, 3, 7, 'win'], [14.6, 4, 2.4, 7, 'win']] : [[2.4, 2, 5.6, 7.2, 'high'], [14.6, 4, 2.4, 7, 'win']], C ? [] : [[2, 4.4, 6, 8.4, 'high']], [[6.6, 3, 5.4, 7.4, 'high']], [[5.7, 3, 3.6, 6.8, 'win']]]);
-    // interior walls: the bedroom wing at y −40.5, x 3.5 between the north-west room and bedroom 1
-    if (!B) {
-      wall([-8.3, -40.5], [xe(-40.5), -40.5], 0.4, FL, WT, [inner, inner], [[5.7, 2.5, FL, 6.9, 'door', -1, 1], [18.3, 2.7, FL, 6.9, 'door', -1, 1]]);
-      wall([14, -29.55], [14, -40.3], 0.4, FL, WT, [inner, inner], [[0.45, 2.4, FL, 6.9, 'pocket'], [7.05, 2.5, FL, 6.9, 'door', 1, 1]]);
-      wall([14.2, -36], [xe(-36), -36], 0.4, FL, WT, [inner, inner]);
-    } else {
-      wall([-8.3, -40.5], [14, -40.5], 0.4, FL, WT, [inner, inner], [[5.7, 2.5, FL, 6.9, 'door', -1, 1], [18.3, 2.7, FL, 6.9, 'door', -1, 1]]);
-      wall([14, -29.55], [14, -42.2], 0.4, FL, WT, [inner, inner], [[8.2, 2.5, FL, 6.9, 'door', 1, 0]]);
-      wall([14.2, -42], [xe(-42), -42], 0.4, FL, WT, [inner, inner]);
-      wall([8.8, -29.55], [8.8, -37.7], 0.4, FL, WT, [inner, inner], [[5.45, 2.4, FL, 6.9, 'pocket']]);
-      wall([9, -37.5], [13.8, -37.5], 0.4, FL, WT, [inner, inner]);
-    }
-    wall([3.5, -40.7], [3.5, -51.5], 0.4, FL, WT, [inner, inner]);
-    K.fl(IN, oak); if (B) K.fl([[9, -29.55], [13.8, -29.55], [13.8, -37.3], [9, -37.3]], tile, FL + 0.01); else K.fl([[14.2, -29.55], [xe(-29.55), -29.55], [xe(-35.8), -35.8], [14.2, -35.8]], tile, FL + 0.01);
-    K.add(flat([[-8.8, -29.3], [27.2, -29.3], [27.8, -28.3], [-8.8, -28.3]], -0.011, apronM));
-    K.kitchenWest(-8.3, -30.5, -36.8, -38.3); K.dining(-3.2, -34.6);
-    if (!B) { // living: sofa against the bedroom wing; the bath (≈66 sq ft, pocket door from the great room + patio door): toilet, vanity, walk-in shower; laundry behind it
-      bx(8.5, 6, 0.03, rugM, 6.2, -35.8); K.sofa(5.8, -38.8, 7); bx(3.5, 2, 1.3, oakM, 5.8, -35.3); bx(2.6, 2.6, 1.4, fabric, 11.4, -35.4); bx(0.7, 2.6, 2.8, fabric, 12.4, -35.4); cyl(0.08, 5, dark, 12.6, -38.2); cyl(0.6, 0.8, lampM, 12.6, -38.2, FL + 5, 0.45);
-      K.toilet(15.45, -33.6, 1); K.vanity(18.7, -35.0, 2.6, 1.6, 18.7, -35.75); K.shower(21, -29.8, 24, -33.3, [[20.95, -33.3, 21, -29.8], [21, -33.35, 22.6, -33.3]]);
-      bx(2.3, 2.3, 5.6, white, 18.5, -39.1); cyl(0.8, 5, white, 16.1, -37.3);
-      cyl(0.08, 7.4, steel, 23, -28.9, 0); cyl(0.5, 0.08, steel, 23, -28.6, 7.2); bx(2.6, 2.6, 0.12, oakM, 23, -27.6, 0); // outdoor rinse shower by the bath door
-      for (const x of [-0.6, 12.6, 16.2]) K.sconce(x, -29.0);
-    } else { // B: living west of the bath; the bath (≈38 sq ft) with its patio door and a pocket door from the great room; bedroom 2 (≈108 sq ft) east of x 14
-      bx(7.5, 5, 0.03, rugM, 4.3, -36.4); K.sofa(4.5, -38.8, 6.4); bx(3.4, 2, 1.3, oakM, 4.5, -35.6);
-      K.toilet(10.2, -32.75, 1); K.vanity(13.1, -31.9, 1.4, 2.4, 13.72, -31.9, 1); K.shower(11, -34.5, 13.8, -37.3, [[10.95, -37.3, 11, -34.5], [11, -34.55, 12.3, -34.5]]);
-      K.bed(17.35, -32.8, 4.6, 6.3, 1); K.nightstand(14.9, -36.2); bx(3, 1.6, 2.8, oakM, 17, -40.8);
-      bx(2.3, 2.3, 5.6, white, -4.7, -41.9); cyl(0.9, 5, white, 0.6, -46.2); bx(1.2, 6, 6.5, white, 2.65, -45);
-      for (const x of [-1.6, 8.4, 13.4]) K.sconce(x, -29.0);
-    }
-    // bedroom 1 (≈146 sq ft): queen bed against the north wall, nightstands, wardrobe, rug
-    bx(6.5, 5, 0.03, rugM, 10, -47); K.bed(10, -48.4, 5, 6.7); K.nightstand(6.7, -51); K.nightstand(13.15, -51); bx(2, 5.5, 7, white, 4.75, -43.75);
-    if (V === 'adu') { bx(1.4, 9.5, 6.5, white, 2.55, -46.1); bx(3.8, 1.4, 6.5, white, -4.7, -41.45); bx(1.2, 2.4, 1.4, oakM, -0.6, -44.6); } // walk-in closet / storage
-    if (!C) { K.pavilion(P, HW, [4.5, 15.4, -41.8]); return; }
-    // ---- C: a second storey over the bedroom wing (y ≤ −37.3): bedroom 2 and a loft; a straight stair in the north-west room; 20 ft to the top ----
-    const UP = [[-8.8, -37.3], [4.47 + 0.581 * (-37.3 + 68.4), -37.3], [14, -52], [0, -52], [-8.8, -41.9]], H1 = 10.15, H2 = 17.6, ue = UP[1][0];
-    for (let i = 0; i < 13; i++) bx(2.8, 0.8, 0.75, oakM, 1.9, -41.4 - i * 0.77, FL + i * 0.755); // treads rising north to the upper floor
-    const hole = [[0.4, -41], [3.3, -41], [3.3, -50.8], [0.4, -50.8]], UPi = offsetPoly(UP, -0.25);
-    K.fl(UPi, oak, H1, [hole]); { const u = flat(UPi, M(H1 - 0.9), plankCeilMat, [hole]); u.castShadow = false; K.add(u); }
-    K.shell(UP, WT, H2, [[[3, 4, H1 + 2.6, H1 + 7, 'win'], [14, 4, H1 + 2.6, H1 + 7, 'win'], [23, 4, H1 + 2.6, H1 + 7, 'win']], [[5, 3.4, H1 + 2.6, H1 + 7, 'win']], [[3, 6, H1 + 2.6, H1 + 7, 'win']], [], [[1.2, 2.5, H1 + 3, H1 + 7, 'win']]]);
-    wall([6.2, -37.55], [6.2, -51.7], 0.4, H1, H2, [inner, inner], [[1.2, 2.7, H1, H1 + 6.9, 'door', 1, 0]]);
-    K.base = H1 - FL; // furniture upstairs
-    K.bed(10.5, -48.4, 5, 6.7); K.nightstand(7.4, -51); bx(2, 5, 6.5, white, 16, -40.4); bx(6, 5, 0.03, rugM, 10.5, -45); // bedroom 2 (≈190 sq ft)
-    bx(2.4, 5, 2.4, oakM, -4.2, -40); bx(2.2, 2.2, 1.4, fabric, -1.6, -41); K.base = 0;                                      // loft: desk and reading chair
-    // the one-storey front: a low shed roof from the patio eave up to the upper wall, with gable infill at its two ends
-    const sh = [V3(-9.8, 10.2, -28.0), V3(28.4, 10.2, -28.0), V3(ue + 0.9, 11.75, -37.3), V3(-9.8, 10.2, -28.0), V3(ue + 0.9, 11.75, -37.3), V3(-9.8, 11.75, -37.3)];
-    K.tag(triMesh(sh, roofMat, K.TR)); const shU = triMesh(sh.map(v => [v[0], v[1] - M(0.35), v[2]]), plankCeilMat, K.TR); shU.castShadow = false; K.tag(shU);
-    const g1 = [V3(-8.8, WT, -29.3), V3(-8.8, WT, -37.3), V3(-8.8, 11.4, -37.3)], g2 = [V3(27.2, WT, -29.3), V3(ue, WT, -37.3), V3(ue, 11.4, -37.3)];
-    K.tag(triMesh([...g1, g1[0], g1[2], g1[1], ...g2, g2[0], g2[2], g2[1]], gableM, K.TR));
-    K.pavilion(UP, H2, [4.6, 19.65, -44.5], 1.12);
+  // ---------------- the owner's plan: triangle-cut cottage ----------------
+  const triangle = () => { const Gt = new THREE.Group(); Gt.position.set(M(TRI.c[0]), 0, M(TRI.c[1])); Gt.rotation.y = -TRI.a * Math.PI / 180; ADU_VAR.adu.add(Gt);
+    const K = kit('adu', Gt), { bx, cyl, wall } = K, W = TRI.W, H1 = TRI.H1, H = TRI.H, k = (H - H1) / W, dg = a => -(H1 + k * a), LF = 8.6, WTt = 10.1;
+    const Q = TRI_LOCAL, IN = offsetPoly(Q, -0.5);
+    // exterior: south (bath patio door, slider, window) · east (great-room window, high window over the bed) · diagonal (two bedroom windows) · west (high window in the shower)
+    K.shell(Q, 0, WTt, [[[3, 2.7, FL, 7, 'extdoor', -1, 0], [11, 6, FL, 8, 'slider'], [17.6, 3.2, 3, 7, 'win']],
+      [[3.8, 3.4, 3, 7, 'win'], [13.6, 4.6, 5.6, 7.4, 'high']], [[11, 3, 3.4, 7.2, 'win'], [16.4, 2.6, 3.4, 7.2, 'win']], [[2.2, 2.4, 6, 7.6, 'high']]]);
+    // interior walls: bath | great room (a 8.25), the cross wall at the top of the block (bedroom door), laundry (a 6.25), walk-in closet in the point
+    wall([8.25, -0.25], [8.25, -10.15], 0.4, FL, LF, [inner, inner], [[0.3, 2.4, FL, 6.9, 'door', 1, 0]]);
+    wall([0.25, -10.35], [W - 0.25, -10.35], 0.4, FL, WTt, [inner, inner], [[10.95, 2.5, FL, 6.9, 'door', -1, 0]]);
+    wall([6.25, -10.55], [6.25, dg(6.25) + 0.4], 0.4, FL, WTt, [inner, inner], [[1.9, 2.1, FL, 6.9, 'door', -1, 1]]);
+    const yc = -21.8, xc = (21.8 - H1) / k; wall([xc + 0.3, yc], [W - 0.25, yc], 0.4, FL, WTt, [inner, inner], [[2.2, 2.4, FL, 6.9, 'door', 1, 0]]);
+    K.fl(IN, oak); K.fl([[0.5, -0.5], [8.05, -0.5], [8.05, -10.15], [0.5, -10.15]], tile, FL + 0.01); K.fl([[0.5, -10.55], [6.05, -10.55], [6.05, dg(6.05) + 0.5], [0.5, dg(0.5) + 0.5]], tile, FL + 0.01);
+    K.add(flat([[0, 0], [W, 0], [W, 4.5], [0, 0.7]], -0.011, apronM)); // pavers out to today's patio edge
+    // bath (≈80 sq ft): walk-in shower on the west wall, toilet on the stair wall, vanity beside it; its own door to the patio for party guests
+    K.shower(0.5, -3.2, 3.2, -10.15, [[3.15, -10.15, 3.2, -3.2]]);
+    bx(2.2, 1.5, 1.35, white, 6.85, -8.7); bx(0.6, 1.6, 1.4, white, 7.75, -8.7, FL + 1.35);
+    K.vanity(7.2, -4.75, 1.7, 3.6, 7.98, -4.75, 1);
+    // stair to the loft: steep (ship's-ladder pitch) treads rising north between the bath and the great room
+    for (let i = 0; i < 11; i++) bx(2.3, 0.85, 0.12, oakM, 9.65, -(2.95 + i * 0.68), FL + 0.66 + i * 0.75);
+    for (const a of [8.45, 10.85]) { const st = box(M(0.15), M(0.5), M(Math.hypot(7.4, 8.2)), oakM); st.position.set(M(a), M(FL + 4.3), M(-6.55)); st.rotation.x = Math.atan2(8.2, 7.4); K.add(st); }
+    // loft floor over the bath and the great room (ceiling 8.6 ft below it), opening over the stair, a rail round the opening
+    const hole = [[8.35, -2.6], [10.95, -2.6], [10.95, -10.1], [8.35, -10.1]], LP = [[0.5, -0.5], [W - 0.5, -0.5], [W - 0.5, -10.15], [0.5, -10.15]];
+    const n0 = Gt.children.length; // the loft goes with the roof: hidden in the floor plan and whenever the roof is switched off, so the rooms below show
+    K.fl(LP, oak, LF + 0.4, [hole]); { const u = flat(LP, M(LF), plankCeilMat, [hole]); u.castShadow = false; K.add(u); }
+    for (const a of [8.35, 10.95]) { bx(0.12, 3.8, 0.12, oakM, a, -6.7, LF + 3.1); for (let i = 0; i < 4; i++) bx(0.12, 0.12, 2.7, oakM, a, -4.8 - i * 1.27, LF + 0.4); } // guard rail where the roof is high enough over it
+    for (const [a, v] of [[3.2, -4.4], [5.4, -4.4], [3.2, -6.8], [14.6, -5], [17, -5]]) bx(1.9, 1.6, 1.4, mt(0xC9B28E), a, v, LF + 0.4); // storage boxes up there
+    for (const m of Gt.children.slice(n0).filter(o => o !== K.TR)) K.TR.add(m);
+    // great room: kitchen along the north wall (fridge at the east end), round table for four by the window
+    K.kitchenNorth(14.4, 19.0, -10.15, 20.2); K.dining(17.4, -4.0); bx(7, 5, 0.03, rugM, 16.6, -4.2);
+    // laundry (D): stacked washer-dryer
+    bx(2.3, 2.3, 5.6, white, 4.4, -11.9);
+    // bedroom (≈150 sq ft): king bed with its head on the east wall, nightstands, a dresser along the diagonal wall
+    { const x = 18.1, y = -16.15, w = 6.3, l = 6.6; bx(l, w, 1.8, oakM, x, y); bx(l - 0.5, w - 0.1, 0.6, linen, x - 0.25, y, FL + 1.8); bx(l * 0.5, w, 0.25, duvet, x - l * 0.25, y, FL + 2.38); bx(0.35, w + 0.4, 3.9, oakM, x + l / 2 - 0.15, y); for (const s of [-1, 1]) bx(1, w / 2 - 0.7, 0.45, white, x + l / 2 - 1.2, y + s * w / 4, FL + 2.4); }
+    K.nightstand(20.7, -12.3); K.nightstand(20.7, -20.0); bx(8, 6, 0.03, rugM, 16.6, -16.2);
+    { const ang = Math.atan2(H - H1, W), a0 = 9.2, nx = Math.sin(ang), ny = Math.cos(ang), cx = a0 + nx * 1.15, cy = dg(a0) + ny * 1.15; bx(5, 1.6, 2.9, oakM, cx, cy, FL, ang); }
+    // walk-in closet in the north point: hanging rod and shelves on the east wall
+    bx(1.6, 4.8, 6.6, white, 20.6, -24.4); cyl(0.05, 4.4, steel, 19.3, -24.0, FL + 5.6);
+    [1.8, 10.2, 20.2].forEach(a => K.sconce(a, 0.3));
+    // pavilion roof: every eave slopes up to one ridge point over the loft; top 15.75 ft, under the 16 ft limit
+    K.pavilion(Q, WTt - 0.3, [11.6, 15.4, -10.2], 1.1);
   };
-
   // ---------------- prefab: three real products, modelled from the makers' published floor plans, sizes and finishes ----------------
   // P1 Studio Home Summit 308, Model A (studio-home.com/products/summit-308): 14 × 22 ft, single-slope roof rising to a clerestory over the glass wall, dark lap siding, white French doors
   // P2 Samara Backyard Studio (samara.com/adus/studio): 29 × 15 ft, 5:12 standing-seam gable, vertical fiber-cement boards, double doors under a canopy, cedar deck; the bath holds the washer-dryer
@@ -1439,7 +1424,7 @@ const ADU_LABELS = {
       }
     }
   };
-  custom('adu'); custom('adu2'); prefab('pf1'); prefab('pf2'); prefab('pf3'); prefab('pf3b');
+  triangle(); prefab('pf1'); prefab('pf2'); prefab('pf3'); prefab('pf3b');
   // what makes way in each option: plants whose trunk stands in the footprint or within reach of the walls and roof; the shed, the log pile, the patio heater
   const inside = (x, y, d, Q) => { if (inPoly(x, y, Q)) return true; for (let i = 0; i < Q.length; i++) { const a = Q[i], b = Q[(i + 1) % Q.length], vx = b[0] - a[0], vy = b[1] - a[1], t = Math.max(0, Math.min(1, ((x - a[0]) * vx + (y - a[1]) * vy) / (vx * vx + vy * vy))); if (Math.hypot(a[0] + vx * t - x, a[1] + vy * t - y) < d) return true; } return false; };
   const REACH = { tree: 4, conifer: 8.5, cypress: 3, palm: 3, banana: 2, citrus: 3, bush: 1, ball: 1 };
@@ -1497,7 +1482,14 @@ function itemGroup(it, ghost) {
     }
     case 'chair': case 'bar_stool': {
       if (it.type === 'bar_stool') { Cy(w / 2, w / 2, 0.05, 0, h - 0.05, 0, m1); Cy(0.025, 0.025, h - 0.05, 0, 0, 0, dark); Cy(w * 0.4, w * 0.4, 0.02, 0, 0, 0, dark); Cy(w * 0.3, w * 0.3, 0.015, 0, h * 0.35, 0, dark, true); if (it.back) { B(w * 0.9, 0.035, 0.26, 0, h, -w / 2 + 0.02, m1); for (const sx of [-1, 1]) B(0.035, w * 0.5, 0.2, sx * (w / 2 - 0.02), h, -w * 0.22, m1); } break; }
-      const sh = h * 0.5; B(w, d, 0.05, 0, sh - 0.05, 0, m1); legs(sh - 0.05, 0.03, 0.035, m3); B(w, 0.04, h - sh, 0, sh, -d / 2 + 0.02, m1); break;
+      if (/high chair/i.test(it.name || '')) { const sh = 0.58; for (const sx of [-1, 1]) for (const sz of [-1, 1]) { const l = Cy(0.018, 0.022, sh, 0, 0, 0, white); l.position.set(sx * w * 0.36, sh / 2, sz * d * 0.36); l.rotation.set(-sz * 0.12, 0, sx * 0.12); }
+        B(w * 0.7, d * 0.62, 0.05, 0, sh, 0, white); B(w * 0.72, 0.03, 0.02, 0, 0.18, d * 0.36, white); B(w * 0.62, 0.05, h - sh, 0, sh, -d * 0.29, white); for (const sx of [-1, 1]) B(0.04, d * 0.5, 0.17, sx * w * 0.33, sh + 0.05, -d * 0.02, white);
+        B(w * 0.8, d * 0.34, 0.03, 0, sh + 0.2, d * 0.34, white); B(w * 0.66, d * 0.24, 0.012, 0, sh + 0.23, d * 0.34, mk(0xA9D4E3)); B(w * 0.58, d * 0.5, 0.03, 0, sh + 0.05, -0.01, mk(0xD8E6EC)); break; }
+      const sh = Math.min(0.47, h * 0.5), fr = m3, tl = 0.07, post = 0.042, pad = mk(base.clone().offsetHSL(0, -0.02, 0.06), { roughness: 0.9 });
+      for (const sx of [-1, 1]) { B(post, post, sh - 0.06, sx * (w / 2 - 0.04), 0, d / 2 - 0.045, fr); const rp = B(post, post, h, sx * (w / 2 - 0.04), 0, -d / 2 + 0.04, fr); rp.rotation.x = -tl; rp.position.z -= Math.sin(tl) * h / 2; }
+      B(w - 0.05, d - 0.06, 0.07, 0, sh - 0.13, 0, fr); B(w - 0.02, d - 0.02, 0.075, 0, sh - 0.075, 0.005, pad);
+      const bh = (h - sh) * 0.62, bk = B(w - 0.11, 0.05, bh, 0, sh + (h - sh) * 0.22, -d / 2 + 0.035 - Math.sin(tl) * (h * 0.45), pad); bk.rotation.x = -tl;
+      const tr = B(w - 0.03, 0.04, 0.05, 0, h - 0.06, -d / 2 + 0.03 - Math.sin(tl) * h * 0.95, fr); tr.rotation.x = -tl; break;
     }
     case 'bed_king': case 'bed_queen': {
       B(w, d, 0.3, 0, 0, 0, wood); B(w * 0.97, d * 0.95, 0.24, 0, 0.3, 0.02, white); B(w, 0.08, h, 0, 0, -d / 2 + 0.04, m3);
@@ -1603,6 +1595,8 @@ const MOVE12 = [['bench', 54.9, 69.6, 54.3, 69.6], ['nightstand', 48.4, 82.4, 47
   ['office_chair', 46.9, 58.9, 47.6, 59.1, { rot: 0 }], ['zz_plant', 40.0, 62.4, 40.3, 62.4, { w: 0.4, d: 0.6 }], ['speaker', 41.4, 59.7, 42.5, 60.6], ['ladder_shelf', 40.1, 58.6, 40.6, 59.1], ['rack', 60.0, 60.2, 59.7, 61.0, { w: 0.9 }], ['rack', 59.9, 58.6, 58.9, 58.75],
   ['desk', 59.7, 64.2, 59.5, 64.1, { w: 1.0 }], ['raised_bed', 30.6, -19.6, 32.6, -18.6], ['raised_bed', 28.2, -24.6, 30.0, -26.0], ['chair', 28.6, -21, 28.4, -20.4],
   ...[41.5, 44, 46.5, 49, 51.5, 54, 56.5, 59].map((x, i) => ['plant', x, 83.2, 43.8 + i * 2.3, 83.05, { elev: 1.22 }])];
+// layouts saved while the dining room's side chairs still faced away from the table: turn the ones still where the starter put them
+function migrate17() { for (const i of state.items) if (i.name === 'Dining chair' && i.level === 0) { if (Math.abs(i.x - M(30.2)) < 0.05 && i.rot === 90) i.rot = 270; else if (Math.abs(i.x - M(35)) < 0.05 && i.rot === 270) i.rot = 90; } }
 function migrate16() { const by = n => state.items.find(i => i.name === n), mv = (it, x, y, o) => it && Object.assign(it, { x: M(x), z: M(y) }, o || {});
   const so = by('Charcoal sofa'); if (so && so.z < M(23)) mv(so, 12.9, 29.4, { rot: 90 }); const r1 = by('Grey leaf rug'); if (r1 && r1.z < M(23)) mv(r1, 18.6, 31.6, { rot: 0 }); const r2 = by('Dinosaur quilt'); if (r2 && r2.z < M(23)) mv(r2, 18.4, 31.8, { rot: 0 });
   const tv = by('Wall TV'); if (tv && Math.abs(tv.z - M(39.05)) < 0.05) mv(tv, 0.34, 36.4, { rot: 270 }); const dr = by('White dresser'); if (dr && Math.abs(dr.z - M(33.4)) < 0.05) mv(dr, 10.0, 30.6); const kr = by('Dinosaur rug'); if (kr && Math.abs(kr.x - M(6.4)) < 0.05) mv(kr, 5.4, 35.6); }
@@ -1642,7 +1636,7 @@ function removeItemMesh(id) { const g = meshes.get(id); if (g) { G.furn[g.userDa
 function applyRoomStyles() { for (const r of ROOMS) { const s = state.rooms[r.id] || {}; roomWallMat(r.id).color.set(s.wall || r.wall || '#F2EEE6'); r.floorMesh.material = floorMats[s.floor || r.floor]; } }
 function loadState(obj, msg) {
   for (const id of [...meshes.keys()]) removeItemMesh(id);
-  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 16 };
+  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 17 };
   nextId = 1 + Math.max(0, ...state.items.map(i => parseInt(String(i.id).slice(1)) || 0));
   if ((obj.m | 0) < 2) migrate2();
   if ((obj.m | 0) < 3) migrate3();
@@ -1654,6 +1648,7 @@ function loadState(obj, msg) {
   if ((obj.m | 0) < 14) migrate14();
   if ((obj.m | 0) < 15) migrate15();
   if ((obj.m | 0) < 16) migrate16();
+  if ((obj.m | 0) < 17) migrate17();
   { const g = state.items.find(i => i.name === 'Glider chair' && Math.abs(i.z - M(51.6)) < 0.05); if (g) g.z = M(50.6); } // clear of the nursery closet
   state.items.forEach(syncItem); syncPins(); applyRoomStyles(); select(null); renderRooms(); if (msg) toast(msg); setStatus();
 }
@@ -1664,9 +1659,9 @@ const PLANS_KEY = 'arlington736.plans.v1'; let plans = { cur: 'gt', list: [] }, 
 try { const p0 = JSON.parse(localStorage.getItem(PLANS_KEY) || 'null'); if (p0 && Array.isArray(p0.list)) plans = p0; } catch (e) {}
 const designSig = () => JSON.stringify([state.items, state.rooms]), curPlan = () => plans.list.find(p => p.id === plans.cur);
 function storePlans() { localStorage.setItem(PLANS_KEY, JSON.stringify(plans)); }
-const OPTIONS = [{ id: 'adu', name: 'ADU A · custom 1 bed + 1 bath' }, { id: 'adu2', name: 'ADU B · custom 2 beds + 1 bath' }, { id: 'pf1', name: 'Prefab P1 · Studio Home Summit 308 (14 × 22 studio, no crane)' }, { id: 'pf2', name: 'Prefab P2 · Samara Backyard Studio (29 × 15)' }, { id: 'pf3', name: 'Prefab P3 · Abodu One (14 × 37, 1 bed)' }, { id: 'pf3b', name: 'Prefab P3+ · Abodu One, mirrored, house colours, entry deck' }], optOf = id => OPTIONS.find(o => o.id === id);
+const OPTIONS = [{ id: 'adu', name: 'ADU · your plan: triangle, 1 bed + 1 bath + storage loft (≈414 sq ft)' }, { id: 'pf1', name: 'Prefab P1 · Studio Home Summit 308 (14 × 22 studio, no crane)' }, { id: 'pf2', name: 'Prefab P2 · Samara Backyard Studio (29 × 15)' }, { id: 'pf3', name: 'Prefab P3 · Abodu One (14 × 37, 1 bed)' }, { id: 'pf3b', name: 'Prefab P3+ · Abodu One, mirrored, house colours, entry deck' }], optOf = id => OPTIONS.find(o => o.id === id);
 function renderPlans() { const sel = $('planSel'); sel.innerHTML = ''; const o = new Option('Original (as it is today)', 'gt'); sel.add(o); for (const op of OPTIONS) sel.add(new Option(op.name, op.id)); for (const p of plans.list) sel.add(new Option(p.name + (p.opt && optOf(p.opt) ? ' · on ' + optOf(p.opt).name.split(' ·')[0] : ''), p.id)); sel.value = curPlan() ? plans.cur : optOf(plans.cur) ? plans.cur : 'gt'; $('planDel').hidden = $('planRen').hidden = !curPlan(); }
-function originalData() { let o = null; try { o = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {} return o && Array.isArray(o.items) ? o : { items: starterItems(), rooms: {}, m: 16 }; }
+function originalData() { let o = null; try { o = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {} return o && Array.isArray(o.items) ? o : { items: starterItems(), rooms: {}, m: 17 }; }
 function openPlan(id, msg) { clearTimeout(saveT); const op = optOf(id); if (op) { plans.cur = id; select(null); loadState(JSON.parse(JSON.stringify(originalData())), msg); gtBase = designSig(); try { storePlans(); } catch (e) {} renderPlans(); applyStruct(id); setStatus(op.name + ' · the original is unchanged'); return; } const p = plans.list.find(q => q.id === id); plans.cur = p ? id : 'gt'; select(null); loadState(JSON.parse(JSON.stringify(p ? p.data : originalData())), msg); applyStruct(p && p.opt || ''); if (!p) gtBase = designSig(); try { storePlans(); } catch (e) {} renderPlans(); setStatus(p ? 'Design plan · ' + p.name : 'Original · changes go into a new design'); }
 function newPlan(name, quiet) { const n = plans.list.length + 1, p = { id: 'p' + Date.now().toString(36), name: name || 'Design ' + n, data: JSON.parse(JSON.stringify(state)), opt: aduOn || undefined }; plans.list.push(p); plans.cur = p.id; try { storePlans(); } catch (e) {} renderPlans(); if (!quiet) toast('New design plan · ' + p.name); return p; }
 function save(now) { clearTimeout(saveT); const run = () => { try { const p = curPlan();
@@ -1941,7 +1936,7 @@ $('openRight').onclick = () => { $('left').classList.remove('open'); $('right').
 $('closeLeft').onclick = $('closeRight').onclick = closeSheets;
 $('bSave').onclick = () => save(true);
 let resetArm = 0;
-$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 16 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
+$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 17 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
 const dlg = $('dlg');
 function openDlg(kind) {
   const exp = kind === 'export'; $('dlgTitle').textContent = exp ? 'Export layout' : 'Import layout';
@@ -2065,7 +2060,7 @@ function tick() {
 
 /* ================= BOOT ================= */
 let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { saved = null; }
-if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 16 }); }
+if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 17 }); }
 gtBase = designSig(); if (optOf(location.hash.slice(1))) plans.cur = location.hash.slice(1); if (curPlan()) { loadState(JSON.parse(JSON.stringify(curPlan().data))); applyStruct(curPlan().opt || ''); } else if (optOf(plans.cur)) applyStruct(plans.cur); else plans.cur = 'gt';
 renderPlans(); $('planSel').onchange = e => openPlan(e.target.value, 'Plan opened');
 $('planNew').onclick = () => { const nm = prompt('Name for the new design plan', 'Design ' + (plans.list.length + 1)); if (nm === null) return; newPlan(nm.trim() || null); setStatus('Design plan · ' + curPlan().name); };
