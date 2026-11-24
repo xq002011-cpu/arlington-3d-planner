@@ -411,7 +411,7 @@ const CAT = {
   office_chair: { label: 'Office chair', w: 0.66, d: 0.66, h: 1.05, color: '#2A2C2F' },
   umbrella: { label: 'Patio umbrella', w: 3.0, d: 3.0, h: 2.6, color: '#B8AE9F' },
   standing_desk: { label: 'Standing desk', w: 1.5, d: 0.75, h: 1.1, color: '#C9B08A' },
-  grand_piano: { label: 'Grand piano', w: 1.5, d: 1.9, h: 1.0, color: '#17171A' },
+  grand_piano: { label: 'Baby grand piano', w: 1.5, d: 1.5, h: 1.0, color: '#17171A' },
   bench: { label: 'Bench', w: 1.4, d: 0.4, h: 0.45, color: '#A48463' },
   hoops: { label: 'Basketball arcade machine', w: 1.1, d: 2.3, h: 2.6, color: '#1E3A6E' },
   snoo: { label: 'SNOO bassinet', w: 0.9, d: 0.6, h: 0.9, color: '#F4F2EE' },
@@ -445,7 +445,7 @@ const TERRACE_SET = [['sofa', 'rec', -2.6, -27.6, 0, { color: OUT, name: 'Outdoo
   ['dining_table', 'rec', 10, -22.0, 0, { color: BLK, name: 'Outdoor dining table' }], ['chair', 'rec', 7.6, -24.2, 0, { color: BLK }], ['chair', 'rec', 10, -24.2, 0, { color: BLK }], ['chair', 'rec', 12.4, -24.2, 0, { color: BLK }], ['chair', 'rec', 7.6, -19.8, 180, { color: BLK }], ['chair', 'rec', 10, -19.8, 180, { color: BLK }], ['chair', 'rec', 12.4, -19.8, 180, { color: BLK }], ['umbrella', 'rec', 10, -22.0, 180]];
 const STARTER = [
   // living room: piano in the corner by the office, bench on its keyboard side; black tub chair by the fireplace; navy sofa under the street windows; navy sectional with its ottoman; navy coffee ottoman
-  ['grand_piano', 'living', 42.6, 68.9, 270], ['bench', 'living', 46.9, 68.9, 270, { color: BLK, w: 1.0, d: 0.38, h: 0.5, name: 'Piano bench' }], ['armchair', 'living', 59.2, 75.6, 90, { color: '#141B33', w: 0.72, d: 0.7, h: 0.72, name: 'Navy velvet tub chair' }], ['guitar_case', 'living', 61.6, 82.9, 180], ['guitar_case', 'living', 60.1, 83.0, 180, { h: 1.15 }], ['guitar_case', 'living', 58.6, 82.9, 180, { h: 1.0 }],
+  ['grand_piano', 'living', 42.0, 68.9, 270], ['bench', 'living', 45.6, 68.9, 270, { color: BLK, w: 1.0, d: 0.38, h: 0.5, name: 'Piano bench' }], ['armchair', 'living', 59.2, 75.6, 90, { color: '#141B33', w: 0.72, d: 0.7, h: 0.72, name: 'Navy velvet tub chair' }], ['guitar_case', 'living', 61.6, 82.9, 180], ['guitar_case', 'living', 60.1, 83.0, 180, { h: 1.15 }], ['guitar_case', 'living', 58.6, 82.9, 180, { h: 1.0 }],
   ['sofa', 'living', 52.4, 81.9, 180, { color: NAVY, w: 2.2, name: 'Navy sofa' }], ['coffee_table', 'living', 55.4, 77.6, 0, { color: NAVY, w: 1.0, d: 0.9, h: 0.44, name: 'Navy ottoman table' }],
   ['sofa', 'living', 43.6, 76.2, 270, { color: NAVY, w: 2.8, d: 1.05, name: 'Navy sectional' }], ['bench', 'living', 49.6, 74.0, 0, { color: NAVY, w: 1.1, d: 1.1, h: 0.45, name: 'Sectional ottoman' }],
   ['nightstand', 'living', 47.9, 82.4, 180, { color: '#6B4630', w: 0.45, d: 0.4, h: 0.55, name: 'Wood side table' }], ['desk', 'living', 45.4, 81.6, 180, { color: BLK, w: 0.8, d: 0.5, h: 0.78, name: 'Black standing table' }],
@@ -1595,6 +1595,9 @@ const MOVE12 = [['bench', 54.9, 69.6, 54.3, 69.6], ['nightstand', 48.4, 82.4, 47
   ['office_chair', 46.9, 58.9, 47.6, 59.1, { rot: 0 }], ['zz_plant', 40.0, 62.4, 40.3, 62.4, { w: 0.4, d: 0.6 }], ['speaker', 41.4, 59.7, 42.5, 60.6], ['ladder_shelf', 40.1, 58.6, 40.6, 59.1], ['rack', 60.0, 60.2, 59.7, 61.0, { w: 0.9 }], ['rack', 59.9, 58.6, 58.9, 58.75],
   ['desk', 59.7, 64.2, 59.5, 64.1, { w: 1.0 }], ['raised_bed', 30.6, -19.6, 32.6, -18.6], ['raised_bed', 28.2, -24.6, 30.0, -26.0], ['chair', 28.6, -21, 28.4, -20.4],
   ...[41.5, 44, 46.5, 49, 51.5, 54, 56.5, 59].map((x, i) => ['plant', x, 83.2, 43.8 + i * 2.3, 83.05, { elev: 1.22 }])];
+// layouts saved before the piano was found to be a baby grand: shrink it and keep it, with its bench, in the north-west corner
+function migrate18() { const at = (i, x, y) => i && Math.abs(i.x - M(x)) < 0.05 && Math.abs(i.z - M(y)) < 0.05;
+  for (const i of state.items) { if (i.type === 'grand_piano') { if (Math.abs((i.d || 0) - 1.9) < 0.01) i.d = 1.5; if (at(i, 42.6, 68.9)) i.x = M(42.0); } else if (i.name === 'Piano bench' && at(i, 46.9, 68.9)) i.x = M(45.6); } }
 // layouts saved while the dining room's side chairs still faced away from the table, and while the piano stood in the north-east corner: fix the pieces still where the starter put them
 function migrate17() { const at = (i, x, y) => i && Math.abs(i.x - M(x)) < 0.05 && Math.abs(i.z - M(y)) < 0.05, mv = (i, x, y, rot) => Object.assign(i, { x: M(x), z: M(y) }, rot == null ? {} : { rot });
   for (const i of state.items) { if (i.type === 'grand_piano' && at(i, 58.6, 69.6)) mv(i, 42.6, 68.9, 270); else if (i.name === 'Piano bench' && at(i, 54.3, 69.6)) mv(i, 46.9, 68.9, 270); else if (i.name === 'Navy sectional' && at(i, 43.6, 74.2)) mv(i, 43.6, 76.2); else if (i.name === 'Sectional ottoman' && at(i, 48.2, 71.2)) mv(i, 49.6, 74.0); }
@@ -1638,7 +1641,7 @@ function removeItemMesh(id) { const g = meshes.get(id); if (g) { G.furn[g.userDa
 function applyRoomStyles() { for (const r of ROOMS) { const s = state.rooms[r.id] || {}; roomWallMat(r.id).color.set(s.wall || r.wall || '#F2EEE6'); r.floorMesh.material = floorMats[s.floor || r.floor]; } }
 function loadState(obj, msg) {
   for (const id of [...meshes.keys()]) removeItemMesh(id);
-  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 17 };
+  state = { v: 1, items: Array.isArray(obj.items) ? obj.items.filter(i => CAT[i.type]) : [], rooms: obj.rooms || {}, notes: Array.isArray(obj.notes) ? obj.notes : [], m: 18 };
   nextId = 1 + Math.max(0, ...state.items.map(i => parseInt(String(i.id).slice(1)) || 0));
   if ((obj.m | 0) < 2) migrate2();
   if ((obj.m | 0) < 3) migrate3();
@@ -1651,6 +1654,7 @@ function loadState(obj, msg) {
   if ((obj.m | 0) < 15) migrate15();
   if ((obj.m | 0) < 16) migrate16();
   if ((obj.m | 0) < 17) migrate17();
+  if ((obj.m | 0) < 18) migrate18();
   { const g = state.items.find(i => i.name === 'Glider chair' && Math.abs(i.z - M(51.6)) < 0.05); if (g) g.z = M(50.6); } // clear of the nursery closet
   state.items.forEach(syncItem); syncPins(); applyRoomStyles(); select(null); renderRooms(); if (msg) toast(msg); setStatus();
 }
@@ -1663,7 +1667,7 @@ const designSig = () => JSON.stringify([state.items, state.rooms]), curPlan = ()
 function storePlans() { localStorage.setItem(PLANS_KEY, JSON.stringify(plans)); }
 const OPTIONS = [{ id: 'adu', name: 'ADU · your plan: triangle, 1 bed + 1 bath + storage loft (≈414 sq ft)' }, { id: 'pf1', name: 'Prefab P1 · Studio Home Summit 308 (14 × 22 studio, no crane)' }, { id: 'pf2', name: 'Prefab P2 · Samara Backyard Studio (29 × 15)' }, { id: 'pf3', name: 'Prefab P3 · Abodu One (14 × 37, 1 bed)' }, { id: 'pf3b', name: 'Prefab P3+ · Abodu One, mirrored, house colours, entry deck' }], optOf = id => OPTIONS.find(o => o.id === id);
 function renderPlans() { const sel = $('planSel'); sel.innerHTML = ''; const o = new Option('Original (as it is today)', 'gt'); sel.add(o); for (const op of OPTIONS) sel.add(new Option(op.name, op.id)); for (const p of plans.list) sel.add(new Option(p.name + (p.opt && optOf(p.opt) ? ' · on ' + optOf(p.opt).name.split(' ·')[0] : ''), p.id)); sel.value = curPlan() ? plans.cur : optOf(plans.cur) ? plans.cur : 'gt'; $('planDel').hidden = $('planRen').hidden = !curPlan(); }
-function originalData() { let o = null; try { o = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {} return o && Array.isArray(o.items) ? o : { items: starterItems(), rooms: {}, m: 17 }; }
+function originalData() { let o = null; try { o = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {} return o && Array.isArray(o.items) ? o : { items: starterItems(), rooms: {}, m: 18 }; }
 function openPlan(id, msg) { clearTimeout(saveT); const op = optOf(id); if (op) { plans.cur = id; select(null); loadState(JSON.parse(JSON.stringify(originalData())), msg); gtBase = designSig(); try { storePlans(); } catch (e) {} renderPlans(); applyStruct(id); setStatus(op.name + ' · the original is unchanged'); return; } const p = plans.list.find(q => q.id === id); plans.cur = p ? id : 'gt'; select(null); loadState(JSON.parse(JSON.stringify(p ? p.data : originalData())), msg); applyStruct(p && p.opt || ''); if (!p) gtBase = designSig(); try { storePlans(); } catch (e) {} renderPlans(); setStatus(p ? 'Design plan · ' + p.name : 'Original · changes go into a new design'); }
 function newPlan(name, quiet) { const n = plans.list.length + 1, p = { id: 'p' + Date.now().toString(36), name: name || 'Design ' + n, data: JSON.parse(JSON.stringify(state)), opt: aduOn || undefined }; plans.list.push(p); plans.cur = p.id; try { storePlans(); } catch (e) {} renderPlans(); if (!quiet) toast('New design plan · ' + p.name); return p; }
 function save(now) { clearTimeout(saveT); const run = () => { try { const p = curPlan();
@@ -1938,7 +1942,7 @@ $('openRight').onclick = () => { $('left').classList.remove('open'); $('right').
 $('closeLeft').onclick = $('closeRight').onclick = closeSheets;
 $('bSave').onclick = () => save(true);
 let resetArm = 0;
-$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 17 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
+$('bReset').onclick = () => { if (Date.now() - resetArm < 3000) { resetArm = 0; $('bReset').textContent = 'Reset to starter'; starter = true; loadState({ items: starterItems(), rooms: {}, notes: state.notes, m: 18 }, 'Starter layout restored'); save(true); starter = true; setStatus(); return; } resetArm = Date.now(); $('bReset').textContent = 'Click again to reset'; setTimeout(() => { $('bReset').textContent = 'Reset to starter'; }, 3000); };
 const dlg = $('dlg');
 function openDlg(kind) {
   const exp = kind === 'export'; $('dlgTitle').textContent = exp ? 'Export layout' : 'Import layout';
@@ -2062,7 +2066,7 @@ function tick() {
 
 /* ================= BOOT ================= */
 let saved = null; try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { saved = null; }
-if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 17 }); }
+if (saved && Array.isArray(saved.items)) loadState(saved); else { starter = true; loadState({ items: starterItems(), rooms: {}, m: 18 }); }
 gtBase = designSig(); if (optOf(location.hash.slice(1))) plans.cur = location.hash.slice(1); if (curPlan()) { loadState(JSON.parse(JSON.stringify(curPlan().data))); applyStruct(curPlan().opt || ''); } else if (optOf(plans.cur)) applyStruct(plans.cur); else plans.cur = 'gt';
 renderPlans(); $('planSel').onchange = e => openPlan(e.target.value, 'Plan opened');
 $('planNew').onclick = () => { const nm = prompt('Name for the new design plan', 'Design ' + (plans.list.length + 1)); if (nm === null) return; newPlan(nm.trim() || null); setStatus('Design plan · ' + curPlan().name); };
